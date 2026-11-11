@@ -286,6 +286,53 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
 .toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;z-index:30;padding:10px 18px;border-radius:14px;font-weight:600;background:rgba(11,18,48,.96);border:1px solid var(--gold);box-shadow:0 12px 30px rgba(0,0,0,.5);opacity:0;transform:translateY(16px);transition:.3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
 .toast.show{opacity:1;transform:none}
 
+/* ---------- جهة الطالب: خريطة الكواكب واللعب ---------- */
+.role-btn{border:1px dashed var(--line-2);background:rgba(0,0,0,.3);border-radius:10px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink-mut);display:flex;align-items:center;gap:6px}
+.role-btn svg{width:16px;height:16px}
+.map{position:relative;padding:26px 18px 30px;overflow:hidden}
+.map-head{text-align:center;margin-bottom:8px}
+.map-head .h2{font-size:clamp(26px,4vw,36px)}
+.route{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:start;padding-top:20px}
+.route svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.node{position:relative;z-index:1;display:grid;justify-items:center;gap:6px;text-align:center;border:0;background:none;padding:6px}
+.node:nth-child(even){margin-top:90px}
+.node .orb-wrap{position:relative;width:min(130px,100%);aspect-ratio:1;display:grid;place-items:center}
+.node .orb-wrap svg{width:100%;height:100%;filter:drop-shadow(0 10px 22px rgba(0,0,0,.45))}
+.node.open .orb-wrap svg{animation:orbF 4s ease-in-out infinite;filter:drop-shadow(0 0 26px var(--pc))}
+@keyframes orbF{50%{transform:translateY(-8px)}}
+.node.locked .orb-wrap svg{filter:grayscale(.85) brightness(.55)}
+.node .padlock{position:absolute;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(6,10,28,.85);border:1px solid var(--line-2)}
+.node .padlock svg{width:22px;height:22px;fill:var(--ink-mut);filter:none;animation:none}
+.node .n-num{font-size:12px;font-weight:600;color:var(--ink-dim);letter-spacing:.1em}
+.node b{font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1}
+.node small{font-size:13px;color:var(--ink-mut);line-height:1.35;max-width:180px}
+.node .go{margin-top:2px;padding:6px 16px;border-radius:999px;font-weight:700;font-size:14px;color:#141022;background:linear-gradient(180deg,#ffe39a,var(--gold));box-shadow:0 0 18px rgba(255,201,77,.4)}
+.node .soon{margin-top:2px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--ink-dim);border:1px solid var(--line)}
+.node.open{cursor:pointer}
+.node.open:hover .go{transform:scale(1.06)}
+.map-ws{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:14px 16px}
+.play-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;margin-bottom:10px}
+.play-bar .orb{width:40px;height:40px}
+.play-bar .t{min-width:0;flex:1}
+.play-bar .t b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1}
+.play-bar .t small{color:var(--ink-mut);font-size:13px}
+.play-frame{display:block;width:100%;height:calc(100svh - 190px);min-height:600px;border:0;border-radius:16px;background:#2e190c;box-shadow:0 0 0 1px var(--line),0 20px 50px rgba(0,0,0,.4)}
+.play-wrap:fullscreen{background:#000}
+.play-wrap:fullscreen .play-frame{height:100vh;border-radius:0}
+.open-toggle{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line-2);background:rgba(0,0,0,.3);font-weight:600;font-size:14px;cursor:pointer}
+.open-toggle input{width:20px;height:20px;accent-color:var(--mint)}
+.game-tag{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;color:#06372a;background:var(--mint)}
+.pl .game-dot{position:absolute;bottom:6px;inset-inline-end:8px;font-size:10px;font-weight:700;color:var(--mint)}
+@media (max-width:760px){
+  .route{grid-template-columns:minmax(0,1fr);gap:4px}
+  .route svg.path{display:none}
+  .node,.node:nth-child(even){margin-top:0;grid-template-columns:96px minmax(0,1fr);justify-items:start;text-align:start;align-items:center;column-gap:14px;padding:10px;border-radius:16px;background:rgba(0,0,0,.2);border:1px solid var(--line)}
+  .node:nth-child(even){direction:ltr}
+  .node:nth-child(even) > *{direction:rtl}
+  .node .orb-wrap{grid-row:span 4;width:96px}
+  .node .padlock{width:34px;height:34px}
+  .play-frame{height:calc(100svh - 150px);min-height:560px}
+}
 @media (max-width:980px){
   .groups,.ws-pick{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ws{grid-template-columns:minmax(0,1fr)}
@@ -339,22 +386,52 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       <g class="ring"><ellipse cx="28" cy="28" rx="26" ry="8" fill="none" stroke="#ffc94d" stroke-width="2.4" transform="rotate(-20 28 28)"/><circle cx="52" cy="22" r="2.6" fill="#ffc94d"/></g>
     </svg>
     <div>
-      <p class="kicker">مركز قيادة الفصل · ٤ مجموعات · ٥ مهمات</p>
+      <p class="kicker" id="kicker">لوحة المعلّم · ٤ مجموعات · ٥ مهمات</p>
       <h1>مهمة <span>الكواكب الخمسة</span></h1>
     </div>
   </div>
   <div style="display:grid;gap:6px;justify-items:end">
-    <nav class="tabs" role="tablist" aria-label="أقسام اللعبة">
+    <nav class="tabs" role="tablist" aria-label="أقسام لوحة المعلّم" id="tabsT">
       <button class="tab" role="tab" data-view="hq" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>القيادة</button>
       <button class="tab" role="tab" data-view="ws" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h5v6M10 20V9l5-4 4 4v11" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/></svg>ورشة البناء</button>
       <button class="tab" role="tab" data-view="eval" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></svg>التقييم</button>
       <button class="tab" role="tab" data-view="report" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12h7M9 16h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>التقرير</button>
     </nav>
-    <span class="status"><i></i><span id="statusTxt">الأنظمة تعمل</span></span>
+    <nav class="tabs" role="tablist" aria-label="أقسام الطالب" id="tabsS" hidden>
+      <button class="tab" role="tab" data-view="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"/><ellipse cx="12" cy="12" rx="11" ry="3.5" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-20 12 12)"/></svg>الكواكب</button>
+      <button class="tab" role="tab" data-view="ws" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h5v6M10 20V9l5-4 4 4v11" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/></svg>ورشة البناء</button>
+    </nav>
+    <span style="display:flex;gap:10px;align-items:center">
+      <button class="role-btn" type="button" id="roleBtn" hidden></button>
+      <span class="status"><i></i><span id="statusTxt">الأنظمة تعمل</span></span>
+    </span>
   </div>
 </header>
 
 <main>
+  <!-- ===== جهة الطالب: الكواكب الخمسة ===== -->
+  <section class="view" id="view-map" hidden>
+    <div class="map panel corners">
+      <div class="map-head"><p class="kicker">رحلة الفصل</p><h2 class="h2">اختر كوكبك</h2><p class="sub">كل كوكب نشاط. يُفتح الكوكب حين يجهّزه المعلّم، فادخلوه والعبوا معًا.</p></div>
+      <div class="route" id="route"></div>
+    </div>
+    <div class="map-ws panel">
+      <div><b style="font-family:var(--f-display);font-weight:400;font-size:22px">ورشة بناء مجموعتكم</b><p class="sub" style="margin:0">ابنوا قاعدتكم الفضائية بالكريستالات التي كسبتموها في الأنشطة.</p></div>
+      <button class="btn gold" type="button" id="toWs">ادخلوا الورشة</button>
+    </div>
+  </section>
+
+  <!-- ===== جهة الطالب: داخل الكوكب ===== -->
+  <section class="view" id="view-play" hidden>
+    <div class="play-bar panel">
+      <button class="btn" type="button" id="playBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>الكواكب</button>
+      <span id="playOrb"></span>
+      <div class="t"><b id="playName"></b><small id="playSub"></small></div>
+      <button class="btn" type="button" id="playFull"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>ملء الشاشة</button>
+    </div>
+    <div class="play-wrap" id="playWrap"><iframe class="play-frame" id="playFrame" title="لعبة الكوكب" allow="fullscreen"></iframe></div>
+  </section>
+
   <!-- ===== القيادة ===== -->
   <section class="view" id="view-hq">
     <div class="sec" style="margin-top:8px"><div><h2 class="h2">ترتيب المجموعات</h2><p class="sub">كل نقطة يكسبها الطالب تصير كريستالة في خزنة مجموعته، والفوز يرفع نقاط المجموعة كلها.</p></div></div>
@@ -415,6 +492,8 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       <div class="field"><label for="actTitle">اسم النشاط</label><input id="actTitle" maxlength="40" autocomplete="off"></div>
       <div class="field" style="flex:0 1 180px"><label for="actDate">التاريخ</label><input id="actDate" type="date"></div>
       <button class="btn" id="allPresent" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>الجميع حاضر</button>
+      <label class="open-toggle" id="openWrap"><input type="checkbox" id="openChk">الكوكب مفتوح للطلاب</label>
+      <button class="btn" id="previewGame" type="button">جرّب لعبة الكوكب</button>
       <button class="btn gold" id="launch" type="button">أطلق الصواريخ</button>
     </div>
     <div class="rules" id="rules"></div>
@@ -462,8 +541,10 @@ const CONFIG = {
     { id: "g3", name: "النيزك",  color: "#ff9a4d", code: "2164", emblem: "diamond", members: [10, 11, 12, 13, 14] },
     { id: "g4", name: "السديم",  color: "#48e0a8", code: "5937", emblem: "star",    members: [15, 16, 17, 18, 19] }
   ],
+  // game: صفحة لعبة الكوكب (بجانب هذه الصفحة). الكوكب بلا لعبة يبقى مقفلًا عند الطلاب حتى توضع فيه لعبة.
   planets: [
-    { name: "الياقوت",  c1: "#ffb3c1", c2: "#ff4d6d", c3: "#8a0f2e", ring: true  },
+    { name: "الياقوت",  c1: "#ffb3c1", c2: "#ff4d6d", c3: "#8a0f2e", ring: true,
+      game: "planet1.html", gameName: "تحدي البذور: بستان البذرة", gameDesc: "محطات وكلمات سرّ وماء لسقي البذرة حتى تصير شجرة مثمرة." },
     { name: "الزمرّد",  c1: "#c6ffd9", c2: "#2fd17f", c3: "#0b6b3c", ring: false },
     { name: "الفيروز",  c1: "#c9f6ff", c2: "#33c3e8", c3: "#0d5a85", ring: true  },
     { name: "الكهرمان", c1: "#fff0b8", c2: "#ffb22e", c3: "#9a4e05", ring: false },
@@ -537,11 +618,12 @@ const KEY = "mohimmat-alkawakib-v2", OLD_KEY = "rehlat-alkawakib-v1", BKEY = "mo
 function blank() {
   return { titles: Array(N_ACT).fill(""), dates: Array(N_ACT).fill(""),
     gres: Array.from({ length: N_ACT }, () => ({})),   // نتيجة كل مجموعة في كل مهمة: w / d / x
+    open: Array(N_ACT).fill(true),                     // هل يرى الطلاب لعبة الكوكب
     s: CONFIG.students.map(() => Array.from({ length: N_ACT }, () => ({ att: null, mor: null }))) };
 }
 function normalize(d) {
   const b = blank();
-  for (let a = 0; a < N_ACT; a++) { b.titles[a] = String((d.titles || [])[a] || ""); b.dates[a] = String((d.dates || [])[a] || ""); }
+  for (let a = 0; a < N_ACT; a++) { b.titles[a] = String((d.titles || [])[a] || ""); b.dates[a] = String((d.dates || [])[a] || ""); b.open[a] = (d.open || [])[a] !== false; }
   b.s.forEach((row, i) => row.forEach((e, a) => {
     const o = (((d.s || [])[i] || [])[a]) || {};
     e.att = o.att in P.att ? o.att : null;
@@ -571,7 +653,23 @@ let bases = (() => { const d = lsGet(BKEY) || {}; const o = {}; CONFIG.groups.fo
 
 let remoteDb = null, canWrite = true, pushTimer = 0, gradesChain = Promise.resolve(), lastJSON = "";
 const baseChain = {}, baseJSON = {};
-function save() { lsSet(KEY, state); pushGrades(); }
+function save() { lsSet(KEY, state); pushGrades(); pushPublic(); }
+/* ملخّص عامّ يقرؤه الطلاب: الكواكب المفتوحة ومجموع كل مجموعة فقط، بلا درجات الأفراد */
+let pub = null, pubTimer = 0, lastPub = "";
+function publicSummary() {
+  const earned = {}; CONFIG.groups.forEach(g => earned[g.id] = g.members.reduce((x, i) => x + totals(i).total, 0));
+  return { open: CONFIG.planets.map((p, a) => state.open[a] !== false), titles: state.titles.slice(), earned };
+}
+function pushPublic() {
+  if (!remoteDb || !canWrite) return;
+  clearTimeout(pubTimer);
+  pubTimer = setTimeout(() => {
+    const json = JSON.stringify(publicSummary());
+    if (json === lastPub) return;
+    lastPub = json;
+    remoteDb.doc("public/summary").set({ json, at: Date.now() }).catch(() => {});
+  }, 900);
+}
 function pushGrades() {
   if (!remoteDb || !canWrite) return;
   clearTimeout(pushTimer);
@@ -595,23 +693,41 @@ function saveBase(gid) {
 function rerender() {
   const typing = document.activeElement && document.activeElement.matches("input");
   if (view === "hq") renderHQ();
+  else if (view === "map") renderMap();
   else if (view === "ws") { if (!typing) renderWS(); }
   else if (view === "eval") { if (!typing) renderEval(); }
   else if (view === "report") renderReport();
 }
-function applyReadOnly() {
-  document.querySelector('.tab[data-view="eval"]').hidden = !canWrite;
+/* الجهتان: المعلّم (من يملك التعديل) يرى لوحة المعلّم، والطالب يرى الكواكب وورشة البناء فقط */
+let preview = /(^|[#&])student\b/.test(location.hash);
+const studentSide = () => !canWrite || preview;
+function applyRole() {
+  const st = studentSide();
+  $("#tabsT").hidden = st; $("#tabsS").hidden = !st;
+  $("#kicker").textContent = st ? "جهة الطالب · ٤ مجموعات · ٥ كواكب" : "لوحة المعلّم · ٤ مجموعات · ٥ مهمات";
+  $("#roleBtn").hidden = !canWrite;
+  $("#roleBtn").innerHTML = st ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>العودة إلى لوحة المعلّم'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>معاينة جهة الطالب';
   ["#importBtn", "#resetBtn", "#codesWrap"].forEach(q => $(q).hidden = !canWrite);
-  if (!canWrite && view === "eval") show("hq");
+  const okViews = st ? ["map", "play", "ws"] : ["hq", "ws", "eval", "report", "play"];
+  if (!okViews.includes(view)) show(st ? "map" : "hq");
 }
+$("#roleBtn").addEventListener("click", () => { preview = !preview; wsGroup = null; applyRole(); show(studentSide() ? "map" : "hq"); });
 (async function connect() {
   const c = window.claude;
   if (!c || !c.use) return;
   const [db, user] = await Promise.all([c.use("db"), c.use("user")]);
   if (!db) return;
   if (user && typeof user.canEdit === "function") { try { canWrite = !!(await user.canEdit()); } catch (e) {} }
-  remoteDb = db; applyReadOnly();
+  remoteDb = db; applyRole();
   $("#statusTxt").textContent = "متّصل · يُحفظ تلقائيًّا";
+  db.doc("public/summary").onSnapshot(snap => {
+    const d = snap.exists ? snap.data() || {} : {};
+    if (typeof d.json === "string") { try { pub = JSON.parse(d.json); lastPub = d.json; } catch (e) {} }
+    if (canWrite) pushPublic(); else rerender();
+  }, () => {});
+  watchBases(db);
+  if (!canWrite) return;   // الطالب لا يقرأ درجات الأفراد
   let first = true;
   db.doc("grades/semester").onSnapshot(snap => {
     if (snap.exists) {
@@ -623,6 +739,8 @@ function applyReadOnly() {
     } else if (first && canWrite && state.s.some((r, i) => r.some((e, a) => graded(i, a)))) pushGrades();
     first = false;
   }, () => {});
+})();
+function watchBases(db) {
   let firstB = true;
   db.collection("bases").onSnapshot(qs => {
     const seen = {};
@@ -638,7 +756,7 @@ function applyReadOnly() {
     firstB = false;
     lsSet(BKEY, bases); rerender();
   }, () => {});
-})();
+}
 
 /* ===================== الحساب ===================== */
 const ptsWord = n => n === 1 ? "نقطة واحدة" : n === 2 ? "نقطتان" : n === 0 ? "بلا نقاط" : `${ar(n)} نقاط`;
@@ -666,7 +784,7 @@ function ranking() {
   return { list, rank: rankOf(list) };
 }
 function groupStats(g) {
-  const earned = g.members.reduce((s, i) => s + totals(i).total, 0);
+  const earned = !canWrite && remoteDb ? ((pub && pub.earned && +pub.earned[g.id]) || 0) : g.members.reduce((s, i) => s + totals(i).total, 0);
   const spent = bases[g.id].built.reduce((s, id) => s + (MODULES.find(m => m.id === id) || { cost: 0 }).cost, 0);
   return { earned, spent, left: Math.max(0, earned - spent), built: bases[g.id].built.length };
 }
@@ -684,15 +802,16 @@ document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () =>
 function show(v) {
   view = v;
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v));
-  ["hq", "ws", "eval", "report"].forEach(x => $("#view-" + x).hidden = x !== v);
-  ({ hq: renderHQ, ws: renderWS, eval: renderEval, report: renderReport })[v]();
+  ["map", "play", "hq", "ws", "eval", "report"].forEach(x => $("#view-" + x).hidden = x !== v);
+  if (v !== "play") { const f = $("#playFrame"); if (f.getAttribute("src")) f.removeAttribute("src"); }
+  ({ map: renderMap, play: () => {}, hq: renderHQ, ws: renderWS, eval: renderEval, report: renderReport })[v]();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 function renderPlanets(el, pressed) {
   el.innerHTML = CONFIG.planets.map((pl, a) => `
     <button class="pl ${actDone(a) ? "done" : ""}" type="button" data-act="${a}" ${pressed ? `aria-pressed="${a === cur}"` : ""}>
       ${planetSVG(pl)}<span><b>كوكب ${esc(pl.name)}</b><small>${esc(actName(a))}</small></span>
-      <span class="st">${actDone(a) ? "✓ تمّت" : ar(a + 1)}</span></button>`).join("");
+      <span class="st">${actDone(a) ? "✓ تمّت" : ar(a + 1)}</span>${pl.game ? `<span class="game-dot">${state.open[a] !== false ? "● لعبة مفتوحة" : "○ لعبة مغلقة"}</span>` : ""}</button>`).join("");
 }
 
 /* ===================== القاعدة الفضائية (رسم) ===================== */
@@ -749,6 +868,55 @@ function modIcon(id, c) {
   };
   return `<svg viewBox="0 0 32 32" aria-hidden="true" style="overflow:visible">${I[id]}</svg>`;
 }
+
+/* ===================== جهة الطالب: الخريطة واللعب ===================== */
+const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" style="stroke:var(--ink-mut)"/></svg>';
+const planetOpen = a => {
+  if (!CONFIG.planets[a].game) return false;
+  const o = canWrite || !remoteDb ? state.open : (pub && pub.open) || [];
+  return o[a] !== false;
+};
+const planetTitle = a => {
+  const t = canWrite || !remoteDb ? state.titles[a] : ((pub && pub.titles) || [])[a];
+  return t || CONFIG.planets[a].gameName || "";
+};
+function renderMap() {
+  const nodes = CONFIG.planets.map((pl, a) => {
+    const open = planetOpen(a);
+    return `<button class="node ${open ? "open" : "locked"}" type="button" data-planet="${a}" style="--pc:${pl.c2}" ${open ? "" : 'aria-disabled="true"'}>
+      <span class="orb-wrap">${planetSVG(pl, "")}${open ? "" : `<span class="padlock">${LOCK_SVG}</span>`}</span>
+      <span class="n-num">الكوكب ${ar(a + 1)}</span><b>كوكب ${esc(pl.name)}</b>
+      <small>${open ? esc(planetTitle(a)) : "لم يُجهَّز بعد"}</small>
+      ${open ? '<span class="go">ادخل الكوكب</span>' : '<span class="soon">مقفل</span>'}</button>`;
+  }).join("");
+  $("#route").innerHTML = `<svg class="path" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><path d="M900 80 C800 80 780 170 700 170 S580 80 500 80 S380 170 300 170 S180 80 100 80" fill="none" stroke="rgba(160,190,255,.28)" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/></svg>` + nodes;
+}
+$("#route").addEventListener("click", e => {
+  const b = e.target.closest("[data-planet]"); if (!b) return;
+  const a = +b.dataset.planet;
+  if (!planetOpen(a)) { toast("هذا الكوكب مقفل حتى يجهّزه المعلّم"); return; }
+  openPlanet(a);
+});
+$("#toWs").addEventListener("click", () => show("ws"));
+let playFrom = "map";
+function openPlanet(a, fromTeacher) {
+  const pl = CONFIG.planets[a];
+  if (!pl.game) return;
+  playFrom = fromTeacher ? "eval" : "map";
+  $("#playBack").lastChild.textContent = fromTeacher ? "لوحة التقييم" : "الكواكب";
+  $("#playOrb").innerHTML = planetSVG(pl);
+  $("#playName").textContent = `كوكب ${pl.name}`;
+  $("#playSub").textContent = planetTitle(a) + (pl.gameDesc ? " · " + pl.gameDesc : "");
+  show("play");
+  $("#playFrame").setAttribute("src", pl.game);
+}
+$("#playBack").addEventListener("click", () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); show(playFrom); });
+$("#playFull").addEventListener("click", () => {
+  const w = $("#playWrap");
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  else if (w.requestFullscreen) w.requestFullscreen().catch(() => toast("ملء الشاشة غير متاح هنا"));
+  else toast("ملء الشاشة غير متاح هنا");
+});
 
 /* ===================== القيادة ===================== */
 let shown = CONFIG.students.map(() => 0);
@@ -810,7 +978,7 @@ function renderWS() {
       return `<button class="pick" type="button" data-g="${x.id}" style="--g:${x.color}"><span class="emb">${embSVG(bases[x.id].emblem)}</span><b>${esc(x.name)}</b><small>${ar(s.left)} كريستالة · ${ar(s.built)} من ${ar(MODULES.length)} وحدات</small></button>`; }).join("");
     return;
   }
-  if (!canWrite && !unlocked.has(g.id)) { showLock(g); return; }
+  if (studentSide() && !unlocked.has(g.id)) { showLock(g); return; }
   const s = groupStats(g), b = bases[g.id];
   $("#ws").hidden = false; $("#ws").style.setProperty("--g", g.color);
   $("#wsEmb").innerHTML = embSVG(b.emblem);
@@ -843,7 +1011,7 @@ function showLock(g) {
 }
 $("#pickGrid").addEventListener("click", e => { const b = e.target.closest("[data-g]"); if (b) { wsGroup = b.dataset.g; renderWS(); } });
 $("#lockBack").addEventListener("click", () => { wsGroup = null; renderWS(); });
-$("#wsLeave").addEventListener("click", () => { if (!canWrite) { unlocked.delete(wsGroup); try { sessionStorage.setItem("ws-unlocked", JSON.stringify([...unlocked])); } catch (e) {} } wsGroup = null; renderWS(); });
+$("#wsLeave").addEventListener("click", () => { if (studentSide()) { unlocked.delete(wsGroup); try { sessionStorage.setItem("ws-unlocked", JSON.stringify([...unlocked])); } catch (e) {} } wsGroup = null; renderWS(); });
 $("#pin").addEventListener("input", e => {
   const ins = [...document.querySelectorAll("#pin input")], k = ins.indexOf(e.target);
   e.target.value = e.target.value.replace(/[^\d٠-٩]/g, "").slice(-1).replace(/[٠-٩]/, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
@@ -902,6 +1070,9 @@ function renderEval() {
   $("#actTitle").value = state.titles[cur];
   $("#actTitle").placeholder = `كوكب ${CONFIG.planets[cur].name}: اكتب اسم النشاط`;
   $("#actDate").value = state.dates[cur];
+  const hasGame = !!CONFIG.planets[cur].game;
+  $("#openWrap").hidden = !hasGame; $("#previewGame").hidden = !hasGame;
+  $("#openChk").checked = state.open[cur] !== false;
   $("#evalGroups").innerHTML = CONFIG.groups.map(g => `<section class="ev-group" style="--g:${g.color}">
     <div class="gres-bar"><div class="lg-head" style="margin:0"><span class="emb">${embSVG(bases[g.id].emblem)}</span>مجموعة ${esc(g.name)}</div>
       <div class="gres"><span>نتيجة المجموعة:</span>${Object.keys(P.res).map(v => `<button class="opt v-${v}" type="button" data-gres="${g.id}" data-v="${v}" aria-pressed="${state.gres[cur][g.id] === v}">${LABEL.res[v]}</button>`).join("")}</div></div>
@@ -928,6 +1099,8 @@ $("#evalGroups").addEventListener("click", e => {
 });
 $("#actTitle").addEventListener("input", e => { state.titles[cur] = e.target.value.trim(); save(); renderPlanets($("#planetsEval"), true); });
 $("#actDate").addEventListener("change", e => { state.dates[cur] = e.target.value; save(); });
+$("#openChk").addEventListener("change", e => { state.open[cur] = e.target.checked; save(); renderPlanets($("#planetsEval"), true); toast(e.target.checked ? "صار الكوكب مفتوحًا للطلاب" : "أُغلق الكوكب عن الطلاب"); });
+$("#previewGame").addEventListener("click", () => openPlanet(cur, true));
 $("#allPresent").addEventListener("click", () => { state.s.forEach(r => { if (!r[cur].att) r[cur].att = "p"; }); save(); renderEval(); toast("سُجّل حضور كل من لم يُحدَّد حضوره"); });
 $("#launch").addEventListener("click", () => { show("hq"); toast(`انطلقت الصواريخ من كوكب ${CONFIG.planets[cur].name}!`); });
 
@@ -1021,7 +1194,8 @@ function badgeSVG(col, ic) {
 let tt;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2800); }
 (function stars() { let h = ""; for (let k = 0; k < 90; k++) h += `<i style="top:${(Math.random() * 100).toFixed(1)}%;left:${(Math.random() * 100).toFixed(1)}%;animation-delay:${(-Math.random() * 3).toFixed(2)}s;animation-duration:${(2 + Math.random() * 3).toFixed(1)}s"></i>`; $("#sky").innerHTML = h; })();
-show("hq");
+applyRole();
+show(studentSide() ? "map" : "hq");
 </script>
 </body>
 </html>

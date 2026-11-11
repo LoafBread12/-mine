@@ -1,0 +1,1775 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>بستان البذرة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;800&family=Lalezar&display=swap">
+<style>
+/* Layout: a wooden game cabinet. The garden scene fills the left and centre,
+   a wooden divider, then the board of six password stations on the right. */
+:root{
+  --wood-900:#2e190c; --wood-700:#5a331a; --wood-500:#8a5530; --wood-300:#c08a52;
+  --sky-900:#0f3349; --sky-700:#1c5878; --sky-500:#3a8bb0;
+  --parch:#f2e6c9; --parch-2:#dcc69b; --ink:#fff6e3; --ink-dark:#3a2414; --ink-mut:#c9dde8;
+  --leaf:#6dbb4f; --leaf-deep:#2f6b2a; --gold:#f4c34f; --water:#86d6ff; --bad:#ffb4a3;
+  --f-display:"Lalezar","Baloo Bhaijaan 2",Tahoma,sans-serif;
+  --f-body:"Baloo Bhaijaan 2",Tahoma,"Segoe UI",sans-serif;
+  --grain:repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 2px,transparent 2px 9px,rgba(255,255,255,.05) 9px 10px,transparent 10px 19px);
+  --grain-v:repeating-linear-gradient(0deg,rgba(0,0,0,.13) 0 2px,transparent 2px 9px,rgba(255,255,255,.05) 9px 10px,transparent 10px 19px);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background:var(--grain),linear-gradient(180deg,#3a2010,var(--wood-900));
+  background-color:var(--wood-900);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0;
+  -webkit-tap-highlight-color:transparent;
+}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(300px,390px);grid-template-rows:minmax(0,1fr);direction:ltr;padding-block:12px}
+.app>*{direction:rtl}
+
+.panel{position:relative;border-radius:6px;box-shadow:0 0 0 3px var(--wood-700),0 0 0 5px rgba(0,0,0,.35),inset 0 0 60px rgba(0,0,0,.45)}
+.divider{background:var(--grain-v),linear-gradient(90deg,var(--wood-700),var(--wood-300) 45%,var(--wood-500) 60%,var(--wood-700));border-radius:3px;margin-inline:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+
+/* ---------- Garden ---------- */
+.garden{
+  overflow:hidden; container-type:size; touch-action:none; user-select:none; -webkit-user-select:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 3px,transparent 3px 28px),
+    radial-gradient(ellipse 70% 55% at 50% 62%,rgba(255,255,255,.16),transparent 70%),
+    linear-gradient(180deg,var(--sky-500) 0%,var(--sky-700) 58%,var(--sky-900) 100%);
+  cursor:grab;
+}
+.garden.pouring{cursor:grabbing}
+.sun{position:absolute;top:28px;right:30px;width:86px;height:86px;border-radius:50%;
+  background:radial-gradient(circle at 40% 38%,#fff3c4,var(--gold) 55%,#e9a73a);
+  box-shadow:0 0 40px 14px rgba(244,195,79,.45),0 0 120px 40px rgba(244,195,79,.18);z-index:0}
+.cloud{position:absolute;height:34px;border-radius:40px;background:rgba(255,255,255,.85);filter:blur(.3px);z-index:0;opacity:.75;animation:drift 70s linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud::before{width:50%;height:150%;top:-60%;left:16%}
+.cloud::after{width:36%;height:120%;top:-40%;left:50%}
+.cloud.c1{width:130px;top:150px;left:-160px}
+.cloud.c2{width:96px;top:70px;left:-120px;animation-duration:95s;animation-delay:-40s;opacity:.55}
+.cloud.c3{width:160px;top:220px;left:-200px;animation-duration:120s;animation-delay:-80s;opacity:.4}
+@keyframes drift{to{transform:translateX(calc(100cqw + 400px))}}
+.hill{position:absolute;left:-10%;right:-10%;bottom:-38cqh;height:62cqh;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 20%,#4f9a45,#2f6b2a 60%,#1f4d1f);z-index:0}
+
+.stage-wrap{position:absolute;left:0;right:0;top:150px;bottom:100px;z-index:1}
+.rays{position:absolute;left:50%;top:50%;width:min(130%,1100px);aspect-ratio:1;translate:-50% -50%;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,255,255,.11) 0 9deg,transparent 9deg 22deg);
+  -webkit-mask:radial-gradient(circle,#000 18%,transparent 62%);mask:radial-gradient(circle,#000 18%,transparent 62%);
+  animation:spin 80s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+#scene{position:relative;width:100%;height:100%;overflow:visible;display:block}
+#plantPop{transform-box:view-box;transform-origin:200px 352px}
+#plantPop.pop{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+#plantPop.wilt{animation:wilt 1.5s ease-in-out}
+@keyframes wilt{10%,30%,50%{transform:rotate(-3deg) scale(.97)}20%,40%,60%{transform:rotate(3deg) scale(.95)}80%{transform:scale(.96)}}
+.stage-wrap.wilt #scene{animation:wiltf 1.6s ease-in-out}
+@keyframes wiltf{40%{filter:saturate(.3) sepia(.35) brightness(.85)}}
+
+/* teacher's gift items and their animations */
+.tray{position:absolute;left:14px;top:290px;z-index:6;display:grid;gap:8px;justify-items:start;max-width:46%}
+.tray-title{margin:0;font-weight:800;font-size:13px;background:rgba(0,0,0,.45);border-radius:20px;padding:0 10px}
+#trayItems{display:grid;gap:8px;justify-items:start}
+.item{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border:0;border-radius:12px;cursor:pointer;color:var(--ink-dark);text-align:start;
+  background:linear-gradient(180deg,var(--parch),var(--parch-2));box-shadow:0 0 0 2px var(--gold),0 4px 0 rgba(0,0,0,.3);animation:glowItem 1.6s ease-in-out infinite}
+.item svg{width:42px;height:42px;flex:none}
+.item small{display:block;font-weight:800;font-size:12px;line-height:1.2}
+.item b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1;color:var(--leaf-deep)}
+.item:active{transform:translateY(2px)}
+.item.new{animation:itemIn .6s cubic-bezier(.3,1.6,.5,1),glowItem 1.6s ease-in-out .6s infinite}
+@keyframes glowItem{50%{box-shadow:0 0 0 2px var(--gold),0 0 20px rgba(244,195,79,.85),0 4px 0 rgba(0,0,0,.3)}}
+@keyframes itemIn{from{transform:scale(.3) rotate(-20deg);opacity:0}}
+.fx-item{position:absolute;z-index:4;pointer-events:none;translate:-50% -50%}
+.fx-item svg{display:block;width:100%;height:100%;overflow:visible}
+.fx-item.sack{width:96px;height:110px;animation:sack 2.4s ease-in-out forwards}
+@keyframes sack{0%{transform:translateY(-60px);opacity:0}15%{transform:none;opacity:1}30%,75%{transform:rotate(-62deg)}90%{transform:rotate(-62deg);opacity:1}100%{transform:rotate(-20deg) translateY(-30px);opacity:0}}
+.fx-item.cloud{width:230px;height:120px;animation:cloud 2.6s ease-in-out forwards}
+@keyframes cloud{0%{transform:scale(.6);opacity:0}15%{transform:none;opacity:1}30%,60%{transform:translateX(-6px)}45%,75%{transform:translateX(6px)}85%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
+.float{position:absolute;z-index:6;pointer-events:none;translate:-50% -50%;font-family:var(--f-display);font-size:clamp(40px,6cqw,64px);line-height:1;white-space:nowrap;
+  -webkit-text-stroke:2px rgba(0,0,0,.45);paint-order:stroke;animation:floatUp 2.4s ease-out forwards}
+.float.up{color:#b8f39a}
+.float.down{color:#ff8a7a;animation-name:floatDown}
+@keyframes floatUp{0%{transform:translateY(20px) scale(.5);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}80%{opacity:1}100%{transform:translateY(-90px);opacity:0}}
+@keyframes floatDown{0%{transform:translateY(-20px) scale(.5);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}80%{opacity:1}100%{transform:translateY(70px);opacity:0}}
+.g-height.up #heightTxt{animation:hUp 2s ease}
+.g-height.down #heightTxt{animation:hDown 2s ease}
+@keyframes hUp{20%,60%{color:#b8f39a;text-shadow:0 0 14px rgba(184,243,154,.9)}}
+@keyframes hDown{20%,60%{color:#ff8a7a;text-shadow:0 0 14px rgba(255,138,122,.9)}}
+@keyframes pop{0%{transform:scale(.82)}100%{transform:scale(1)}}
+#plantSway{transform-box:view-box;transform-origin:200px 352px;animation:sway 5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
+
+#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+
+.can{position:absolute;left:0;top:0;width:120px;height:96px;padding:0;border:0;background:none;z-index:3;cursor:grab;touch-action:none;will-change:transform}
+.can svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.can.ready .can-art{animation:bob 1.6s ease-in-out infinite}
+.can.ready::after{content:"اسحبني";position:absolute;top:-30px;left:50%;translate:-50% 0;font-family:var(--f-display);font-size:17px;color:var(--ink);
+  background:rgba(15,51,73,.8);border:2px solid var(--gold);padding:0 10px;border-radius:20px;white-space:nowrap;animation:bob 1.6s ease-in-out infinite}
+.can.empty{filter:grayscale(.85) brightness(.85);opacity:.7}
+.can.filling .can-art{animation:fill .9s ease}
+@keyframes bob{50%{transform:translateY(-5px)}}
+@keyframes fill{30%{transform:scale(1.18) rotate(6deg)}60%{transform:scale(.96)}}
+
+.hud{position:absolute;top:14px;left:50%;translate:-50% 0;z-index:5;pointer-events:none;display:grid;justify-items:center;gap:8px;width:min(94%,520px)}
+.plaque{background:rgba(10,30,45,.62);border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 22px 12px;display:grid;justify-items:center;gap:4px;backdrop-filter:blur(3px)}
+.g-title{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(26px,4.4cqw,38px);line-height:1.15;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,.45)}
+.g-stage{margin:0;font-weight:800;font-size:17px;color:var(--ink)}
+.g-stage b{color:var(--gold);font-weight:800}
+.track{list-style:none;margin:4px 0 0;padding:0;display:flex;gap:5px;direction:rtl}
+.track li{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;line-height:1;
+  background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);transition:background .4s,border-color .4s,transform .4s}
+.track li.done{background:var(--leaf);border-color:#a8e08a;color:#0f2d0c}
+.track li.boost{border-style:dashed;border-color:rgba(244,195,79,.7);color:var(--gold)}
+.track li.boost.done{background:var(--gold);border-style:solid;border-color:#fff1bf;color:#4a2c06}
+.track li.now{background:var(--gold);border-color:#fff1bf;color:#4a2c06;transform:scale(1.18);box-shadow:0 0 12px rgba(244,195,79,.8)}
+.next{width:100%;height:7px;border-radius:9px;background:rgba(0,0,0,.4);overflow:hidden;margin-top:4px}
+.next span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a8e08a,var(--leaf));border-radius:9px;transition:width .25s linear;margin-inline-start:0}
+.ticker{margin:0;font-weight:600;font-size:15px;text-align:center;color:var(--ink);text-shadow:0 1px 3px rgba(0,0,0,.7);text-wrap:balance;transition:opacity .35s}
+.ticker.fade{opacity:0}
+
+.gauge{position:absolute;left:50%;bottom:14px;translate:-50% 0;z-index:5;width:min(92%,470px);display:flex;align-items:center;gap:12px;
+  padding:8px 14px;border-radius:10px;pointer-events:none;
+  background:var(--grain),linear-gradient(180deg,var(--wood-300),var(--wood-500) 50%,var(--wood-700));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.35)}
+.g-ico{flex:none;width:52px;height:52px;border-radius:10px;background:rgba(0,0,0,.28);display:grid;place-items:center}
+.g-ico svg{width:42px;height:34px}
+.g-body{flex:1;min-width:0}
+.g-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:800;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+#waterTxt{font-variant-numeric:tabular-nums;color:#dff4ff}
+.g-bar{height:12px;border-radius:9px;background:rgba(0,0,0,.4);box-shadow:inset 0 1px 3px rgba(0,0,0,.6);overflow:hidden;margin-block:3px}
+.g-bar span{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(180deg,#c9efff,var(--water) 50%,#3aa5d8);transition:width .2s linear}
+.g-hint{margin:0;font-size:14px;font-weight:600;line-height:1.35;color:var(--ink)}
+.gauge.done{background:var(--grain),linear-gradient(180deg,#f7d77c,#d9a23b 55%,#a06a1c)}
+.gauge.done .g-hint{font-family:var(--f-display);font-size:19px;font-weight:400;color:#3a2006;text-shadow:none}
+
+.toast{position:absolute;left:50%;bottom:104px;z-index:6;translate:-50% 0;pointer-events:none;min-width:240px;max-width:90%;
+  background:rgba(14,10,6,.92);border:2px solid var(--gold);border-radius:6px;padding:8px 18px;display:flex;gap:12px;align-items:center;
+  box-shadow:0 0 0 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.5);opacity:0;transform:translateY(16px);transition:opacity .3s,transform .3s}
+.toast.show{opacity:1;transform:none}
+.toast .t-ico{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#ffe9a6,var(--gold));color:#4a2c06}
+.toast .t-ico svg{width:20px;height:20px}
+.toast small{display:block;font-size:13px;color:#e8d6b4;line-height:1.2}
+.toast strong{display:block;font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.25}
+
+.g-height{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(24px,3.6cqw,32px);line-height:1.1;color:var(--gold);text-shadow:0 2px 0 rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
+.g-height small{font-family:var(--f-body);font-weight:800;font-size:14px;color:var(--ink);margin-inline-end:6px;text-shadow:none}
+.g-team{margin:0;font-weight:800;font-size:15px;color:#dff4ff;background:rgba(0,0,0,.3);border-radius:20px;padding:0 12px}
+.pause{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:16px;background:rgba(8,24,36,.45);pointer-events:none}
+.pause-card{width:min(100%,400px);display:grid;gap:6px;padding:16px 20px;border-radius:10px;text-align:center;
+  background:rgba(14,10,6,.9);border:2px solid var(--gold);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.pause-card h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.2;color:var(--gold)}
+.pause-card p{margin:0;font-size:16px;font-weight:600}
+/* round clock: a card under the stations with the countdown ring and the round's four parts */
+.timebox{margin:4px 12px 0;padding:12px 14px 14px;border-radius:8px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;align-items:center;
+  background:var(--grain),linear-gradient(180deg,#4a2a16,#2e190c);box-shadow:0 0 0 2px var(--wood-500),inset 0 1px 0 rgba(255,255,255,.15),0 4px 0 rgba(0,0,0,.3)}
+.tb-ring{position:relative;width:96px;height:96px;grid-row:span 2}
+.tb-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.tb-ring .track{fill:none;stroke:rgba(255,255,255,.12);stroke-width:8}
+.tb-ring .arc{fill:none;stroke:var(--leaf);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s linear,stroke .3s}
+.timebox.low .tb-ring .arc{stroke:#e0453a}
+.timebox.paused .tb-ring .arc{stroke:var(--gold)}
+.tb-time{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-size:26px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;direction:ltr}
+.timebox.low .tb-time{color:#ffb4a3;animation:qdot 1s ease-in-out infinite}
+.tb-head{align-self:end}
+.tb-round{margin:0;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1;color:var(--gold)}
+.tb-status{margin:2px 0 0;font-size:13px;font-weight:700;color:var(--ink-mut);line-height:1.35}
+.tb-parts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:5px;align-self:start}
+.tb-parts li{display:grid;justify-items:center;gap:2px;padding:4px 0 3px;border-radius:6px;font-size:11px;font-weight:800;color:rgba(255,246,227,.5);
+  background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.tb-parts li b{font-family:var(--f-display);font-weight:400;font-size:18px;line-height:1}
+.tb-parts li.done{color:#e3f2c8;background:rgba(109,187,79,.3);box-shadow:inset 0 0 0 1px rgba(168,224,138,.45)}
+.tb-parts li.now{color:#3a2006;background:var(--gold);box-shadow:0 0 12px rgba(244,195,79,.6)}
+.tb-parts li .tb-state,.tb-parts li .tb-bar{display:none}
+/* with only a few parts each tile gets the room to say where it stands, and the running one shows its progress */
+.tb-parts.wide{gap:8px}
+.tb-parts.wide li{grid-template-columns:auto minmax(0,1fr);justify-items:start;align-items:center;column-gap:10px;row-gap:4px;padding:8px 12px;text-align:start}
+.tb-parts.wide li b{grid-row:span 2;font-size:40px}
+.tb-parts.wide li > span:not(.tb-state):not(.tb-bar){font-size:17px;line-height:1.1}
+.tb-parts.wide li .tb-state{display:block;font-size:16px;line-height:1.1}
+.tb-parts.wide li.now .tb-bar{height:6px}
+.tb-parts.wide li.now .tb-bar{display:block;grid-column:1 / -1;width:100%;height:5px;border-radius:5px;background:rgba(58,36,20,.25);overflow:hidden}
+.tb-parts.wide li.now .tb-bar i{display:block;height:100%;width:0;background:#3a2006;border-radius:5px;transition:width .5s linear}
+.join{position:absolute;inset:0;z-index:8;display:grid;place-items:center;padding:16px;background:rgba(8,24,36,.55);backdrop-filter:blur(2px)}
+.join-card{width:min(100%,380px);display:grid;gap:10px;padding:18px 20px 16px;border-radius:10px;text-align:center;
+  background:var(--grain),linear-gradient(180deg,var(--wood-300),var(--wood-500) 45%,var(--wood-700));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 0 3px var(--wood-900),0 16px 40px rgba(0,0,0,.5)}
+.join-card h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.2;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+.join-card p{margin:0;font-size:14px;font-weight:600}
+.join-card input{height:48px;border-radius:6px;border:2px solid var(--wood-900);background:var(--parch);color:var(--ink-dark);font-size:20px;font-weight:800;text-align:center;padding:0 10px}
+.join-card button{height:46px;border:0;border-radius:6px;cursor:pointer;font-weight:800;font-size:18px;color:#0b2a3b;
+  background:linear-gradient(180deg,#d4f2ff,var(--water) 55%,#4fb2e2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),0 2px 0 rgba(0,0,0,.4)}
+.join-card .join-msg{min-height:1.3em;color:var(--bad)}
+
+
+/* side questions: a small hanging sign at the top left that unrolls into a scroll */
+.quests{position:absolute;top:0;left:18px;z-index:8;display:grid;justify-items:end}
+.qtab{position:relative;margin-top:14px;display:flex;align-items:center;gap:7px;padding:5px 10px 5px 8px;border:0;border-radius:8px;cursor:pointer;
+  color:var(--ink-dark);font-weight:800;font-size:14px;line-height:1.1;transform-origin:50% -14px;animation:sway 4s ease-in-out infinite;
+  background:var(--grain),linear-gradient(180deg,#e9cf98,#cfa968);box-shadow:0 0 0 2px var(--wood-700),inset 0 1px 0 rgba(255,255,255,.6),0 4px 8px rgba(0,0,0,.35)}
+.qtab::before,.qtab::after{content:"";position:absolute;top:-14px;width:2px;height:14px;background:linear-gradient(#c9a26a,#7a5530)}
+.qtab::before{left:12px}
+.qtab::after{right:12px}
+.qtab svg{width:22px;height:22px;flex:none}
+.qtab .q-count{font-variant-numeric:tabular-nums;font-size:12px;background:var(--wood-700);color:#ffe9a6;border-radius:10px;padding:1px 7px}
+.qtab.all .q-count{background:var(--leaf-deep);color:#e3f2c8}
+.qtab.lesson{animation:sway 4s ease-in-out infinite,lessonGlow 1.4s ease-in-out infinite}
+@keyframes lessonGlow{50%{box-shadow:0 0 0 2px var(--wood-700),0 0 0 6px rgba(244,195,79,.55),0 0 26px rgba(244,195,79,.9)}}
+.qtab .q-dot{position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--wood-700);animation:qdot 1.6s ease-in-out infinite}
+.qtab.all .q-dot{display:none}
+.quests.open .qtab{animation:none}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes qdot{50%{transform:scale(1.35)}}
+.qpanel{margin-top:10px;width:min(320px,calc(100cqw - 36px));max-height:min(62cqh,460px);display:grid;grid-template-rows:auto minmax(0,1fr);
+  border-radius:4px;color:var(--ink-dark);background:linear-gradient(90deg,#e6d3a8,#f4e8cc 12%,#f4e8cc 88%,#e6d3a8);
+  box-shadow:0 0 0 2px #b8955c,0 14px 30px rgba(0,0,0,.45);transform-origin:top;animation:unroll .35s cubic-bezier(.2,.9,.3,1.2)}
+.qpanel::before,.qpanel::after{content:"";position:absolute;left:-6px;right:-6px;height:12px;border-radius:6px;
+  background:linear-gradient(180deg,#a87a45,#d9b67f 45%,#7a5530);box-shadow:0 2px 3px rgba(0,0,0,.3)}
+.qpanel{position:relative}
+.qpanel::before{top:-6px}
+.qpanel::after{bottom:-6px}
+@keyframes unroll{from{transform:scaleY(.1);opacity:0}}
+.qp-head{padding:14px 14px 6px;border-bottom:1px dashed rgba(122,85,48,.45)}
+.qp-head h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.2}
+.qp-head p{margin:2px 0 0;font-size:13px;font-weight:600;color:#7a5634}
+.qp-list{list-style:none;margin:0;padding:8px 12px 16px;display:grid;gap:10px;overflow:auto}
+.qp-item{display:grid;gap:6px;padding:9px 10px;border-radius:6px;background:rgba(255,255,255,.45);box-shadow:inset 0 0 0 1px rgba(122,85,48,.25)}
+.qp-q{display:flex;gap:8px;align-items:flex-start;font-weight:800;font-size:15px;line-height:1.45}
+.qp-n{flex:none;width:24px;height:24px;display:grid;place-items:center;margin-top:1px;font-size:12px;color:#fff6e3;background:var(--wood-500);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.qp-row{display:flex;gap:6px}
+.qp-row input{flex:1;min-width:0;height:38px;padding:0 10px;border-radius:6px;border:2px solid #b8955c;background:#fffaf0;color:var(--ink-dark);font-size:16px;font-weight:700}
+.qp-row button{flex:none;height:38px;padding:0 12px;border:0;border-radius:6px;cursor:pointer;font-weight:800;color:#0b2a3b;
+  background:linear-gradient(180deg,#d4f2ff,var(--water) 55%,#4fb2e2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}
+.qp-msg{margin:0;min-height:0;font-size:13px;font-weight:700}
+.qp-msg.bad{color:#a8321f}
+.qp-item.solved{background:rgba(124,195,90,.22);box-shadow:inset 0 0 0 1px rgba(47,107,42,.35)}
+.qp-item.solved .qp-n{background:var(--leaf-deep)}
+.qp-item.solved .qp-row{display:none}
+.qp-closed{display:none;margin:0;padding:6px 10px;border-radius:6px;font-size:13px;font-weight:800;color:#7a5634;background:rgba(122,85,48,.12)}
+.qpanel.closed .qp-closed{display:block}
+.qpanel.closed .qp-row input,.qpanel.closed .qp-row button{opacity:.45;pointer-events:none}
+.qp-done{display:none;font-size:13px;font-weight:800;color:var(--leaf-deep)}
+.qp-item.solved .qp-done{display:block}
+.qp-item.shake{animation:shake .45s}
+@media (prefers-reduced-motion:reduce){.qtab,.qtab .q-dot,.qpanel{animation:none}}
+
+
+/* prayer time: one calm screen over the whole game */
+.prayer{position:fixed;inset:0;z-index:60;display:grid;place-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  background:radial-gradient(ellipse at 50% 30%,rgba(28,88,72,.96),rgba(8,32,28,.98) 70%);animation:prayIn .5s ease}
+@keyframes prayIn{from{opacity:0}}
+.prayer-card{width:min(100%,460px);display:grid;justify-items:center;gap:10px;text-align:center;color:var(--ink)}
+.prayer-card svg{width:150px;height:auto;filter:drop-shadow(0 0 24px rgba(244,195,79,.35))}
+.prayer-card h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(34px,7vw,52px);line-height:1.15;color:var(--gold)}
+.prayer-card p{margin:0;font-size:18px;font-weight:600;line-height:1.6;color:#e3f2e8}
+.prayer-card .pr-time{margin-top:6px;font-size:14px;font-weight:800;color:#bfe3d4;background:rgba(0,0,0,.25);border-radius:20px;padding:3px 14px}
+
+
+/* group rotation: the team's station for this shawt lights up, with where to go */
+.assign{margin:0 12px 10px;padding:10px 12px;border-radius:8px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center;color:#3a2006;
+  background:linear-gradient(180deg,#ffe9a6,var(--gold));box-shadow:0 0 0 2px #fff1bf,0 0 18px rgba(244,195,79,.55)}
+.assign.next{color:var(--ink);background:rgba(0,0,0,.3);box-shadow:inset 0 0 0 1px rgba(244,195,79,.5)}
+.assign .a-ico{grid-row:span 3;width:52px;height:52px;border-radius:10px;display:grid;place-items:center;color:var(--gold);background:linear-gradient(160deg,var(--sky-500),var(--sky-900))}
+.assign .a-ico svg{width:30px;height:30px}
+.assign .a-when{font-size:13px;font-weight:800;opacity:.85}
+.assign .a-name{font-family:var(--f-display);font-size:24px;line-height:1.15}
+.assign .a-where{display:flex;align-items:center;gap:5px;font-size:15px;font-weight:800}
+.assign .a-where svg{width:16px;height:16px;flex:none}
+.station.mine{order:-1;box-shadow:0 0 0 3px var(--gold),0 0 22px rgba(244,195,79,.75),0 4px 0 rgba(0,0,0,.25);animation:mineGlow 1.8s ease-in-out infinite}
+@keyframes mineGlow{50%{box-shadow:0 0 0 3px #fff1bf,0 0 34px rgba(244,195,79,.95),0 4px 0 rgba(0,0,0,.25)}}
+.station.other{opacity:.6}
+.st-where{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:#7a5634}
+.st-where svg{width:13px;height:13px;flex:none}
+@media (prefers-reduced-motion:reduce){.station.mine{animation:none}}
+
+/* ---------- Station board ---------- */
+.board{display:flex;flex-direction:column;overflow:auto;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 3px,transparent 3px 28px),linear-gradient(180deg,var(--sky-700),var(--sky-900))}
+.board.nudge{animation:nudge 1s ease 2}
+@keyframes nudge{40%{box-shadow:0 0 0 3px var(--gold),0 0 30px rgba(244,195,79,.7),inset 0 0 60px rgba(0,0,0,.45)}}
+.b-head{padding:16px 16px 0;text-align:center}
+.b-head h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:40px;line-height:1.1;text-shadow:0 3px 0 rgba(0,0,0,.45)}
+.plank{height:12px;margin:10px 0 0;border-radius:3px;background:var(--grain),linear-gradient(180deg,var(--wood-300),var(--wood-500) 50%,var(--wood-700));box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.b-sub{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 14px 6px;padding:4px 10px;border-radius:4px;background:rgba(0,0,0,.3);font-weight:800;font-size:14px;letter-spacing:.3px}
+.pips{display:flex;gap:4px}
+.pips i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3)}
+.pips i.on{background:var(--water);border-color:#d9f3ff;box-shadow:0 0 6px var(--water)}
+.b-help{margin:0 14px 10px;font-size:14px;color:var(--ink-mut);line-height:1.4}
+
+.stations{list-style:none;margin:0;padding:0 12px 12px;display:grid;gap:9px}
+.station{border-radius:6px;background:linear-gradient(180deg,var(--parch),var(--parch-2));color:var(--ink-dark);
+  box-shadow:0 0 0 2px var(--wood-700),inset 0 1px 0 rgba(255,255,255,.7),0 4px 0 rgba(0,0,0,.25);transition:transform .15s,background .3s}
+.st-head{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border:0;background:none;cursor:pointer;text-align:start;color:inherit;border-radius:6px}
+.st-head:hover{background:rgba(255,255,255,.35)}
+.st-ico{flex:none;width:50px;height:50px;border-radius:10px;display:grid;place-items:center;color:var(--gold);
+  background:linear-gradient(160deg,var(--sky-500),var(--sky-900));box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+.st-ico svg{width:30px;height:30px}
+.st-text{flex:1;min-width:0;display:grid}
+.st-name{font-family:var(--f-display);font-size:24px;line-height:1.2}
+.st-status{font-size:14px;font-weight:600;color:#7a5634;display:flex;align-items:center;gap:5px}
+.st-status svg{width:14px;height:14px;flex:none}
+.st-chev{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(58,36,20,.12);transition:rotate .3s}
+.st-chev svg{width:14px;height:14px}
+.station.open .st-chev{rotate:180deg}
+.st-drop{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease}
+.station.open .st-drop{grid-template-rows:1fr}
+.st-drop-in{overflow:hidden}
+.st-form,.st-donemsg{margin:0 10px 10px;padding:10px 12px 8px;border-radius:6px;
+  background:var(--grain),linear-gradient(180deg,var(--wood-700),#432612);color:var(--ink);box-shadow:inset 0 2px 6px rgba(0,0,0,.5)}
+.st-form label{display:block;font-weight:800;font-size:14px;margin-bottom:6px}
+.st-row{display:flex;gap:8px}
+.st-row input{flex:1;min-width:0;height:44px;padding:0 12px;border-radius:6px;border:2px solid var(--wood-900);background:var(--parch);color:var(--ink-dark);
+  font-size:20px;font-weight:800;letter-spacing:2px;text-align:center;box-shadow:inset 0 2px 4px rgba(0,0,0,.25)}
+.st-row input.text{font-size:17px;letter-spacing:0;text-align:start}
+.st-locks{display:none;margin:0 10px 8px;gap:6px}
+.st-locks.on{display:flex}
+.lk{flex:1;min-width:0;display:grid;justify-items:center;gap:2px;padding:6px 2px 5px;border-radius:8px;background:rgba(58,36,20,.12);border:2px solid transparent;
+  font-size:11px;font-weight:800;line-height:1.2;text-align:center;color:var(--ink-dark)}
+.lk svg{width:30px;height:35px;overflow:visible}
+.lk .shackle{transition:transform .5s cubic-bezier(.3,1.6,.5,1);transform-origin:70% 100%}
+.lk.open .shackle{transform:translateY(-6px) rotate(-28deg)}
+.lk.cur{border-color:var(--c);background:rgba(255,255,255,.4)}
+.lk.open{border-color:#5aa845;background:rgba(124,195,90,.25)}
+.st-row input.num{letter-spacing:6px}
+.st-step{color:var(--gold)}
+.st-row input::placeholder{color:#a88a62;letter-spacing:4px}
+.st-go{flex:none;height:44px;padding:0 14px;border-radius:6px;border:0;cursor:pointer;font-weight:800;color:#0b2a3b;
+  background:linear-gradient(180deg,#d4f2ff,var(--water) 55%,#4fb2e2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),0 2px 0 rgba(0,0,0,.4)}
+.st-go:active{transform:translateY(2px)}
+.st-msg{min-height:1.4em;margin:6px 0 0;font-size:14px;font-weight:700}
+.st-msg.bad{color:var(--bad)}
+.st-msg.ok{color:#b8f39a}
+.st-donemsg{display:none;font-size:14px;font-weight:600}
+.station.done{background:linear-gradient(180deg,#e3f2c8,#bcd998)}
+.station.wait{background:linear-gradient(180deg,#d9d2c2,#bdb3a0)}
+.station.wait .st-ico{filter:grayscale(.8);opacity:.7}
+.station.wait .st-form,.station.closed .st-form{display:none}
+.st-waitmsg{display:none;margin:0 10px 10px;padding:10px 12px;border-radius:6px;font-size:14px;font-weight:700;color:var(--ink);
+  background:var(--grain),linear-gradient(180deg,var(--wood-700),#432612)}
+.station.wait .st-waitmsg,.station.closed .st-waitmsg{display:block}
+.station.done .st-ico{background:linear-gradient(160deg,#7cc35a,var(--leaf-deep));color:#fff7d6}
+.station.done .st-status{color:var(--leaf-deep)}
+.station.done .st-form{display:none}
+.station.done .st-donemsg{display:block}
+.station.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+.b-foot{margin-top:auto;padding:10px 14px 14px;display:flex;justify-content:flex-start}
+.reset{border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:var(--ink-mut);border-radius:20px;padding:4px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.reset.arm{background:#8a2c1e;border-color:#ffb4a3;color:#fff}
+
+@media (max-width:860px){
+  html,body{height:auto}
+  .app{height:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 16px auto}
+  .garden{height:min(82svh,700px);min-height:540px}
+  .divider{margin:4px 0;background:var(--grain),linear-gradient(180deg,var(--wood-700),var(--wood-300) 45%,var(--wood-500) 60%,var(--wood-700))}
+  .board{overflow:visible}
+  .sun{width:46px;height:46px;top:200px;right:12px}
+  .hud{top:56px}
+  .stage-wrap{top:196px}
+  .tray{top:310px}
+}
+@media (max-width:420px){
+  .track li{width:21px;height:21px;font-size:11px}
+  .track{gap:3px}
+  .plaque{padding-inline:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rays,.cloud,#plantSway,.can.ready .can-art,.can.ready::after{animation:none}
+}
+</style>
+<div class="app">
+  <section class="garden panel" id="garden" aria-label="الحديقة">
+    <div class="sun"></div>
+    <div class="quests" id="quests">
+      <button class="qtab" id="qtab" type="button" aria-expanded="false" aria-controls="qpanel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7" fill="#f4e8cc" stroke="#7a5530" stroke-width="1.6"/><path d="M6 4a2 2 0 0 0-2 2v1h4V6a2 2 0 0 0-2-2z" fill="#d9b67f" stroke="#7a5530" stroke-width="1.6"/><path d="M7 20a2 2 0 0 1-2-2v-1h4v1a2 2 0 0 1-2 2z" fill="#d9b67f" stroke="#7a5530" stroke-width="1.6"/><path d="M10 9h6M10 12h6M10 15h4" stroke="#7a5530" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>مهام إضافية</span><span class="q-count" id="qcount">٠ من ٣</span><span class="q-dot" aria-hidden="true"></span>
+      </button>
+      <div class="qpanel" id="qpanel" hidden>
+        <div class="qp-head"><h3>مهام إضافية</h3><p>كل جواب صحيح يملأ الإبريق كاملًا.</p><p class="qp-closed" id="qpClosed"></p></div>
+        <ol class="qp-list" id="qlist"></ol>
+      </div>
+    </div>
+    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+    <div class="hill"></div>
+
+    <div class="stage-wrap" id="stageWrap">
+      <div class="rays"></div>
+      <svg id="scene" viewBox="-180 -40 760 500" preserveAspectRatio="xMidYMax meet" role="img" aria-labelledby="stageAria">
+        <title id="stageAria">البذرة في التراب</title>
+        <defs>
+          <clipPath id="soilClip"><path d="M50 350A150 14 0 0 0 350 350Q352 440 200 446Q48 440 50 350Z"/></clipPath>
+        </defs>
+        <ellipse cx="200" cy="450" rx="172" ry="13" fill="#000" opacity=".28"/>
+        <path id="soilBody" d="M50 350Q48 440 200 446Q352 440 350 350Z" fill="#5b3620"/>
+        <g clip-path="url(#soilClip)">
+          <g id="pebbles"></g>
+          <g id="roots"></g>
+        </g>
+        <ellipse id="soilTop" cx="200" cy="350" rx="150" ry="14" fill="#7a4c2c"/>
+        <ellipse cx="200" cy="347" rx="132" ry="7" fill="#fff" opacity=".06"/>
+        <g id="grass"></g>
+        <g id="plantPop"><g id="plantSway"><g id="plant"></g></g></g>
+      </svg>
+    </div>
+
+    <canvas id="fx" aria-hidden="true"></canvas>
+
+    <button class="can" id="can" type="button" aria-label="إبريق السقي. اسحبه فوق التربة، أو اضغط مع الاستمرار على المسافة لتسقي">
+      <svg viewBox="0 0 120 96" aria-hidden="true"><g class="can-art">
+        <path d="M54 30C60 8 88 8 94 30" fill="none" stroke="#1f6f8c" stroke-width="6" stroke-linecap="round"/>
+        <path d="M98 42C124 42 122 80 96 76" fill="none" stroke="#1f6f8c" stroke-width="7" stroke-linecap="round"/>
+        <path d="M50 66L13 39L18 32L54 56Z" fill="#2b8db0" stroke="#1f6f8c" stroke-width="2" stroke-linejoin="round"/>
+        <ellipse cx="13" cy="36" rx="8" ry="5" transform="rotate(-40 13 36)" fill="#1f6f8c"/>
+        <g fill="#9fe2ff"><circle cx="10" cy="35" r="1.2"/><circle cx="14" cy="33" r="1.2"/><circle cx="13" cy="38" r="1.2"/></g>
+        <path d="M44 34L100 34L96 86Q72 93 48 86Z" fill="#3fa9cf" stroke="#1f6f8c" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M52 40L56 82" stroke="#bdeeff" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+        <path d="M46 58L98 58" stroke="#1f6f8c" stroke-width="2" opacity=".5"/>
+        <ellipse cx="72" cy="34" rx="28" ry="5" fill="#2b8db0" stroke="#1f6f8c" stroke-width="2.5"/>
+        <ellipse cx="72" cy="34" rx="21" ry="3" fill="#0f4a60"/>
+      </g></svg>
+    </button>
+
+    <div class="hud">
+      <header class="plaque">
+        <h1 class="g-title">بستان البذرة</h1>
+        <p class="g-team" id="teamLabel" hidden></p>
+        <p class="g-height"><small>طول النبتة</small><span id="heightTxt">٠ سم</span></p>
+        <p class="g-stage"><span id="stageNum">المرحلة ١ من ١٠</span>، <b id="stageName">بذرة</b></p>
+        <ol class="track" id="track"></ol>
+        <div class="next" title="النمو حتى المرحلة التالية"><span id="nextBar"></span></div>
+      </header>
+      <p class="ticker" id="ticker"></p>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      <span class="t-ico"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></svg></span>
+      <span><small id="toastSmall"></small><strong id="toastBig"></strong></span>
+    </div>
+
+    <form class="join" id="join" hidden novalidate>
+      <div class="join-card">
+        <h2>ما اسم فريقكم؟</h2>
+        <p>اكتبوا اسم الفريق ليعرف المعلّم إلى أين وصلتم.</p>
+        <label for="teamName" hidden>اسم الفريق</label>
+        <input id="teamName" maxlength="30" autocomplete="off" placeholder="مثال: فريق الياسمين">
+        <button type="submit">ابدأ اللعب</button>
+        <p class="join-msg" id="joinMsg" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <div class="tray" id="tray" hidden>
+      <p class="tray-title">هدايا المعلّم، اضغطوا لاستخدامها</p>
+      <div id="trayItems"></div>
+    </div>
+
+    <div class="pause" id="pause" hidden>
+      <div class="pause-card" role="status" aria-live="polite"><h2 id="pauseTitle"></h2><p id="pauseText"></p></div>
+    </div>
+
+    <div class="gauge" id="gauge">
+      <div class="g-ico"><svg viewBox="0 0 120 96" aria-hidden="true"><path d="M50 66L13 39L18 32L54 56Z" fill="#2b8db0"/><path d="M44 34L100 34L96 86Q72 93 48 86Z" fill="#3fa9cf"/><path d="M98 42C124 42 122 80 96 76" fill="none" stroke="#1f6f8c" stroke-width="7"/><path d="M60 12q-6 10 0 14q6-4 0-14z" fill="#86d6ff"/></svg></div>
+      <div class="g-body">
+        <div class="g-row"><span>ماء الإبريق</span><span id="waterTxt">فارغ</span></div>
+        <div class="g-bar"><span id="waterBar"></span></div>
+        <p class="g-hint" id="hint"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true"></div>
+
+  <aside class="board panel" id="board" aria-label="المحطات">
+    <div class="b-head"><h2>المحطات</h2><div class="plank"></div></div>
+    <div class="b-sub"><span id="openCount">المحطات المفتوحة: ٠ من ٦</span><span class="pips" id="pips"></span></div>
+    <p class="b-help">اضغط على المحطة واكتب كلمة السر التي حصلت عليها من اللعبة، فيمتلئ إبريق السقي.</p>
+    <div class="assign" id="assign" hidden aria-live="polite">
+      <span class="a-ico" id="aIco"></span>
+      <span class="a-when" id="aWhen"></span>
+      <span class="a-name" id="aName"></span>
+      <span class="a-where"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg><span id="aWhere"></span></span>
+    </div>
+    <ul class="stations" id="stations"></ul>
+    <section class="timebox" id="timebox" hidden aria-label="وقت الجولة">
+      <div class="tb-ring" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42"/><circle class="arc" id="tbArc" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg>
+        <span class="tb-time" id="tbTime">١٥:٠٠</span>
+      </div>
+      <div class="tb-head"><p class="tb-round" id="tbRound">الجولة ١</p><p class="tb-status" id="tbStatus" aria-live="polite"></p></div>
+      <ol class="tb-parts" id="tbParts" aria-label="أشواط الجولة"></ol>
+    </section>
+    <div class="b-foot"><button class="reset" id="reset" type="button">بدء من جديد</button></div>
+  </aside>
+</div>
+
+<div class="prayer" id="prayer" hidden role="alertdialog" aria-labelledby="prayerTitle">
+  <div class="prayer-card">
+    <svg viewBox="0 0 200 150" aria-hidden="true">
+      <path d="M100 18c-4 8-12 13-12 22a12 12 0 0 0 24 0c0-9-8-14-12-22z" fill="#f4c34f"/>
+      <path d="M40 140V92a60 52 0 0 1 120 0v48z" fill="#e9d9a8"/>
+      <path d="M40 92a60 52 0 0 1 120 0" fill="none" stroke="#f4c34f" stroke-width="4"/>
+      <path d="M86 140v-28a14 14 0 0 1 28 0v28z" fill="#1c5848"/>
+      <rect x="10" y="62" width="16" height="78" rx="3" fill="#e9d9a8"/><path d="M10 62l8-16 8 16z" fill="#f4c34f"/>
+      <rect x="174" y="62" width="16" height="78" rx="3" fill="#e9d9a8"/><path d="M174 62l8-16 8 16z" fill="#f4c34f"/>
+      <path d="M2 140h196" stroke="#f4c34f" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <h2 id="prayerTitle">حان وقت الصلاة</h2>
+    <p>توقّفت اللعبة. توضّؤوا وصلّوا، ونكمل بعد الصلاة إن شاء الله.</p>
+    <span class="pr-time" id="prayerTime"></span>
+  </div>
+</div>
+<script>
+/* ===================== الإعدادات: غيّر أسماء المحطات وكلمات السر من هنا ===================== */
+const CONFIG = {
+  stations: [
+    { id: "s1", name: "الحجرة المظلمة", icon: "door", round: 1, location: "الطابق الثاني", steps: [
+      { label: "اكتبوا السؤال الذي وجدتموه في الحجرة", button: "أرسل السؤال", water: 0.4,
+        accept: ["اسم البيعة التي كانت تحت الشجرة"], keywords: ["بيعة", "شجرة"],
+        success: "أحسنتم! حصلتم على بعض الماء. والآن ابحثوا عن الجواب.", wrong: "هذا ليس السؤال الموجود في الحجرة. اقرؤوه جيدًا واكتبوه مرة أخرى." },
+      { label: "اكتبوا الجواب", button: "أرسل الجواب", water: 0.6,
+        accept: ["الرضوان", "رضوان", "بيعة الرضوان"] }
+    ] },
+    // محطة البصمة: يكتب المعلّم «بصم» إذا وضع الطلاب بصمتهم، ثم يكتب الفريق الكلمة المخفية «أنفسكم».
+    { id: "s2", name: "محطة البصمة", icon: "print", round: 1, location: "", steps: [
+      { label: "هل وضع الطلاب بصمتهم؟", button: "تأكيد", placeholder: "يكتبها المعلّم", water: 0.5,
+        accept: ["بصم"],
+        success: "أحسنتم! حصلتم على بعض الماء. والآن ابحثوا عن الكلمة المخفية.",
+        wrong: "هذه ليست كلمة المعلّم. اطلبوا من المعلّم أن يكتبها بعد أن تضعوا بصمتكم." },
+      { label: "الكلمة المخفية", button: "أرسل الكلمة", water: 0.5,
+        accept: ["أنفسكم", "انفسكم"],
+        wrong: "ليست هذه الكلمة المخفية. ابحثوا جيدًا وحاولوا مرة أخرى." }
+    ] },
+    // صندوق العجائب: أربعة أقفال، كل قفل يفتحه رقم سري من حلّ لغز بطاقته المطبوعة، وكل قفل يعطي ربع ماء المحطة.
+    // where: أين خبّأت البطاقة التالية (اتركها فارغة وسيقول الفريق «ابحثوا عن البطاقة …»).
+    { id: "s3", name: "صندوق العجائب", icon: "chest", round: 1, location: "", steps: [
+      { lock: "قفل الكواكب", color: "#a98be6", numeric: true, water: 0.25, next: 2, where: "",
+        label: "حلّوا لغز البطاقة ١ وأدخلوا الرقم السري", button: "افتح القفل", accept: ["514"],
+        success: "فُتح قفل الكواكب! هل تعلمون؟ المشتري أكبر الكواكب، وهو أثقل من الكواكب الأخرى كلها مجتمعة.",
+        wrong: "ليس هذا الرقم. فكّروا في البطاقة ١ مرة أخرى." },
+      { lock: "قفل الأزهار", color: "#5bb36a", numeric: true, water: 0.25, next: 3, where: "",
+        label: "اكتشفوا سرّ بتلات الأزهار في البطاقة ٢، واكتبوا العدد الناقص", button: "افتح القفل", accept: ["13"],
+        success: "فُتح قفل الأزهار! في كثير من الأزهار يكون عدد البتلات ٣ أو ٥ أو ٨ أو ١٣، وكل عدد منها مجموع العددين اللذين قبله.",
+        wrong: "ليس هذا الرقم. فكّروا في البطاقة ٢ مرة أخرى." },
+      { lock: "قفل الحواس", color: "#f0a23a", numeric: true, water: 0.25, next: 4, where: "",
+        label: "اعرفوا العضو الذي تستعملونه في كل موقف في البطاقة ٣", button: "افتح القفل", accept: ["352"],
+        success: "فُتح قفل الحواس! حواسّكم تعمل معًا: الطعام يبدو ألذّ حين تشمّون رائحته.",
+        wrong: "ليس هذا الرقم. فكّروا في البطاقة ٣ مرة أخرى." },
+      { lock: "قفل الماء", color: "#4fa3e0", numeric: true, water: 0.25,
+        label: "ماذا يحدث للماء في كل موقف في البطاقة ٤؟", button: "افتح القفل", accept: ["312"],
+        success: "فُتح قفل الماء، وفُتح صندوق العجائب! الماء من الأشياء القليلة التي نراها صلبةً وسائلةً وبخارًا. أنتم مكتشفو العجائب!",
+        wrong: "ليس هذا الرقم. فكّروا في البطاقة ٤ مرة أخرى." }
+    ] },
+    { id: "s4", name: "محطة النجمة", icon: "star",     code: "404", round: 1, location: "" },
+    // الجولة الثانية: يكتب المعلّم «فوز» أو «خسر» في خانة المحطة
+    { id: "s5", name: "محطة الأوراق", icon: "leaf", round: 2, location: "", steps: [ { label: "يكتب المعلّم النتيجة هنا", button: "أدخل الرمز", placeholder: "رمز المعلّم",
+        wrong: "هذا الرمز غير صحيح. اطلبوا من المعلّم أن يكتبه.",
+        results: [
+          { accept: ["فوز", "فاز"], water: 1, toast: "مبروك الفوز! ماء كثير من", success: "مبروك الفوز! حصلتم على ماء كثير، اذهبوا واسقوا البذرة." },
+          { accept: ["خسر", "خسارة"], water: 0.35, toast: "قليل من الماء من", success: "حصلتم على قليل من الماء. أحسنتم المحاولة!" }
+        ] } ] },
+    { id: "s6", name: "محطة السومو", icon: "ring", round: 2, location: "", steps: [ { label: "يكتب المعلّم النتيجة هنا", button: "أدخل الرمز", placeholder: "رمز المعلّم",
+        wrong: "هذا الرمز غير صحيح. اطلبوا من المعلّم أن يكتبه.",
+        results: [
+          { accept: ["فوز", "فاز"], water: 1, toast: "مبروك الفوز! ماء كثير من", success: "مبروك الفوز! حصلتم على ماء كثير، اذهبوا واسقوا البذرة." },
+          { accept: ["خسر", "خسارة"], water: 0.35, toast: "قليل من الماء من", success: "حصلتم على قليل من الماء. أحسنتم المحاولة!" }
+        ] } ] }
+  ],
+  // مهام إضافية في الشريط الصغير أعلى اليسار: كل جواب صحيح يعطي إبريقًا كاملًا
+  sideQuests: [
+    { id: "q1", q: "ما الشجرة التي أقسم الله بها مع الزيتون في أول سورة التين؟", accept: ["التين", "تين", "شجرة التين"] },
+    { id: "q2", q: "كم عدد أركان الإسلام؟", accept: ["خمسة", "خمس", "5"] },
+    { id: "q3", q: "ما اسم البئر المباركة التي في مكة؟", accept: ["زمزم", "بئر زمزم", "ماء زمزم"] }
+  ],
+  pourSeconds: 6,  // كم ثانية سقي يحتاجها ماء كل محطة
+  reportUrl: ""    // رابط Google Apps Script لإرسال تقدّم الفرق إلى المعلّم
+};
+// config.js (إن وُجد بجانب الصفحة) يغلب هذه القيم
+Object.assign(CONFIG, window.GAME_CONFIG || {});
+
+const STAGES = [
+  { name: "بذرة",          desc: "بذرة صغيرة نائمة في التراب، تنتظر قطرات الماء." },
+  { name: "تنتفخ البذرة",   desc: "شربت البذرة الماء فانتفخت وتشقّقت قشرتها." },
+  { name: "الجُذير",        desc: "خرج أوّل جذر صغير، يتّجه إلى الأسفل ليبحث عن الماء." },
+  { name: "النُّبَيتة",      desc: "ظهرت ساق صغيرة تشقّ التراب نحو الضوء." },
+  { name: "الفلقتان",       desc: "انفتحت ورقتان مستديرتان تُسمّيان الفلقتين، فيهما غذاء النبتة." },
+  { name: "الأوراق",        desc: "نمت أوراق حقيقية تصنع الغذاء بضوء الشمس." },
+  { name: "الشتلة",         desc: "صارت النبتة شتلة، وساقها تزداد طولًا وقوّة." },
+  { name: "الشجيرة",        desc: "تحوّلت الساق إلى جذع خشبي، وتفرّعت منه الأغصان." },
+  { name: "الإزهار",        desc: "تفتّحت الأزهار على الأغصان، وستصير ثمارًا بإذن الله." },
+  { name: "الإثمار",        desc: "أثمرت الشجرة! الحمد لله الذي أخرج من البذرة الصغيرة شجرة طيّبة." },
+  // the stages after 4 m are reached only with the teacher's boosts
+  { name: "شجرة وارفة",     desc: "امتدّت الأغصان وكثرت الثمار بفضل التعزيز." },
+  { name: "شجرة باسقة",     desc: "ارتفعت الشجرة عاليًا نحو السماء." },
+  { name: "شجرة عظيمة",     desc: "صارت الشجرة عظيمة، يستظلّ بها الناس." },
+  { name: "قمّة البستان",    desc: "وصلتم إلى ١٠ أمتار! أعلى شجرة في البستان، ما شاء الله." }
+];
+
+const ICONS = {
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  cloud: '<svg viewBox="0 0 24 24"><path d="M7 19h10.5a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.3 9.6 4.7 4.7 0 0 0 7 19z" fill="currentColor"/></svg>',
+  mountain: '<svg viewBox="0 0 24 24"><path d="M1.5 20 9 6.5l4.2 7.4 2.3-3.4L22.5 20z" fill="currentColor"/><path d="M9 6.5l2.2 3.9-2.2 1.5-2.1-1.4z" fill="#fff" opacity=".85"/></svg>',
+  star: '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></svg>',
+  leaf: '<svg viewBox="0 0 24 24"><path d="M20 4C10 4 4 9 4 16c0 1.4.3 2.6.8 3.6C6 13 10 9.5 15 8c-4 2.3-7.3 6-8.9 11.4.9.4 1.9.6 3 .6C16 20 20 13 20 4z" fill="currentColor"/></svg>',
+  ring: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8.5" stroke-width="2.4"/><circle cx="12" cy="12" r="4.8" stroke-width="1" stroke-dasharray="2 2"/><path d="M10 12h4" stroke-width="2" stroke-linecap="round"/><path d="M3.5 3.5l2 2M20.5 3.5l-2 2M3.5 20.5l2-2M20.5 20.5l-2-2" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M15.5 2.8a9 9 0 1 0 6 15.6A7.4 7.4 0 0 1 15.5 2.8z" fill="currentColor"/></svg>',
+  print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6.5 6.5A7.5 7.5 0 0 1 19.5 11"/><path d="M4.5 10.5a7.5 7.5 0 0 1 .8-2.4"/><path d="M8 19.5c1-1.8 1.5-4 1.5-6.5a2.5 2.5 0 0 1 5 0c0 1.2-.1 2.4-.3 3.5"/><path d="M5 17c.8-1.3 1.3-2.6 1.4-4.2A5.6 5.6 0 0 1 17.5 12c0 2.5-.4 5-1.3 7.2"/><path d="M12 13c0 3-.6 5.6-1.8 8"/><path d="M19.6 14.5c-.1 1-.3 2-.6 3"/></svg>',
+  chest: '<svg viewBox="0 0 24 24"><path d="M3 11V9a7 7 0 0 1 18 0v2z" fill="currentColor"/><rect x="3" y="11" width="18" height="10" rx="2" fill="currentColor" opacity=".85"/><rect x="10" y="10" width="4" height="5" rx="1" fill="#0f3349"/><path d="M7 11v10M17 11v10" stroke="#0f3349" stroke-width="1.4"/></svg>',
+  door: '<svg viewBox="0 0 24 24"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" fill="currentColor"/><path d="M3 21h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6h8v15H8z" fill="#0f3349"/><circle cx="14" cy="13.5" r="1.2" fill="currentColor"/></svg>',
+  drop: '<svg viewBox="0 0 24 24"><path d="M12 2.5S5.5 10 5.5 14.6a6.5 6.5 0 0 0 13 0C18.5 10 12 2.5 12 2.5z" fill="currentColor"/><path d="M9 14.5a3 3 0 0 0 3 3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/></svg>'
+};
+const LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEV = '<svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+document.documentElement.lang = "ar";
+document.documentElement.dir = "rtl";
+
+const $ = s => document.querySelector(s);
+const toAr = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+const norm = s => String(s).trim().toLowerCase()
+  .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+  .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+  .replace(/[إأآ]/g, "ا").replace(/\s+/g, "");
+
+const MAX = 9;                                       // growth steps watering can give, from seed to fruit (4 m)
+const LAST = STAGES.length - 1;                      // last stage (10 m), reachable only with boosts
+const WPS = MAX / CONFIG.stations.length;            // growth each station's water gives
+const RATE = WPS / CONFIG.pourSeconds;               // growth per second of aimed pouring
+
+/* ---------- state ---------- */
+const KEY = "bustan-albithra-v1";
+let state = { unlocked: [], water: 0, progress: 0, team: "", gameId: "", adj: 0, steps: {}, quests: {}, group: 0 };
+try {
+  const s = JSON.parse(localStorage.getItem(KEY));
+  if (s && Array.isArray(s.unlocked)) {
+    state.team = typeof s.team === "string" ? s.team.slice(0, 30) : "";
+    state.gameId = typeof s.gameId === "string" ? s.gameId : "";
+    state.unlocked = s.unlocked.filter(id => CONFIG.stations.some(x => x.id === id));
+    state.steps = s.steps && typeof s.steps === "object" ? s.steps : {};
+    state.quests = s.quests && typeof s.quests === "object" ? s.quests : {};
+    state.group = Number(s.group) || 0;
+    state.water = Math.max(0, +s.water || 0);
+    state.progress = Math.min(MAX, Math.max(0, +s.progress || 0));
+    state.adj = Number(s.adj) || 0;
+  }
+} catch (e) {}
+let lastSave = 0;
+function save(force) {
+  const now = performance.now();
+  if (!force && now - lastSave < 600) return;
+  lastSave = now;
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+/* ---------- drawing helpers ---------- */
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const f1 = n => n.toFixed(1);
+const G1 = "#a8db6c", G2 = "#7cc35a", G3 = "#5aa845";
+
+const leaf = (x, y, len, ang, col, w = .42) =>
+  `<g transform="translate(${x} ${y}) rotate(${ang})"><path d="M0 0Q${len * .5} ${-len * w} ${len} 0Q${len * .5} ${len * w} 0 0Z" fill="${col}"/><path d="M2 0L${f1(len * .82)} 0" stroke="#fff" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round"/></g>`;
+
+const seed = (x, y, r, s, crack) =>
+  `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><ellipse rx="14" ry="9.5" fill="#7a4b22"/><ellipse cx="-3" cy="-3.5" rx="8" ry="3.2" fill="#b98448" opacity=".85"/>${crack ? '<path d="M-10 1L-5-2.5L-1 2L3-2.5L8 1" fill="none" stroke="#f3e2b8" stroke-width="1.7" stroke-linejoin="round"/>' : ""}<ellipse rx="14" ry="9.5" fill="none" stroke="#4a2c12" stroke-width="1.5"/></g>`;
+
+const stem = (top, w, col = "#8cc152") =>
+  `<path d="M200 353C197 ${f1(353 - (353 - top) * .4)} 203.5 ${f1(353 - (353 - top) * .72)} 200 ${top}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+
+function roots(depth, spread, col, w) {
+  const r = rng(7);
+  let s = `<g fill="none" stroke="${col}" stroke-linecap="round">`;
+  s += `<path d="M200 354C198 ${f1(356 + depth * .35)} 204 ${f1(356 + depth * .7)} 200 ${358 + depth}" stroke-width="${w}"/>`;
+  for (let i = 0; i < spread; i++) {
+    const y = 362 + (depth - 10) * (i + .4) / spread, dir = i % 2 ? 1 : -1, len = 12 + r() * depth * .55 + (spread - i) * 2;
+    s += `<path d="M200 ${f1(y)}q${f1(dir * len * .5)} ${f1(len * .15)} ${f1(dir * len)} ${f1(len * .55)}" stroke-width="${f1(w * .55)}"/>`;
+    if (depth > 60 && i % 2 === 0) s += `<path d="M${f1(200 + dir * len * .6)} ${f1(y + len * .25)}q${f1(dir * 6)} 8 ${f1(dir * 4)} 16" stroke-width="${f1(w * .35)}"/>`;
+  }
+  return s + "</g>";
+}
+
+function trunk(b, top, t) {
+  return `<path d="M${200 - b} 356C${f1(200 - b * .55)} 326 ${200 - t} ${top + 45} ${200 - t} ${top}L${200 + t} ${top}C${200 + t} ${top + 45} ${f1(200 + b * .55)} 326 ${200 + b} 356Z" fill="#7b4a26"/>` +
+    `<path d="M${f1(200 - t * .3)} ${top + 12}C${f1(200 - b * .2)} 300 ${f1(200 - b * .3)} 330 ${f1(200 - b * .4)} 352" stroke="#5a3418" stroke-width="2" fill="none" opacity=".6"/>` +
+    `<path d="M${f1(200 + t * .4)} ${top + 30}C${f1(200 + b * .3)} 310 ${f1(200 + b * .4)} 335 ${f1(200 + b * .55)} 352" stroke="#a06a3c" stroke-width="2" fill="none" opacity=".5"/>`;
+}
+const branch = (x1, y1, x2, y2, w) =>
+  `<path d="M${x1} ${y1}Q${(x1 + x2) / 2 + (x2 > x1 ? -10 : 10)} ${(y1 + y2) / 2 + 8} ${x2} ${y2}" stroke="#7b4a26" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
+
+function canopy(cx, cy, rx, ry, n, sd, rr = rx * .33) {
+  const r = rng(sd), shades = ["#3a8234", "#55a443", "#78c45a"];
+  let s = "";
+  for (let layer = 0; layer < 3; layer++) {
+    for (let i = 0; i < n; i++) {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * (1 - layer * .2);
+      const x = cx + Math.cos(a) * rx * d * .8 - layer * rx * .06;
+      const y = cy + Math.sin(a) * ry * d * .8 - layer * ry * .12;
+      const rad = rr * (.7 + r() * .45) * (1 - layer * .22);
+      s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(rad)}" fill="${shades[layer]}"/>`;
+    }
+  }
+  return s;
+}
+function pts(cx, cy, rx, ry, n, sd) {
+  const r = rng(sd), o = [];
+  for (let g = 0; o.length < n && g < 800; g++) {
+    const a = r() * 6.283, d = Math.sqrt(r());
+    const x = cx + Math.cos(a) * rx * d, y = cy + Math.sin(a) * ry * d;
+    if (o.every(p => Math.hypot(p[0] - x, p[1] - y) > 24)) o.push([x, y]);
+  }
+  return o;
+}
+function blossom(x, y, k = 1) {
+  let s = `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})">`;
+  for (let i = 0; i < 5; i++) { const a = i * 1.2566 - 1.57; s += `<circle cx="${f1(Math.cos(a) * 4.2)}" cy="${f1(Math.sin(a) * 4.2)}" r="3.6" fill="${i % 2 ? "#ffd3e0" : "#fff6f8"}"/>`; }
+  return s + `<circle r="2.4" fill="#f4c34f"/></g>`;
+}
+const fruit = (x, y, k = 1) =>
+  `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})"><path d="M0-8q1-6 5-7" stroke="#5a3418" stroke-width="1.8" fill="none" stroke-linecap="round"/>${leaf(2, -12, 9, -30, "#4f9e3f", .5)}<circle r="9" fill="#e0453a"/><path d="M-7 3a9 9 0 0 0 13 3" stroke="#a82a22" stroke-width="2" fill="none" opacity=".6"/><circle cx="-3" cy="-3.5" r="2.6" fill="#fff" opacity=".55"/></g>`;
+
+const dimple = '<ellipse cx="200" cy="352" rx="24" ry="5" fill="#000" opacity=".22"/>';
+const bigTree = () =>
+  trunk(34, 190, 13) + branch(196, 262, 30, 170, 16) + branch(204, 248, 372, 160, 16) + branch(200, 222, 196, 40, 14) +
+  branch(198, 290, -10, 186, 11) + branch(202, 282, 410, 180, 11) + branch(197, 236, 90, 80, 9) + branch(203, 230, 312, 74, 9) +
+  canopy(200, 118, 330, 118, 26, 21, 64);
+
+// trees past 4 m: more fruit, golden fruit, and a glow at the top stages
+const goldFruit = (x, y, k) =>
+  `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})"><circle r="11" fill="#f4c34f" opacity=".35"/><circle r="8.5" fill="#f2b632"/><circle cx="-3" cy="-3" r="2.6" fill="#fff" opacity=".7"/></g>`;
+function boostTree(nFruit, nGold, glow) {
+  const g = glow ? '<ellipse cx="200" cy="120" rx="360" ry="190" fill="#fff3b0" opacity=".22"/><ellipse cx="200" cy="120" rx="300" ry="150" fill="#fff3b0" opacity=".18"/>' : "";
+  const sparks = glow ? pts(200, 110, 360, 170, 16, 77).map(p => `<path d="M${f1(p[0])} ${f1(p[1] - 9)}L${f1(p[0] + 3)} ${f1(p[1])}L${f1(p[0])} ${f1(p[1] + 9)}L${f1(p[0] - 3)} ${f1(p[1])}Z" fill="#fff6c8"/>`).join("") : "";
+  return { r: roots(84, 9, "#a77b4c", 6.5), a: g + fruit(152, 351) + fruit(250, 355) + fruit(300, 352) + bigTree() +
+    pts(200, 124, 310, 112, nFruit, 33).map(p => fruit(p[0], p[1], 1.6)).join("") +
+    pts(200, 110, 280, 100, nGold, 91).map(p => goldFruit(p[0], p[1], 1.5)).join("") + sparks };
+}
+
+const DRAW = [
+  () => ({ r: "", a: dimple + seed(200, 347, -14, 1, false) }),
+  () => ({ r: roots(6, 0, "#f3e6c8", 2.4), a: dimple + seed(200, 346, -14, 1.2, true) }),
+  () => ({ r: roots(28, 2, "#f3e6c8", 3), a: dimple + seed(200, 345, -14, 1.2, true) + '<path d="M204 338q1-10 9-11" fill="none" stroke="#c5e38a" stroke-width="3.6" stroke-linecap="round"/>' }),
+  () => ({ r: roots(44, 4, "#efdfbd", 3.4), a: dimple + seed(222, 349, 25, .8, true) + stem(300, 6, "#a9d36b") + '<path d="M200 300C199 289 189 286 184 294" fill="none" stroke="#a9d36b" stroke-width="6" stroke-linecap="round"/>' }),
+  () => ({ r: roots(54, 5, "#e9d6ae", 3.6), a: stem(276, 6.5) + leaf(200, 279, 36, -162, G2, .62) + leaf(200, 279, 36, -18, G2, .62) + '<circle cx="200" cy="274" r="3.5" fill="#b9e27c"/>' }),
+  () => ({ r: roots(62, 6, "#e4cfa3", 4), a: stem(232, 7.5) + leaf(200, 306, 24, -172, "#b5d77a", .6) + leaf(200, 306, 24, -8, "#b5d77a", .6) +
+      leaf(200, 268, 42, -155, G2) + leaf(200, 268, 42, -25, G2) + leaf(200, 238, 30, -125, G1) + leaf(200, 238, 30, -55, G1) }),
+  () => ({ r: roots(72, 7, "#d9bd8c", 4.6), a: stem(188, 10, "#7fae45") + '<path d="M200 353C198 332 202 318 201 300" fill="none" stroke="#9a6a3c" stroke-width="10" stroke-linecap="round"/>' +
+      leaf(201, 318, 48, -172, G3) + leaf(201, 296, 50, -10, G3) + leaf(201, 270, 46, -165, G2) + leaf(201, 248, 46, -18, G2) +
+      leaf(201, 226, 40, -150, G2) + leaf(201, 208, 38, -32, G1) + leaf(200, 190, 30, -112, G1) + leaf(200, 190, 30, -68, G1) }),
+  () => ({ r: roots(80, 8, "#b58b5c", 5.5), a: trunk(20, 222, 8) + branch(198, 272, 90, 196, 9) + branch(202, 260, 310, 190, 9) + branch(200, 240, 198, 130, 7) +
+      canopy(200, 176, 175, 82, 14, 11, 50) }),
+  () => ({ r: roots(84, 9, "#a77b4c", 6.5), a: bigTree() + pts(200, 120, 300, 108, 46, 31).map(p => blossom(p[0], p[1], 1.5)).join("") }),
+  () => ({ r: roots(84, 9, "#a77b4c", 6.5), a: fruit(152, 351) + fruit(250, 355) + bigTree() +
+      pts(200, 120, 300, 108, 10, 57).map(p => blossom(p[0], p[1], 1.4)).join("") + pts(200, 124, 300, 110, 38, 33).map(p => fruit(p[0], p[1], 1.6)).join("") }),
+  () => boostTree(52, 0, false),
+  () => boostTree(56, 8, false),
+  () => boostTree(58, 12, true),
+  () => boostTree(60, 18, true)
+];
+
+/* static soil details */
+(function soilDetails() {
+  const r = rng(3); let s = "";
+  for (let i = 0; i < 46; i++) {
+    const x = 60 + r() * 280, y = 362 + r() * 78;
+    s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(1.5 + r() * 3.5)}" ry="${f1(1 + r() * 2)}" fill="${r() > .5 ? "#7d5233" : "#3f2414"}" opacity=".75"/>`;
+  }
+  s += '<path d="M52 380Q130 392 200 386T348 382" stroke="#4a2b17" stroke-width="3" fill="none" opacity=".5"/><path d="M60 412Q140 420 200 416T340 410" stroke="#4a2b17" stroke-width="3" fill="none" opacity=".4"/>';
+  $("#pebbles").innerHTML = s;
+  let g = "";
+  [[56, 1], [76, 1], [328, -1], [346, -1], [118, 1], [290, -1]].forEach(([x, d], i) => {
+    for (let k = 0; k < 4; k++) {
+      const h = 10 + ((i * 7 + k * 5) % 9), lean = (k - 1.5) * 3 * d;
+      g += `<path d="M${x + k * 3} 351q${lean} ${-h * .5} ${lean * 1.6} ${-h}" stroke="${k % 2 ? "#5aa845" : "#7cc35a"}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+    }
+  });
+  $("#grass").innerHTML = g;
+})();
+
+/* ---------- DOM refs ---------- */
+const garden = $("#garden"), board = $("#board"), canEl = $("#can"), canvas = $("#fx"), ctx = canvas.getContext("2d");
+const plantG = $("#plant"), rootsG = $("#roots"), popG = $("#plantPop"), soilTop = $("#soilTop"), soilBody = $("#soilBody");
+
+const track = $("#track");
+STAGES.forEach((s, i) => {
+  const li = document.createElement("li"); li.textContent = toAr(i + 1);
+  li.title = s.name + (i > MAX ? " (بالتعزيز فقط)" : "");
+  if (i > MAX) li.className = "boost";
+  track.appendChild(li);
+});
+const pipsEl = $("#pips");
+CONFIG.stations.forEach(() => pipsEl.appendChild(document.createElement("i")));
+// with rounds on, the board shows only the current round's stations (round 1 before the game starts)
+const maxRound = Math.max(1, ...CONFIG.stations.map(st => st.round || 1));
+const boardRound = () => Math.max(1, Math.min(round.n, maxRound));
+const onBoard = st => !CONFIG.reportUrl || !st.round || st.round === boardRound();
+
+/* ---------- stations ---------- */
+const list = $("#stations");
+let openId = null;
+// A station is one or more steps; each step gives part of the station's water.
+// A plain station is one step: its password.
+const stepsOf = st => st.steps && st.steps.length ? st.steps
+  : [{ label: "اكتب كلمة السر", button: "افتح الماء", accept: [st.code], water: 1, code: true }];
+const stepsDone = st => Math.min(stepsOf(st).length, state.steps[st.id] || (state.unlocked.includes(st.id) ? stepsOf(st).length : 0));
+// lenient compare for typed questions and answers: no vowel marks, punctuation or spaces
+const norm2 = v => norm(v).replace(/[\u064B-\u0652\u0670\u0640]/g, "").replace(/[؟?!.,،:؛"'«»()\-_]/g, "")
+  .replace(/ة/g, "ه").replace(/ى/g, "ي").replace(/ؤ/g, "و").replace(/ئ/g, "ي");
+function stepMatches(step, raw) {
+  const v = norm2(raw);
+  if (!v) return false;
+  if ((step.accept || []).some(a => norm2(a) === v)) return true;
+  return !!(step.keywords && step.keywords.length && step.keywords.every(k => v.includes(norm2(k))));
+}
+// a step with `results` takes one of several codes, each giving its own share of water (e.g. win / lose)
+const matchResult = (step, raw) => step.results ? step.results.find(r => stepMatches(r, raw)) || null : (stepMatches(step, raw) ? step : null);
+// stations tied to a round stay closed until the teacher starts that round
+const roundLocked = st => !!(CONFIG.reportUrl && st.round && round.n < st.round);
+
+CONFIG.stations.forEach((st, i) => {
+  const li = document.createElement("li");
+  li.className = "station"; li.dataset.id = st.id;
+  li.innerHTML = `
+    <button class="st-head" type="button" aria-expanded="false" aria-controls="drop-${st.id}">
+      <span class="st-ico">${ICONS[st.icon] || ICONS.star}</span>
+      <span class="st-text"><span class="st-name"></span><span class="st-status"></span><span class="st-where" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg><span></span></span></span>
+      <span class="st-chev">${CHEV}</span>
+    </button>
+    <div class="st-drop" id="drop-${st.id}"><div class="st-drop-in">
+      <div class="st-locks"></div>
+      <form class="st-form" novalidate>
+        <label for="code-${st.id}"><span class="st-step"></span><span class="st-label"></span></label>
+        <div class="st-row">
+          <input id="code-${st.id}" name="code" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button type="submit" class="st-go"></button>
+        </div>
+        <p class="st-msg" aria-live="polite"></p>
+      </form>
+      <p class="st-donemsg"></p>
+      <p class="st-waitmsg"></p>
+    </div></div>`;
+  li.querySelector(".st-name").textContent = st.name;
+  if (st.location) { li.querySelector(".st-where").hidden = false; li.querySelector(".st-where span").textContent = st.location; }
+  list.appendChild(li);
+  // a station whose steps are padlocks (صندوق العجائب) shows the padlocks, which open one by one
+  const lockSteps = stepsOf(st), locksEl = li.querySelector(".st-locks");
+  if (lockSteps.length > 1 && lockSteps.every(x => x.lock && x.color)) {
+    locksEl.classList.add("on");
+    lockSteps.forEach(x => {
+      const lk = document.createElement("span");
+      lk.className = "lk"; lk.style.setProperty("--c", x.color);
+      lk.innerHTML = `<svg viewBox="0 0 54 62" aria-hidden="true"><path class="shackle" d="M15 26V17a12 12 0 0 1 24 0v9" fill="none" stroke="#8d93ad" stroke-width="6" stroke-linecap="round"/><rect x="6" y="24" width="42" height="34" rx="8" fill="${x.color}"/><circle cx="27" cy="38" r="4" fill="#fff" opacity=".9"/><rect x="25" y="40" width="4" height="10" rx="2" fill="#fff" opacity=".9"/></svg><span></span>`;
+      lk.lastElementChild.textContent = x.lock;
+      locksEl.append(lk);
+    });
+  }
+  const head = li.querySelector(".st-head"), drop = li.querySelector(".st-drop"), form = li.querySelector("form"),
+        input = li.querySelector("input"), msg = li.querySelector(".st-msg"), pause = { miss: 0, until: 0 };
+  drop.inert = true;
+  head.addEventListener("click", () => toggleStation(st.id));
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const steps = stepsOf(st), k = stepsDone(st), step = steps[k];
+    if (!step || roundLocked(st)) return;
+    const asg = assignment();
+    if (asg && asg.when === "now" && asg.st.id !== st.id) { renderStations(); return; }
+    if (!canAnswer()) { renderStations(); return; }
+    if (step.numeric && Date.now() < pause.until) { setMsg(msg, "انتظروا لحظات ثم جرّبوا مرة أخرى.", "bad"); return; }
+    if (!norm2(input.value)) { setMsg(msg, step.code || step.numeric ? "اكتبوا الرقم السري أولًا." : "اكتبوا الإجابة أولًا.", "bad"); input.focus(); return; }
+    const res = matchResult(step, input.value);
+    if (res) {
+      input.value = ""; pause.miss = 0;
+      const last = unlockStep(st, k, res);
+      if (last) {
+        setMsg(msg, res.success || "أحسنتم! امتلأ الإبريق، اذهبوا واسقوا البذرة.", "ok");
+        setTimeout(() => { if (openId === st.id) toggleStation(st.id); }, 1500);
+      } else {
+        setMsg(msg, (step.success || "أحسنتم! حصلتم على بعض الماء.") + nextCard(step), "ok");
+        input.focus({ preventScroll: true });
+      }
+    } else {
+      setMsg(msg, step.wrong || (step.code ? "كلمة السر غير صحيحة. تأكّد منها وحاول مرة أخرى." : "الإجابة غير صحيحة. حاولوا مرة أخرى."), "bad");
+      li.classList.remove("shake"); void li.offsetWidth; li.classList.add("shake");
+      input.select();
+      // numeric locks: three misses in a row make the team stop and think for five seconds, so nobody guesses numbers
+      if (step.numeric && ++pause.miss >= 3) {
+        pause.miss = 0; pause.until = Date.now() + 5000;
+        setMsg(msg, "ثلاث محاولات خاطئة. انتظروا خمس ثوانٍ، وارجعوا إلى البطاقة فكّروا فيها معًا.", "bad");
+        input.disabled = true;
+        setTimeout(() => { input.disabled = false; setMsg(msg, "جرّبوا الآن.", ""); }, 5000);
+      }
+    }
+  });
+  li.addEventListener("animationend", () => li.classList.remove("shake"));
+});
+const nextCard = s => !s.next ? "" : s.where ? ` البطاقة ${toAr(s.next)} مخبّأة: ${s.where}.` : ` ابحثوا الآن عن البطاقة ${toAr(s.next)}.`;
+function setMsg(el, t, kind) { el.textContent = t; el.className = "st-msg " + kind; }
+function toggleStation(id) {
+  const next = openId === id ? null : id;
+  list.querySelectorAll(".station").forEach(li => {
+    const on = li.dataset.id === next;
+    li.classList.toggle("open", on);
+    li.querySelector(".st-head").setAttribute("aria-expanded", on);
+    li.querySelector(".st-drop").inert = !on;
+    if (!on) setMsg(li.querySelector(".st-msg"), "", "");
+  });
+  openId = next;
+  if (next) {
+    const li = list.querySelector(`[data-id="${next}"]`), inp = li.querySelector("input");
+    if (!li.classList.contains("done") && !li.classList.contains("wait")) setTimeout(() => inp.focus({ preventScroll: true }), 120);
+    setTimeout(() => li.scrollIntoView({ block: "nearest", behavior: "smooth" }), 330);
+  }
+}
+// returns true when this was the station's last step
+function unlockStep(st, k, res) {
+  const steps = stepsOf(st);
+  if (stepsDone(st) !== k) return false;
+  state.steps[st.id] = k + 1;
+  const share = res && res.water != null ? res.water : steps[k].water != null ? steps[k].water : 1 / steps.length;
+  state.water += WPS * share;
+  const last = k + 1 >= steps.length;
+  if (last && !state.unlocked.includes(st.id)) state.unlocked.push(st.id);
+  save(true);
+  report();
+  renderStations();
+  if (res && res.toast) toast(res.toast, st.name, 3000);
+  else toast((last ? "امتلأ الإبريق من " : "ماء من ") + st.name, last ? "اسقوا البذرة!" : "حصلتم على بعض الماء", 2600);
+  canEl.classList.remove("filling"); void canEl.offsetWidth; canEl.classList.add("filling");
+  return last;
+}
+canEl.addEventListener("animationend", e => { if (e.animationName === "fill") canEl.classList.remove("filling"); }, true);
+function renderStations() {
+  const n = state.unlocked.length;
+  list.querySelectorAll(".station").forEach(li => {
+    const st = CONFIG.stations.find(x => x.id === li.dataset.id), steps = stepsOf(st), k = stepsDone(st);
+    const a = assignment(), mine = !!a && a.when === "now" && a.st.id === st.id, other = !!a && a.when === "now" && !mine;
+    const noGroup = rotationOn() && !state.group;
+    const done = k >= steps.length, multi = steps.length > 1, wait = !done && roundLocked(st), closed = !done && !wait && (!canAnswer() || other || noGroup);
+    li.classList.toggle("mine", mine && !done);
+    li.classList.toggle("other", other && !done);
+    li.classList.toggle("done", done);
+    li.classList.toggle("wait", wait);
+    li.classList.toggle("closed", closed);
+    li.querySelector("input").disabled = closed || wait;
+    li.querySelector(".st-waitmsg").textContent = wait ? `هذه المحطة تُفتح عندما يبدأ المعلّم الجولة ${toAr(st.round)}.`
+      : closed ? (noGroup && canAnswer() ? "ننتظر رقم مجموعتكم من المعلّم، لحظات…" : other && canAnswer() ? `هذه ليست محطتكم في هذا الشوط. محطتكم الآن: ${a.st.name}، ${whereOf(a.st)}.` : closedMsg()) : "";
+    li.querySelector(".st-status").innerHTML = done ? CHECK + "فُتح الماء"
+      : wait ? LOCK + `تُفتح في الجولة ${toAr(st.round)}`
+      : k > 0 ? LOCK + (steps[0].lock ? `فُتح ${toAr(k)} من ${toAr(steps.length)} أقفال` : `أُنجزت ${toAr(k)} من ${toAr(steps.length)}، بقيت خطوة`)
+      : LOCK + (steps[0].results ? "بانتظار رمز المعلّم" : steps[0].lock ? "مقفلة، فيها " + toAr(steps.length) + " أقفال" : multi ? "مقفلة، فيها " + toAr(steps.length) + " خطوات" : "مقفلة، تحتاج كلمة السر");
+    const step = steps[Math.min(k, steps.length - 1)];
+    li.querySelector(".st-step").textContent = multi && !done ? `الخطوة ${toAr(k + 1)} من ${toAr(steps.length)}: ` : "";
+    li.querySelector(".st-label").textContent = step.label;
+    li.querySelector(".st-go").textContent = step.button || "تحقّق";
+    const inp = li.querySelector("input"), codeLike = step.code || step.numeric;
+    inp.placeholder = codeLike ? "• • •" : (step.placeholder || "");
+    inp.classList.toggle("text", !codeLike);
+    inp.classList.toggle("num", !!step.numeric);
+    inp.inputMode = step.numeric ? "numeric" : "text";
+    [...li.querySelectorAll(".lk")].forEach((el, i) => { el.classList.toggle("open", i < k); el.classList.toggle("cur", i === k && !done); });
+    li.querySelector(".st-donemsg").textContent = steps[0].lock ? "فتحتم الأقفال الأربعة، وامتلأ الإبريق من ماء هذه المحطة." : multi ? "أنجزتم كل خطوات هذه المحطة، وامتلأ الإبريق من مائها." : "تم استخدام كلمة السر لهذه المحطة، وامتلأ الإبريق من مائها.";
+  });
+  const shown = CONFIG.stations.filter(onBoard), m = shown.filter(st => state.unlocked.includes(st.id)).length;
+  list.querySelectorAll(".station").forEach(li => {
+    const vis = onBoard(CONFIG.stations.find(x => x.id === li.dataset.id));
+    li.hidden = !vis;
+    if (!vis && openId === li.dataset.id) toggleStation(openId);
+  });
+  renderAssign();
+  $("#openCount").textContent = CONFIG.reportUrl && shown.length < CONFIG.stations.length
+    ? `محطات الجولة ${toAr(boardRound())}: ${toAr(m)} من ${toAr(shown.length)}`
+    : `المحطات المفتوحة: ${toAr(n)} من ${toAr(CONFIG.stations.length)}`;
+  [...pipsEl.children].forEach((p, i) => { p.hidden = i >= shown.length; p.classList.toggle("on", i < m); });
+}
+
+/* ---------- toast ---------- */
+const toastEl = $("#toast"); let toastQ = [], toastBusy = false;
+function toast(small, big, ms = 2400) { toastQ.push([small, big, ms]); if (!toastBusy) nextToast(); }
+function nextToast() {
+  const t = toastQ.shift(); if (!t) { toastBusy = false; return; }
+  toastBusy = true;
+  $("#toastSmall").textContent = t[0]; $("#toastBig").textContent = t[1];
+  toastEl.classList.add("show");
+  setTimeout(() => { toastEl.classList.remove("show"); setTimeout(nextToast, 320); }, t[2]);
+}
+
+/* ---------- plant + HUD ---------- */
+// Height in cm where each stage begins. Watering grows the plant along this curve up to 4 m;
+// the teacher's boosts and cuts (state.adj) add to or take from that height.
+const HEIGHTS = [0, 5, 15, 30, 50, 80, 120, 180, 260, 400, 500, 650, 800, 1000];
+const growthCm = p => { const i = Math.min(MAX - 1, Math.floor(p)); return HEIGHTS[i] + (HEIGHTS[i + 1] - HEIGHTS[i]) * (p - i); };
+// what the screen shows: the teacher's changes animate in (vis.adj), and an item's height
+// is held back (hold) until its animation finishes
+const vis = { adj: state.adj };
+let hold = 0;
+const heightCm = () => Math.max(0, growthCm(state.progress) + vis.adj);
+const stageOfH = h => { let i = 0; while (i < LAST && h >= HEIGHTS[i + 1] - 1e-6) i++; return i; };
+const fmtH = h => h < 100 ? toAr(Math.round(h)) + " سم" : toAr((h / 100).toFixed(2)).replace(".", "٫") + " م";
+let curStage = -1, complete = false;
+function setStage(i, animate) {
+  curStage = i;
+  const d = DRAW[i]();
+  plantG.innerHTML = d.a; rootsG.innerHTML = d.r;
+  $("#stageAria").textContent = "المرحلة " + toAr(i + 1) + ": " + STAGES[i].name;
+  $("#stageNum").textContent = `المرحلة ${toAr(i + 1)} من ${toAr(STAGES.length)}`;
+  $("#stageName").textContent = STAGES[i].name;
+  [...track.children].forEach((li, k) => { li.classList.toggle("done", k < i || (k === i && i === LAST)); li.classList.toggle("now", k === i && i !== LAST); });
+  const tk = $("#ticker");
+  if (animate) { tk.classList.add("fade"); setTimeout(() => { tk.textContent = STAGES[i].desc; tk.classList.remove("fade"); }, 350); }
+  else tk.textContent = STAGES[i].desc;
+  if (animate) {
+    popG.classList.remove("pop"); void popG.getBoundingClientRect(); popG.classList.add("pop");
+    burst();
+    if (i === LAST) toast("وصلتم إلى ١٠ أمتار!", STAGES[i].name, 4000);
+    else if (i !== MAX) toast("مرحلة جديدة!", toAr(i + 1) + ". " + STAGES[i].name);
+    report();
+  }
+}
+popG.addEventListener("animationend", () => popG.classList.remove("pop", "wilt"));
+
+let shownH = "", zoom = 1;
+function updatePlantScale() {
+  const h = heightCm();
+  const frac = curStage >= LAST ? 1 : Math.max(0, (h - HEIGHTS[curStage]) / (HEIGHTS[curStage + 1] - HEIGHTS[curStage]));
+  let s = (curStage >= 7 ? .93 : .88) + (curStage >= 7 ? .07 : .12) * Math.min(1, frac);
+  // above 4 m the tree keeps growing and the view zooms out with it, so the soil shrinks below it
+  const z = h > HEIGHTS[MAX] ? 1 + Math.min(.9, (h - HEIGHTS[MAX]) / (HEIGHTS[LAST] - HEIGHTS[MAX]) * .8) : 1;
+  if (curStage >= MAX) s = z;
+  if (Math.abs(z - zoom) > .004) {
+    zoom = z;
+    scene.setAttribute("viewBox", `${(200 - 380 * z).toFixed(1)} ${(460 - 500 * z).toFixed(1)} ${(760 * z).toFixed(1)} ${(500 * z).toFixed(1)}`);
+    measure();
+  }
+  const txt = fmtH(h);
+  if (txt !== shownH) { $("#heightTxt").textContent = txt; shownH = txt; }
+  plantG.setAttribute("transform", `translate(200 352) scale(${s.toFixed(3)}) translate(-200 -352)`);
+  $("#nextBar").style.width = (curStage >= LAST ? 100 : Math.min(1, frac) * 100) + "%";
+}
+
+let hintState = "";
+function updateHUD(pouring, aimed) {
+  const w = state.water;
+  $("#waterBar").style.width = Math.min(1, w / WPS) * 100 + "%";
+  const extra = Math.ceil(w / WPS - 1e-6) - 1;
+  $("#waterTxt").textContent = w <= 0 ? "فارغ" : toAr(Math.max(1, Math.round(Math.min(1, w / WPS) * 100))) + "٪" + (extra > 0 ? ` + ${toAr(extra)} إبريق` : "");
+  let h;
+  if (complete) h = "أثمرت الشجرة! أحسنتم يا أبطال";
+  else if (!canWater()) h = "السقي متوقّف الآن، انتظروا المعلّم";
+  else if (w > 0 && pouring) h = aimed ? "رائع! استمرّ في السقي…" : "وجّه الإبريق فوق التربة";
+  else if (w > 0) h = "اضغط مطوّلًا واسحب الإبريق فوق التربة لتسقي البذرة";
+  else if (state.unlocked.length === 0) h = "اختر محطة من لوحة المحطات واكتب كلمة السر لتحصل على الماء";
+  else h = "انتهى الماء. افتح محطة جديدة بكلمة السر";
+  if (h !== hintState) { $("#hint").textContent = h; hintState = h; }
+  $("#gauge").classList.toggle("done", complete);
+  canEl.classList.toggle("empty", w <= 0 && !complete);
+  canEl.classList.toggle("ready", w > 0 && !pouring && !complete);
+}
+
+/* ---------- geometry ---------- */
+let GW = 0, GH = 0, DPR = 1, soil = { l: 0, r: 0, cx: 0, cy: 0 };
+function measure() {
+  const g = garden.getBoundingClientRect();
+  GW = g.width; GH = g.height; DPR = Math.min(2, window.devicePixelRatio || 1);
+  canvas.width = Math.round(GW * DPR); canvas.height = Math.round(GH * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const s = soilTop.getBoundingClientRect();
+  soil = { l: s.left - g.left, r: s.right - g.left, cx: (s.left + s.right) / 2 - g.left, cy: (s.top + s.bottom) / 2 - g.top };
+}
+const scene = $("#scene"), stageWrap = $("#stageWrap");
+function fitScene() {
+  // wide box: show the whole tree; narrow box: fill the height and let the canopy run off the sides
+  const r = stageWrap.getBoundingClientRect();
+  scene.setAttribute("preserveAspectRatio", r.width / Math.max(1, r.height) > 760 / 500 ? "xMidYMax meet" : "xMidYMax slice");
+}
+new ResizeObserver(() => { fitScene(); measure(); }).observe(garden);
+window.addEventListener("resize", measure);
+
+/* ---------- watering can + input ---------- */
+const can = { x: -200, y: -200, a: 0 };
+const ptr = { x: 0, y: 0 };
+let dragging = false, keyPour = false, lastNudge = 0;
+function restPos() {
+  return { x: Math.max(66, soil.l - 6), y: soil.cy - 26 };
+}
+function setPtr(e) { const g = garden.getBoundingClientRect(); ptr.x = e.clientX - g.left; ptr.y = e.clientY - g.top; }
+function needWater() {
+  const now = performance.now();
+  if (now - lastNudge < 2500) return;
+  lastNudge = now;
+  board.classList.remove("nudge"); void board.offsetWidth; board.classList.add("nudge");
+  toast("الإبريق فارغ", "افتح محطة بكلمة السر");
+}
+board.addEventListener("animationend", e => { if (e.animationName === "nudge") board.classList.remove("nudge"); });
+garden.addEventListener("pointerdown", e => {
+  if (e.button > 0 || complete || !joinEl.hidden || e.target.closest(".tray") || e.target.closest(".quests")) return;
+  if (!canWater()) { pausedToast(); return; }
+  if (state.water <= 0) { needWater(); return; }
+  dragging = true; setPtr(e);
+  garden.setPointerCapture(e.pointerId);
+  garden.classList.add("pouring");
+  e.preventDefault();
+});
+garden.addEventListener("pointermove", e => { if (dragging) setPtr(e); });
+const endDrag = () => { if (dragging) report(); dragging = false; garden.classList.remove("pouring"); save(true); };
+garden.addEventListener("pointerup", endDrag);
+garden.addEventListener("pointercancel", endDrag);
+canEl.addEventListener("keydown", e => {
+  if (e.key !== " " && e.key !== "Enter") return;
+  e.preventDefault();
+  if (e.repeat) return;
+  if (!canWater()) { pausedToast(); return; }
+  if (state.water <= 0 && !complete) { needWater(); return; }
+  keyPour = true;
+});
+canEl.addEventListener("keyup", e => { if (e.key === " " || e.key === "Enter") { keyPour = false; save(true); } });
+canEl.addEventListener("blur", () => { keyPour = false; });
+canEl.addEventListener("click", e => e.preventDefault());
+
+/* ---------- particles ---------- */
+let parts = [], wet = 0, dropAcc = 0, appliedWet = -1;
+const COLORS = ["#f4c34f", "#7cc35a", "#86d6ff", "#ffd3e0", "#fff6e3", "#e0453a"];
+function burst() {
+  const p = plantG.getBoundingClientRect(), g = garden.getBoundingClientRect();
+  const cx = (p.left + p.right) / 2 - g.left, cy = (p.top + p.bottom) / 2 - g.top;
+  for (let i = 0; i < 34; i++) {
+    const a = Math.random() * 6.283, v = 90 + Math.random() * 220;
+    parts.push({ t: "spark", x: cx, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 60, life: 1, rot: Math.random() * 6, s: 5 + Math.random() * 6 });
+  }
+}
+function confetti() {
+  for (let i = 0; i < 160; i++) {
+    parts.push({ t: "conf", x: Math.random() * GW, y: -20 - Math.random() * GH * .6, vx: (Math.random() - .5) * 60, vy: 60 + Math.random() * 90,
+      life: 1, rot: Math.random() * 6, vr: (Math.random() - .5) * 8, s: 6 + Math.random() * 6, c: COLORS[i % COLORS.length], leaf: i % 3 === 0 });
+  }
+}
+function star(x, y, r, rot) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.beginPath();
+  for (let i = 0; i < 8; i++) { const rr = i % 2 ? r * .38 : r, a = i * Math.PI / 4; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+function lerpColor(a, b, t) {
+  const pa = a.match(/\w\w/g).map(h => parseInt(h, 16)), pb = b.match(/\w\w/g).map(h => parseInt(h, 16));
+  return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, "0")).join("");
+}
+
+/* ---------- main loop ---------- */
+let last = performance.now();
+function tick(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+
+  const pourIntent = (dragging || keyPour) && !complete && canWater();
+  let tx, ty;
+  if (dragging) { tx = ptr.x + 54; ty = ptr.y - 46; }
+  else if (keyPour) { tx = soil.cx - (soil.r - soil.l) * .12 + 58; ty = soil.cy - 110; }
+  else { const r = restPos(); tx = r.x; ty = r.y; }
+  tx = Math.max(10, Math.min(GW + 40, tx)); ty = Math.max(30, Math.min(GH - 20, ty));
+  if (can.x < -100) { can.x = tx; can.y = ty; }
+  const k = Math.min(1, dt * (dragging ? 20 : 7));
+  can.x += (tx - can.x) * k; can.y += (ty - can.y) * k;
+  const pouring = pourIntent && state.water > 0;
+  can.a += ((pouring ? -36 : 0) - can.a) * Math.min(1, dt * 10);
+  canEl.style.transform = `translate(${(can.x - 60).toFixed(1)}px,${(can.y - 48).toFixed(1)}px) rotate(${can.a.toFixed(2)}deg)`;
+
+  const rad = can.a * Math.PI / 180, lx = -49, ly = -14;
+  const sx = can.x + lx * Math.cos(rad) - ly * Math.sin(rad), sy = can.y + lx * Math.sin(rad) + ly * Math.cos(rad);
+  let aimed = false;
+  if (pouring && can.a < -18) {
+    dropAcc += dt * 60;
+    while (dropAcc > 1) {
+      dropAcc--;
+      parts.push({ t: "drop", x: sx + (Math.random() - .5) * 6, y: sy + (Math.random() - .5) * 4, vx: -55 + Math.random() * 40, vy: 40 + Math.random() * 50, life: 1 });
+    }
+    aimed = sx > soil.l + 14 && sx < soil.r - 14 && sy < soil.cy;
+    if (aimed) {
+      const d = Math.min(state.water, RATE * dt, MAX - state.progress);
+      state.water -= d; state.progress += d;
+      if (state.water < 1e-4) { state.water = 0; toast("انتهى ماء الإبريق", state.progress >= MAX - 1e-4 ? "أحسنتم!" : "افتح محطة أخرى"); }
+      if (state.progress >= MAX - 1e-4) state.progress = MAX;
+      const st = stageOfH(heightCm());
+      if (st !== curStage) setStage(st, st > curStage);
+      if (performance.now() - lastReport > 4000) report();
+      if (state.progress >= MAX && !complete) finish(true);
+      save();
+    }
+  }
+  const targetAdj = state.adj - hold;
+  if (Math.abs(targetAdj - vis.adj) > .05) {
+    vis.adj += (targetAdj - vis.adj) * Math.min(1, dt * 2.2);
+    const st = stageOfH(heightCm());
+    if (st !== curStage) setStage(st, st > curStage);
+  } else vis.adj = targetAdj;
+  updatePlantScale();
+  updateHUD(pouring, aimed);
+
+  wet = Math.max(0, wet - dt * .05);
+  if (Math.abs(wet - appliedWet) > .01) {
+    appliedWet = wet;
+    soilTop.setAttribute("fill", lerpColor("7a4c2c", "4a2a16", Math.min(1, wet)));
+    soilBody.setAttribute("fill", lerpColor("5b3620", "3b2112", Math.min(1, wet)));
+  }
+
+  ctx.clearRect(0, 0, GW, GH);
+  for (const em of emitters) {
+    if (now < em.start) continue;
+    em.acc += dt * em.rate;
+    while (em.acc > 1) { em.acc--; parts.push(em.make()); }
+  }
+  emitters = emitters.filter(em => now < em.until);
+  const next = [];
+  for (const p of parts) {
+    if (p.t === "drop") {
+      p.vy += 900 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.y >= soil.cy && p.x > soil.l + 6 && p.x < soil.r - 6) {
+        wet = Math.min(1.2, wet + .012);
+        for (let i = 0; i < 2; i++) next.push({ t: "splash", x: p.x, y: soil.cy, vx: (Math.random() - .5) * 90, vy: -60 - Math.random() * 60, life: 1 });
+        continue;
+      }
+      if (p.y > GH + 10) continue;
+      ctx.fillStyle = "rgba(134,214,255,.95)";
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 2.6, 4.4, Math.atan2(p.vy, p.vx) - Math.PI / 2, 0, 6.283); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,.8)";
+      ctx.beginPath(); ctx.arc(p.x - .8, p.y - 1, .9, 0, 6.283); ctx.fill();
+    } else if (p.t === "splash") {
+      p.life -= dt * 3; if (p.life <= 0) continue;
+      p.vy += 500 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      ctx.fillStyle = `rgba(${p.c || "170,225,255"},${p.life})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, 6.283); ctx.fill();
+    } else if (p.t === "spark") {
+      p.life -= dt * 1.1; if (p.life <= 0) continue;
+      p.vx *= .97; p.vy = p.vy * .97 + 40 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 3;
+      ctx.fillStyle = `rgba(255,224,130,${p.life})`;
+      star(p.x, p.y, p.s * (.5 + p.life * .5), p.rot);
+    } else if (p.t === "grain" || p.t === "rain") {
+      p.vy += (p.t === "rain" ? 600 : 800) * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.y >= soil.cy && p.x > soil.l + 6 && p.x < soil.r - 6) {
+        if (p.t === "rain") wet = Math.min(1.2, wet + .01);
+        next.push({ t: "splash", x: p.x, y: soil.cy, vx: (Math.random() - .5) * 70, vy: -50 - Math.random() * 40, life: 1, c: p.t === "rain" ? null : "120,90,50" });
+        continue;
+      }
+      if (p.y > GH + 10) continue;
+      if (p.t === "rain") {
+        ctx.strokeStyle = "rgba(160,220,255,.9)"; ctx.lineWidth = 2.2; ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * .03, p.y - 10); ctx.stroke();
+      } else {
+        ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, 6.283); ctx.fill();
+      }
+    } else if (p.t === "leaf") {
+      p.y += p.vy * dt; p.x += p.vx * dt + Math.sin(now / 300 + p.rot) * .8; p.rot += p.vr * dt;
+      if (p.y > soil.cy + 6) p.life -= dt * 2.5;
+      if (p.life <= 0 || p.y > GH + 10) continue;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.life); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.ellipse(0, 0, 7, 3.2, 0, 0, 6.283); ctx.fill(); ctx.restore();
+    } else if (p.t === "conf") {
+      p.y += p.vy * dt; p.x += p.vx * dt + Math.sin(now / 400 + p.rot) * .6; p.rot += p.vr * dt;
+      if (p.y > GH + 20) continue;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c;
+      if (p.leaf) { ctx.beginPath(); ctx.ellipse(0, 0, p.s, p.s * .45, 0, 0, 6.283); ctx.fill(); }
+      else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      ctx.restore();
+    }
+    next.push(p);
+  }
+  parts = next;
+  requestAnimationFrame(tick);
+}
+
+function finish(animate) {
+  complete = true; dragging = false; keyPour = false;
+  garden.classList.remove("pouring");
+  save(true);
+  if (animate) {
+    report();
+    confetti();
+    toast("مبارك!", "أثمرت شجرتكم", 4000);
+  }
+}
+
+/* ---------- reset (two taps, for the teacher) ---------- */
+const resetBtn = $("#reset"); let resetTimer = 0;
+resetBtn.addEventListener("click", () => {
+  if (!resetBtn.classList.contains("arm")) {
+    resetBtn.classList.add("arm"); resetBtn.textContent = "اضغط مرة أخرى للتأكيد";
+    resetTimer = setTimeout(() => { resetBtn.classList.remove("arm"); resetBtn.textContent = "بدء من جديد"; }, 3500);
+    return;
+  }
+  clearTimeout(resetTimer);
+  resetBtn.classList.remove("arm"); resetBtn.textContent = "بدء من جديد";
+  state = { unlocked: [], water: 0, progress: 0, team: "", gameId: state.gameId, adj: state.adj, steps: {}, quests: {}, group: 0 };
+  renderQuests();
+  complete = false; parts = []; wet = 0;
+  save(true);
+  if (openId) toggleStation(openId);
+  renderStations(); setStage(0, false);
+  showTeam();
+});
+
+/* ---------- team name + reporting to the teacher ---------- */
+const joinEl = $("#join"), teamInput = $("#teamName");
+let deviceId = "";
+try { deviceId = localStorage.getItem("bustan-device") || ""; } catch (e) {}
+if (!deviceId) {
+  deviceId = "d" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  try { localStorage.setItem("bustan-device", deviceId); } catch (e) {}
+}
+function showTeam() {
+  const has = !!state.team;
+  joinEl.hidden = has;
+  board.inert = !has;
+  $("#teamLabel").hidden = !has;
+  $("#teamLabel").textContent = has ? "فريق: " + state.team + (state.group ? "، المجموعة " + toAr(state.group) : "") : "";
+  if (!has) setTimeout(() => teamInput.focus({ preventScroll: true }), 50);
+}
+joinEl.addEventListener("submit", e => {
+  e.preventDefault();
+  const name = teamInput.value.trim().replace(/\s+/g, " ").slice(0, 30);
+  if (!name) { $("#joinMsg").textContent = "اكتبوا اسم الفريق أولًا."; teamInput.focus(); return; }
+  state.team = name; state.group = 0; teamInput.value = ""; $("#joinMsg").textContent = "";
+  renderStations();
+  save(true); showTeam(); report();
+});
+
+/* ---------- group rotation ---------- */
+// Each round the groups share that round's stations and move to the next one every shawt:
+// with 4 stations every group is at a different one; with 2, groups 1-2 and 3-4 swap halfway.
+const GROUPS = CONFIG.groups || 4;
+// the sheet gives each team its group number when it joins (see pollRound)
+const rotationOn = () => !!CONFIG.reportUrl && GROUPS > 1;
+function stationFor(group, r, p) {
+  const list = CONFIG.stations.filter(st => (st.round || 1) === r);
+  if (!list.length || !group || !p) return null;
+  const per = Math.max(1, Math.round(GROUPS / list.length));
+  return list[(Math.floor((group - 1) / per) + (p - 1)) % list.length];
+}
+// the team's station now (during a shawt) or next (before the game, between shawts, between rounds)
+function assignment() {
+  if (!rotationOn() || !state.group) return null;
+  const s = round.status;
+  let st = null, when = "next";
+  if (s === "running") { st = stationFor(state.group, round.n, round.part); when = "now"; }
+  else if (s === "break") st = stationFor(state.group, round.n, round.part + 1);
+  else if (s === "idle" || s === "unknown") st = stationFor(state.group, 1, 1);
+  else if (s === "ended") st = stationFor(state.group, round.n + 1, 1);
+  return st ? { st, when } : null;
+}
+const PIN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg>';
+const whereOf = st => st.location || "يحدّد المعلّم المكان";
+let lastAssignKey = "";
+function renderAssign() {
+  const a = assignment(), box = $("#assign");
+  box.hidden = !a || round.status === "over";
+  if (!a) { lastAssignKey = ""; return; }
+  box.classList.toggle("next", a.when !== "now");
+  $("#aIco").innerHTML = ICONS[a.st.icon] || ICONS.star;
+  $("#aWhen").textContent = a.when === "now" ? "محطتكم الآن، اذهبوا إليها" : "محطتكم في الشوط القادم";
+  $("#aName").textContent = a.st.name;
+  $("#aWhere").textContent = whereOf(a.st);
+  const key = a.when + a.st.id + round.n + round.part;
+  if (a.when === "now" && lastAssignKey && key !== lastAssignKey) toast("اذهبوا إلى " + a.st.name, whereOf(a.st), 4200);
+  lastAssignKey = key;
+}
+/* ---------- rounds: the teacher starts and ends them; watering only while one is running ---------- */
+// "unknown" until the first answer, so a slow or unreachable sheet never locks the game
+// part: which of the round's parts is on; endsAt: when it stops (device clock, corrected by skew)
+const round = { status: CONFIG.reportUrl ? "unknown" : "running", n: 0, part: 0, parts: 4, partMin: 15, endsAt: 0, skew: 0, lesson: false, prayer: false, frozenLeft: 0 };
+// lesson time (the teacher's «درس» button) closes watering, stations and gifts; only the extra tasks stay open
+const canWater = () => (round.status === "running" || round.status === "unknown") && !round.lesson && !round.prayer;
+const canAnswer = () => !CONFIG.reportUrl || canWater();
+const canQuest = () => !CONFIG.reportUrl || (!round.prayer && (round.lesson || canWater()));
+function closedMsg() {
+  if (round.prayer) return "وقت الصلاة. كل شيء متوقّف حتى ننتهي من الصلاة.";
+  if (round.lesson) return "وقت الدرس. المحطات مغلقة حتى ينتهي الدرس، ويمكنكم حلّ المهام الإضافية.";
+  return {
+    idle: "لم تبدأ الجولة بعد. اكتبوا الإجابة عندما يبدأ المعلّم الجولة.",
+    break: `انتهى الشوط ${toAr(round.part)}. لا يمكن كتابة الإجابة حتى يبدأ الشوط التالي.`,
+    ended: `انتهت الجولة ${toAr(round.n)}. لا يمكن كتابة الإجابة الآن.`,
+    over: "انتهت اللعبة. لا يمكن كتابة الإجابات."
+  }[round.status] || "لا يمكن كتابة الإجابة الآن.";
+}
+let lastPausedToast = 0;
+function pausedToast() {
+  const now = performance.now();
+  if (now - lastPausedToast < 2500) return;
+  lastPausedToast = now;
+  if (round.prayer) return;
+  if (round.lesson) { toast("وقت الدرس", "السقي متوقّف حتى ينتهي الدرس"); return; }
+  toast("السقي متوقّف", round.status === "over" ? "انتهت اللعبة" : round.status === "break" ? "انتظروا الشوط التالي" : "انتظروا بدء الجولة");
+}
+function renderRound() {
+  const p = $("#pause");
+  renderTimebox();
+  // answers follow the clock too: closed whenever no part is running
+  $("#prayer").hidden = !round.prayer;
+  if (round.prayer) {
+    if (!qpanel.hidden) setQuestsOpen(false);
+    if (openId) toggleStation(openId);
+    $("#prayerTime").textContent = round.status === "running" && round.frozenLeft
+      ? "الوقت المتبقي من الشوط محفوظ: " + fmtClock(Math.ceil(round.frozenLeft / 1000)) : "";
+  }
+  const openKey = canAnswer() + "|" + canQuest() + "|" + round.lesson + "|" + round.prayer + "|" + round.n + "." + round.part + "|" + round.status;
+  if (round.answerOpen !== openKey) { round.answerOpen = openKey; renderStations(); renderQuests(); }
+  qtab.classList.toggle("lesson", round.lesson && !qtab.classList.contains("all"));
+  tickTimer();
+  const msg = round.lesson && round.status !== "over"
+    ? ["وقت الدرس", "استمعوا إلى المعلّم. السقي والمحطات متوقّفة الآن، ويمكنكم حلّ المهام الإضافية من الشريط أعلى اليسار."]
+    : {
+    idle:  ["استعدّوا!", "انتظروا حتى يبدأ المعلّم الجولة."],
+    break: ["انتهى الشوط " + toAr(round.part), "توقّف السقي. انتظروا المعلّم ليبدأ الشوط " + toAr(round.part + 1) + " من الجولة " + toAr(round.n) + "."],
+    ended: ["انتهت الجولة " + toAr(round.n), "توقّف السقي. انتظروا الجولة التالية."],
+    over:  ["انتهت اللعبة", "أحسنتم! انظروا إلى النتائج مع المعلّم."]
+  }[round.status];
+  p.hidden = !msg || complete || round.prayer;
+  if (msg) { $("#pauseTitle").textContent = msg[0]; $("#pauseText").textContent = msg[1]; }
+  if (!canWater()) { dragging = false; keyPour = false; garden.classList.remove("pouring"); }
+}
+
+// countdown for the running part; when it reaches zero watering stops here without waiting for the sheet
+let lastTimerTxt = "";
+const tbox = $("#timebox"), tbParts = $("#tbParts");
+const fmtClock = sec => toAr(Math.floor(sec / 60)) + ":" + toAr(String(sec % 60).padStart(2, "0"));
+function renderTimebox() {
+  tbox.hidden = !CONFIG.reportUrl || round.status === "unknown";
+  const st = round.status, n = round.n, part = round.part, P = round.parts;
+  $("#tbRound").textContent = n ? "الجولة " + toAr(n) : "الجولات";
+  $("#tbStatus").textContent = round.prayer ? "وقت الصلاة. الوقت متوقّف." : round.lesson && st !== "over" ? "وقت الدرس. المهام الإضافية فقط مفتوحة." : {
+    idle: "انتظروا حتى يبدأ المعلّم الجولة الأولى.",
+    running: `الشوط ${toAr(part)} من ${toAr(P)}، اسقوا الآن!`,
+    break: `انتهى الشوط ${toAr(part)}. انتظروا المعلّم ليبدأ الشوط ${toAr(part + 1)}.`,
+    ended: `انتهت الجولة ${toAr(n)}. انتظروا الجولة التالية.`,
+    over: "انتهت اللعبة. أحسنتم!"
+  }[st] || "";
+  if (tbParts.children.length !== P) {
+    tbParts.textContent = "";
+    tbParts.style.setProperty("--n", P);
+    tbParts.classList.toggle("wide", P <= 2);
+    for (let i = 1; i <= P; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = `<b>${toAr(i)}</b><span>الشوط</span><span class="tb-state"></span><span class="tb-bar"><i></i></span>`;
+      tbParts.append(li);
+    }
+  }
+  [...tbParts.children].forEach((li, i) => {
+    const k = i + 1;
+    const done = k < part || (k === part && st !== "running") || st === "ended" || st === "over";
+    li.classList.toggle("done", n > 0 && done);
+    li.classList.toggle("now", st === "running" && k === part);
+    li.querySelector(".tb-state").textContent = st === "running" && k === part ? "الآن" : n > 0 && done ? "انتهى ✓" : "قادم";
+  });
+  tbox.classList.toggle("paused", st !== "running");
+  if (st !== "running") {
+    $("#tbTime").textContent = st === "idle" ? fmtClock(round.partMin * 60) : "٠:٠٠";
+    $("#tbArc").style.strokeDashoffset = st === "idle" ? "0" : "100";
+    tbox.classList.remove("low");
+    lastTimerTxt = "";
+  }
+}
+function tickTimer() {
+  if (round.status !== "running" || !round.endsAt) return;
+  if (round.prayer) {                     // the clock is held during prayer
+    const held = fmtClock(Math.ceil(round.frozenLeft / 1000));
+    if (held !== lastTimerTxt) { $("#tbTime").textContent = held; lastTimerTxt = held; }
+    return;
+  }
+  const left = Math.max(0, Math.ceil((round.endsAt - Date.now()) / 1000));
+  if (left === 0) {
+    round.status = round.part >= round.parts ? "ended" : "break";
+    renderRound();
+    toast("انتهى الوقت!", "انتهى الشوط " + toAr(round.part), 3000);
+    return;
+  }
+  const txt = fmtClock(left);
+  if (txt !== lastTimerTxt) {
+    $("#tbTime").textContent = txt; lastTimerTxt = txt;
+    const used = 100 - Math.min(100, left / (round.partMin * 60) * 100);
+    $("#tbArc").style.strokeDashoffset = String(used);
+    const bar = tbParts.querySelector("li.now .tb-bar i");
+    if (bar) bar.style.width = used + "%";
+  }
+  tbox.classList.toggle("low", left <= 60);
+}
+setInterval(tickTimer, 500);
+async function pollRound() {
+  if (!CONFIG.reportUrl) return;
+  let s;
+  try {
+    const res = await fetch(CONFIG.reportUrl + (CONFIG.reportUrl.includes("?") ? "&" : "?") + "action=state&id=" + encodeURIComponent(deviceId), { cache: "no-store" });
+    s = await res.json();
+  } catch (e) { return; }
+  if (!s || Array.isArray(s) || !s.status) { round.status = "running"; renderRound(); return; }  // older script without rounds
+  if (s.gameId && state.gameId && s.gameId !== state.gameId) {
+    // the teacher started a new game: start this device over
+    state = { unlocked: [], water: 0, progress: 0, team: "", gameId: s.gameId, adj: 0, steps: {}, quests: {}, group: 0 };
+    renderQuests();
+    vis.adj = 0; hold = 0; items = []; Object.keys(inFlight).forEach(k => delete inFlight[k]); renderItems();
+    complete = false; parts = []; wet = 0;
+    save(true);
+    if (openId) toggleStation(openId);
+    renderStations(); setStage(0, false); showTeam();
+    toast("لعبة جديدة", "اكتبوا اسم الفريق");
+  } else if (s.gameId && !state.gameId) {
+    state.gameId = s.gameId; save(true);
+  }
+  if (Array.isArray(s.items)) syncItems(s.items);
+  if (typeof s.group === "number" && s.group && s.group !== state.group && state.team) {
+    state.group = s.group; save(true);
+    showTeam(); renderStations();
+    toast("رقم مجموعتكم", "المجموعة " + toAr(s.group), 3600);
+  }
+  if (typeof s.adj === "number") {
+    // items used here that the sheet has not counted yet still belong to this device's height
+    const pendingUse = Object.values(inFlight).reduce((a, x) => a + x.amount, 0);
+    const target = s.adj + pendingUse;
+    if (Math.abs(target - state.adj) > .05) applyAdj(target);
+  }
+  const was = round.status;
+  const wasN = round.n;
+  const wasPart = round.part;
+  const wasLesson = round.lesson, wasPrayer = round.prayer;
+  round.lesson = !!s.lesson;
+  round.prayer = !!s.prayer;
+  if (round.prayer !== wasPrayer && was !== "unknown" && !round.prayer) toast("انتهت الصلاة", "تقبّل الله، نكمل اللعب!", 3000);
+  if (round.lesson !== wasLesson && was !== "unknown") {
+    if (round.lesson) toast("وقت الدرس", "استمعوا إلى المعلّم، والمهام الإضافية مفتوحة", 3400);
+    else toast("انتهى الدرس", canWater() ? "عودوا إلى السقي والمحطات!" : "انتظروا المعلّم", 3000);
+  }
+  round.status = s.status; round.n = Number(s.round) || 0;
+  round.part = Number(s.part) || 0; round.parts = Number(s.parts) || 4; round.partMin = Number(s.partMinutes) || 15;
+  if (s.now) round.skew = new Date(s.now).getTime() - Date.now();
+  round.endsAt = s.endsAt ? new Date(s.endsAt).getTime() - round.skew : 0;
+  round.frozenLeft = round.prayer && round.endsAt ? Math.max(0, round.endsAt - Date.now()) : 0;
+  if (round.n !== wasN) {
+    const before = Math.max(1, Math.min(wasN, maxRound));
+    renderStations();
+    if (boardRound() !== before && wasN > 0) toast("محطات جديدة!", "ظهرت محطات الجولة " + toAr(boardRound()), 3200);
+  }
+  renderRound();
+  if (was !== "unknown" && was !== round.status) {
+    if (round.status === "running") toast(round.part > 1 ? "بدأ الشوط " + toAr(round.part) + " من الجولة " + toAr(round.n) : "بدأت الجولة " + toAr(round.n), "هيا اسقوا البذرة!");
+  } else if (round.status === "running" && round.part !== wasPart && wasPart) {
+    toast("بدأ الشوط " + toAr(round.part) + " من الجولة " + toAr(round.n), "هيا اسقوا البذرة!");
+  }
+}
+
+// the teacher gave this team a boost or a cut
+function applyAdj(adj) {
+  const delta = adj - state.adj;
+  state.adj = adj; save(true);
+  if (delta > 0) growFx(delta, "زاد طول النبتة");
+  else if (delta < 0) cutFx(-delta);
+}
+
+/* ---------- gift items: the teacher gives them, the team uses them ---------- */
+const ITEM_INFO = {
+  fert: { name: "سماد", use: "استخدموا السماد", art: '<svg viewBox="0 0 100 110" aria-hidden="true"><path d="M30 22Q50 14 70 22L76 30Q50 24 24 30Z" fill="#c9a26a"/><path d="M24 30Q50 24 76 30L84 92Q50 104 16 92Z" fill="#b8874f" stroke="#7a5530" stroke-width="3" stroke-linejoin="round"/><path d="M30 14Q50 4 70 14L68 24Q50 18 32 24Z" fill="#d9b67f" stroke="#7a5530" stroke-width="3"/><path d="M38 12Q50 22 62 12" stroke="#7a5530" stroke-width="3" fill="none"/><circle cx="50" cy="62" r="17" fill="#f2e6c9"/><path d="M50 74C42 66 42 54 52 48C58 56 58 66 50 74Z" fill="#5aa845"/><path d="M50 74L52 52" stroke="#2f6b2a" stroke-width="2"/></svg>' },
+  rain: { name: "غيمة مطر", use: "استخدموا الغيمة", art: '<svg viewBox="0 0 230 120" aria-hidden="true"><path d="M50 100H180A38 38 0 0 0 186 25A52 52 0 0 0 88 26A42 42 0 0 0 50 100Z" fill="#fff"/><path d="M50 100H180A38 38 0 0 0 214 70Q200 92 172 90H58Q30 92 16 72A42 42 0 0 0 50 100Z" fill="#d6e6f0"/><g fill="#86d6ff"><path d="M80 108l-5 10" stroke="#86d6ff" stroke-width="4" stroke-linecap="round"/><path d="M115 108l-5 10" stroke="#86d6ff" stroke-width="4" stroke-linecap="round"/><path d="M150 108l-5 10" stroke="#86d6ff" stroke-width="4" stroke-linecap="round"/></g></svg>' }
+};
+let items = [], busyItem = false, emitters = [];
+const inFlight = {};            // key -> {amount, at}: used here, not yet confirmed by the sheet
+const trayEl = $("#tray"), trayItems = $("#trayItems");
+function renderItems(newKeys = []) {
+  trayItems.textContent = "";
+  items.forEach(it => {
+    const info = ITEM_INFO[it.kind] || ITEM_INFO.fert;
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "item" + (newKeys.includes(it.key) ? " new" : "");
+    b.innerHTML = info.art.replace("<svg", '<svg class="item-art"');
+    const t = document.createElement("span");
+    const sm = document.createElement("small"); sm.textContent = info.use;
+    const bb = document.createElement("b"); bb.textContent = "+" + fmtH(it.amount);
+    t.append(sm, bb); b.append(t);
+    b.setAttribute("aria-label", info.use + "، يزيد الطول " + fmtH(it.amount));
+    b.addEventListener("click", () => useItem(it));
+    trayItems.append(b);
+  });
+  trayEl.hidden = items.length === 0;
+}
+function syncItems(list) {
+  const keys = new Set(list.map(i => i.key));
+  Object.keys(inFlight).forEach(k => {
+    if (!keys.has(k)) delete inFlight[k];                                   // the sheet counted it
+    else if (Date.now() - inFlight[k].at > 15000) { inFlight[k].at = Date.now(); sendUse(k); }  // resend a lost use
+  });
+  const fresh = list.filter(i => !inFlight[i.key]);
+  const added = fresh.filter(i => !items.some(x => x.key === i.key));
+  items = fresh;
+  renderItems(added.map(i => i.key));
+  if (added.length) {
+    const info = ITEM_INFO[added[0].kind] || ITEM_INFO.fert;
+    toast("هدية من المعلّم!", info.name + " +" + fmtH(added[0].amount) + "، اضغطوا عليها", 3600);
+  }
+}
+function sendUse(key) {
+  if (!CONFIG.reportUrl) return;
+  try {
+    fetch(CONFIG.reportUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ type: "useItem", id: deviceId, gameId: state.gameId, key }), keepalive: true }).catch(() => {});
+  } catch (e) {}
+}
+function useItem(it) {
+  if (busyItem) return;
+  if (!canWater()) { pausedToast(); return; }
+  busyItem = true;
+  items = items.filter(x => x.key !== it.key); renderItems();
+  inFlight[it.key] = { amount: it.amount, at: Date.now() };
+  sendUse(it.key);
+  state.adj += it.amount; hold += it.amount; save(true);
+  playItem(it.kind, () => {
+    hold = Math.max(0, hold - it.amount);
+    growFx(it.amount, (ITEM_INFO[it.kind] || ITEM_INFO.fert).name + "! نمت النبتة");
+    busyItem = false;
+  });
+}
+
+function plantBox() {
+  const p = plantG.getBoundingClientRect(), g = garden.getBoundingClientRect();
+  return { l: p.left - g.left, r: p.right - g.left, t: p.top - g.top, b: p.bottom - g.top, cx: (p.left + p.right) / 2 - g.left };
+}
+function fxEl(html, x, y, cls, ms) {
+  const e = document.createElement("div");
+  e.className = "fx-item " + cls; e.innerHTML = html;
+  e.style.left = x + "px"; e.style.top = y + "px";
+  garden.appendChild(e);
+  setTimeout(() => e.remove(), ms);
+}
+function playItem(kind, done) {
+  const now = performance.now();
+  if (kind === "rain") {
+    const pb = plantBox(), w = Math.max(160, Math.min(GW * .6, soil.r - soil.l));
+    const cy = Math.max(70, Math.min(pb.t, soil.cy - 150) - 40);
+    fxEl(ITEM_INFO.rain.art, soil.cx, cy, "cloud", 2600);
+    emitters.push({ start: now + 350, until: now + 2000, rate: 110, acc: 0,
+      make: () => ({ t: "rain", x: soil.cx + (Math.random() - .5) * w * .75, y: cy + 30, vx: -15, vy: 260 + Math.random() * 120, life: 1 }) });
+  } else {
+    const x = soil.cx + 40, y = soil.cy - 150;
+    fxEl(ITEM_INFO.fert.art, x, y, "sack", 2400);
+    emitters.push({ start: now + 750, until: now + 1800, rate: 80, acc: 0,
+      make: () => ({ t: "grain", x: x - 38 + (Math.random() - .5) * 12, y: y - 14, vx: -40 + Math.random() * 50, vy: 10 + Math.random() * 40, life: 1, c: Math.random() < .35 ? "#9bd16a" : "#6b4a2a" }) });
+  }
+  setTimeout(done, 2100);
+}
+function floatLabel(text, dir) {
+  const pb = plantBox(), e = document.createElement("div");
+  e.className = "float " + dir; e.textContent = text;
+  e.style.left = Math.max(80, Math.min(GW - 80, pb.cx)) + "px";
+  e.style.top = Math.max(120, Math.min(soil.cy - 60, pb.t + 40)) + "px";
+  garden.appendChild(e);
+  setTimeout(() => e.remove(), 2500);
+}
+function flashHeight(dir) {
+  const h = $(".g-height");
+  h.classList.remove("up", "down"); void h.offsetWidth; h.classList.add(dir);
+  setTimeout(() => h.classList.remove(dir), 2100);
+}
+function growFx(d, msg) {
+  popG.classList.remove("pop", "wilt"); void popG.getBoundingClientRect(); popG.classList.add("pop");
+  burst();
+  floatLabel("+" + fmtH(d), "up"); flashHeight("up");
+  toast(msg, "+" + fmtH(d), 3200);
+}
+function cutFx(d) {
+  popG.classList.remove("pop", "wilt"); void popG.getBoundingClientRect(); popG.classList.add("wilt");
+  const sw = $("#stageWrap"); sw.classList.remove("wilt"); void sw.offsetWidth; sw.classList.add("wilt");
+  setTimeout(() => sw.classList.remove("wilt"), 1700);
+  const pb = plantBox(), now = performance.now(), colors = ["#7cc35a", "#c9a640", "#a8db6c", "#b8862e"];
+  emitters.push({ start: now, until: now + 1500, rate: curStage >= 5 ? 28 : 8, acc: 0,
+    make: () => ({ t: "leaf", x: pb.l + Math.random() * (pb.r - pb.l), y: pb.t + Math.random() * (pb.b - pb.t) * .6,
+      vx: (Math.random() - .5) * 40, vy: 45 + Math.random() * 45, rot: Math.random() * 6, vr: (Math.random() - .5) * 5, life: 1,
+      c: colors[Math.floor(Math.random() * colors.length)] }) });
+  floatLabel("−" + fmtH(d), "down"); flashHeight("down");
+  toast("قرار من المعلّم", "نقص طول النبتة " + fmtH(d), 3400);
+}
+
+let lastReport = 0;
+function report() {
+  if (!CONFIG.reportUrl || !state.team) return;
+  lastReport = performance.now();
+  const st = stageOfH(heightCm());
+  const body = JSON.stringify({
+    id: deviceId, gameId: state.gameId, team: state.team, group: state.group, stage: st + 1, stageName: STAGES[st].name,
+    growth: Math.round(growthCm(state.progress) * 10) / 10,
+    stations: state.unlocked.length, totalStations: CONFIG.stations.length, done: state.progress >= MAX
+  });
+  try {
+    fetch(CONFIG.reportUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body, keepalive: true }).catch(() => {});
+  } catch (e) {}
+}
+
+
+/* ---------- side questions ---------- */
+const QUESTS = CONFIG.sideQuests || [];
+const questsEl = $("#quests"), qtab = $("#qtab"), qpanel = $("#qpanel"), qlist = $("#qlist");
+questsEl.hidden = QUESTS.length === 0;
+QUESTS.forEach((q, i) => {
+  const li = document.createElement("li");
+  li.className = "qp-item"; li.dataset.id = q.id;
+  li.innerHTML = `<div class="qp-q"><span class="qp-n">${toAr(i + 1)}</span><span class="qp-text"></span></div>
+    <form class="qp-row" novalidate><input id="quest-${q.id}" autocomplete="off" spellcheck="false" aria-label="الجواب"><button type="submit">تحقّق</button></form>
+    <p class="qp-msg" aria-live="polite"></p><p class="qp-done">✓ أحسنتم! امتلأ الإبريق</p>`;
+  li.querySelector(".qp-text").textContent = q.q;
+  const form = li.querySelector("form"), input = li.querySelector("input"), msg = li.querySelector(".qp-msg");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (state.quests[q.id]) return;
+    if (!canQuest()) { renderQuests(); return; }
+    if (!norm2(input.value)) { msg.textContent = "اكتبوا الجواب أولًا."; msg.className = "qp-msg bad"; return; }
+    if (stepMatches(q, input.value)) {
+      state.quests[q.id] = true;
+      state.water += WPS;
+      save(true);
+      msg.textContent = ""; input.value = "";
+      renderQuests();
+      toast("مهمة منجزة!", "امتلأ الإبريق كاملًا", 2800);
+      canEl.classList.remove("filling"); void canEl.offsetWidth; canEl.classList.add("filling");
+    } else {
+      msg.textContent = "ليس هذا الجواب، حاولوا مرة أخرى."; msg.className = "qp-msg bad";
+      li.classList.remove("shake"); void li.offsetWidth; li.classList.add("shake");
+      input.select();
+    }
+  });
+  li.addEventListener("animationend", () => li.classList.remove("shake"));
+  qlist.append(li);
+});
+function renderQuests() {
+  const shut = !canQuest();
+  qpanel.classList.toggle("closed", shut);
+  $("#qpClosed").textContent = shut ? closedMsg() : "";
+  qlist.querySelectorAll("input").forEach(i => { i.disabled = shut; });
+  const n = QUESTS.filter(q => state.quests[q.id]).length;
+  $("#qcount").textContent = `${toAr(n)} من ${toAr(QUESTS.length)}`;
+  qtab.classList.toggle("all", n === QUESTS.length);
+  qlist.querySelectorAll(".qp-item").forEach(li => li.classList.toggle("solved", !!state.quests[li.dataset.id]));
+}
+function setQuestsOpen(on) {
+  qpanel.hidden = !on;
+  questsEl.classList.toggle("open", on);
+  qtab.setAttribute("aria-expanded", on);
+  if (on) { const next = qlist.querySelector(".qp-item:not(.solved) input"); if (next) setTimeout(() => next.focus({ preventScroll: true }), 80); }
+}
+qtab.addEventListener("click", () => setQuestsOpen(qpanel.hidden));
+document.addEventListener("pointerdown", e => { if (!qpanel.hidden && !questsEl.contains(e.target)) setQuestsOpen(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !qpanel.hidden) { setQuestsOpen(false); qtab.focus(); } });
+renderQuests();
+
+/* ---------- start ---------- */
+fitScene(); measure();
+showTeam();
+pollRound();
+setInterval(pollRound, 5000);
+report();
+renderStations();
+setStage(stageOfH(heightCm()), false);
+if (state.progress >= MAX) finish(false);
+requestAnimationFrame(t => { last = t; measure(); requestAnimationFrame(tick); });
+</script>
+
+</body></html>
