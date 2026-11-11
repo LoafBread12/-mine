@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهمة الكواكب الخمسة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&family=Lalezar&display=swap">
+<style>
+:root{
+  --bg:#060a1c; --bg-2:#0b1230; --panel:#0f1838; --panel-2:#142048; --line:rgba(150,180,255,.14); --line-2:rgba(150,180,255,.28);
+  --ink:#eef2ff; --ink-mut:#9aa6d1; --ink-dim:#6b77a6;
+  --gold:#ffc94d; --gold-2:#f29e1f; --mint:#4fe3b5; --rose:#ff6b8b; --sky:#6cc4ff;
+  --f-display:"Lalezar","Readex Pro",Tahoma,sans-serif;
+  --f-body:"Readex Pro",Tahoma,"Segoe UI",sans-serif;
+  --rw:46px;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{
+  margin:0;min-height:100vh;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  background:
+    linear-gradient(var(--line) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 48px,
+    radial-gradient(ellipse 70% 50% at 80% -10%,rgba(90,110,255,.28),transparent 70%),
+    linear-gradient(180deg,var(--bg-2),var(--bg));
+  background-color:var(--bg);background-attachment:fixed;
+  padding:0 max(16px,env(safe-area-inset-left,0px)) 48px;
+  -webkit-tap-highlight-color:transparent;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55))}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.sky{position:fixed;inset:0;pointer-events:none;z-index:-2;overflow:hidden}
+.sky i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.6;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.12}}
+
+/* ---------- header ---------- */
+.top{max-width:1200px;margin:0 auto;padding:18px 0 10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:56px;height:56px;flex:none}
+.brand .ring{transform-origin:28px 28px;animation:rot 18s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.kicker{margin:0;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--sky)}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(28px,4.6vw,42px);line-height:1.05;color:#fff}
+.brand h1 span{color:var(--gold)}
+.status{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink-mut)}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint);animation:tw 2s infinite}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid var(--line)}
+.tab{border:0;background:none;padding:8px 14px;border-radius:10px;font-weight:600;font-size:15px;color:var(--ink-mut);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tab svg{width:18px;height:18px}
+.tab[aria-selected="true"]{color:#141022;background:linear-gradient(180deg,#ffe39a,var(--gold));box-shadow:0 4px 16px rgba(255,201,77,.3)}
+
+main{max-width:1200px;margin:0 auto}
+.view{animation:vin .35s ease}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}}
+.panel{position:relative;border-radius:18px;background:linear-gradient(180deg,rgba(20,32,72,.88),rgba(11,18,48,.92));border:1px solid var(--line);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.panel.corners::before,.panel.corners::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--sky);opacity:.6;pointer-events:none}
+.panel.corners::before{top:-1px;inset-inline-start:-1px;border-inline-end:0;border-bottom:0;border-start-start-radius:18px}
+.panel.corners::after{bottom:-1px;inset-inline-end:-1px;border-inline-start:0;border-top:0;border-end-end-radius:18px}
+.h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:26px;line-height:1.2}
+.sub{margin:2px 0 0;color:var(--ink-mut);font-size:14px}
+.label{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink-dim)}
+.sec{margin:22px 0 10px;display:flex;align-items:end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* ---------- group cards ---------- */
+.groups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.gc{position:relative;overflow:hidden;padding:14px 14px 12px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--g) 16%,#0f1838),#0b1230);box-shadow:inset 0 3px 0 var(--g)}
+.gc-head{display:flex;align-items:center;gap:10px}
+.emb{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--g) 25%,transparent);border:1px solid color-mix(in srgb,var(--g) 60%,transparent)}
+.emb svg{width:26px;height:26px;fill:var(--g)}
+.gc-name{min-width:0}
+.gc-name b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1}
+.gc-name small{display:block;font-size:12px;color:var(--ink-mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-rank{margin-inline-start:auto;font-family:var(--f-display);font-size:30px;line-height:1;color:var(--ink-dim)}
+.gc-rank.r1{color:var(--gold);text-shadow:0 0 16px rgba(255,201,77,.6)}
+.gc-mini{margin:10px -6px 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.gc-mini svg{display:block;width:100%;height:auto}
+.gc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.gc-stats div{padding:5px 2px;border-radius:10px;background:rgba(0,0,0,.25)}
+.gc-stats b{display:block;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.2}
+.gc-stats span{font-size:11px;color:var(--ink-mut)}
+.gc-bar{height:6px;border-radius:6px;background:rgba(0,0,0,.4);overflow:hidden;margin-top:8px}
+.gc-bar i{display:block;height:100%;background:var(--g);border-radius:6px;transition:width 1.4s cubic-bezier(.25,.9,.3,1)}
+
+/* ---------- planets ---------- */
+.planets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
+.pl{position:relative;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);text-align:start}
+.pl .orb{width:40px;height:40px;flex:none}
+.pl b{display:block;font-weight:600;font-size:14px;line-height:1.2}
+.pl small{display:block;font-size:12px;color:var(--ink-mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl > span:last-child{min-width:0}
+.pl .st{position:absolute;top:6px;inset-inline-end:8px;font-size:11px;font-weight:700;color:var(--ink-dim)}
+.pl.done .st{color:var(--mint)}
+.pl[aria-pressed="true"]{border-color:var(--gold);background:linear-gradient(180deg,rgba(255,201,77,.16),rgba(255,201,77,.03));box-shadow:0 0 20px rgba(255,201,77,.18)}
+
+/* ---------- race ---------- */
+.race{padding:16px}
+.lane-group{margin-top:14px}
+.lane-group:first-child{margin-top:0}
+.lg-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700;font-size:14px;color:var(--g)}
+.lg-head .emb{width:26px;height:26px;border-radius:8px}
+.lg-head .emb svg{width:16px;height:16px}
+.lane{display:grid;grid-template-columns:30px 150px minmax(0,1fr);align-items:center;gap:10px;margin-top:5px}
+.rank{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:13px;background:rgba(255,255,255,.06);color:var(--ink-mut);border:1px solid var(--line)}
+.rank.r1{background:linear-gradient(180deg,#ffe39a,var(--gold));color:#3a2600;border-color:transparent}
+.rank.r2{background:linear-gradient(180deg,#fff,#c3cbe0);color:#252b3e;border-color:transparent}
+.rank.r3{background:linear-gradient(180deg,#ffcfa6,#d9884a);color:#3b1c05;border-color:transparent}
+.who{border:0;background:none;padding:0;text-align:start;min-width:0;display:grid;line-height:1.25}
+.who span{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who small{font-size:12px;color:var(--gold);font-weight:600}
+.who:hover span{text-decoration:underline;text-decoration-color:var(--g)}
+.track{position:relative;height:34px;border-radius:10px;background:rgba(0,0,0,.28);border:1px solid var(--line)}
+.cp{position:absolute;top:3px;bottom:3px;width:1px;background:var(--line-2);inset-inline-start:calc((100% - var(--rw)) * var(--k) + var(--rw) - 1px)}
+.trail{position:absolute;top:50%;height:4px;translate:0 -50%;border-radius:4px;inset-inline-start:8px;width:calc((100% - var(--rw)) * var(--p));background:linear-gradient(270deg,transparent,var(--g));opacity:.6;transition:width 1.8s cubic-bezier(.25,.9,.3,1)}
+.rocket{position:absolute;top:50%;translate:0 -50%;width:var(--rw);height:24px;inset-inline-start:calc((100% - var(--rw)) * var(--p));transition:inset-inline-start 1.8s cubic-bezier(.25,.9,.3,1)}
+.rocket svg{width:100%;height:100%;overflow:visible;display:block}
+.flame{transform-origin:52px 16px;animation:flick .16s ease-in-out infinite alternate}
+.rocket.boost .flame{animation:flick .1s ease-in-out infinite alternate,boost 1.8s ease}
+@keyframes flick{to{transform:scaleX(.7) scaleY(.85)}}
+@keyframes boost{20%,70%{transform:scaleX(2.4)}}
+.plus{position:absolute;top:-14px;inset-inline-start:calc((100% - var(--rw)) * var(--p) + 6px);font-weight:700;font-size:14px;color:var(--mint);pointer-events:none;animation:plus 2.6s ease-out forwards}
+@keyframes plus{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
+.scale{display:grid;grid-template-columns:30px 150px minmax(0,1fr);gap:10px;margin-bottom:4px}
+.scale .track{height:18px;background:none;border:0}
+.scale .tick{position:absolute;top:0;font-size:11px;font-weight:600;color:var(--ink-dim);translate:50% 0;inset-inline-start:calc((100% - var(--rw)) * var(--k) + var(--rw))}
+
+/* ---------- workshop ---------- */
+.ws-pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pick{display:grid;justify-items:center;gap:6px;padding:18px 10px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--g) 18%,#0f1838),#0b1230);box-shadow:inset 0 3px 0 var(--g);text-align:center}
+.pick .emb{width:60px;height:60px;border-radius:18px}
+.pick .emb svg{width:36px;height:36px}
+.pick b{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1}
+.pick small{color:var(--ink-mut);font-size:13px}
+.pick:hover{border-color:var(--g)}
+.lock{max-width:420px;margin:24px auto;padding:22px;text-align:center;display:grid;gap:12px;justify-items:center}
+.lock .emb{width:64px;height:64px;border-radius:18px}
+.lock .emb svg{width:38px;height:38px}
+.pin{display:flex;gap:8px;direction:ltr}
+.pin input{width:54px;height:62px;border-radius:14px;border:1px solid var(--line-2);background:rgba(0,0,0,.4);text-align:center;font-size:28px;font-weight:700}
+.pin input:focus{border-color:var(--g);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--g) 30%,transparent)}
+.lock.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.msg{min-height:1.4em;margin:0;font-size:14px;font-weight:600;color:var(--rose)}
+
+.ws{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:14px;align-items:start}
+.ws-scene{overflow:hidden;padding:0}
+.ws-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ws-top .emb{width:46px;height:46px}
+.ws-title{min-width:0;flex:1 1 220px}
+.ws-title b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1}
+.ws-title small{display:block;color:var(--ink-mut);font-size:13px}
+.crys{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid var(--line-2)}
+.crys svg{width:26px;height:26px}
+.crys b{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1;color:#b9f3ff}
+.crys span{font-size:12px;color:var(--ink-mut);line-height:1.2}
+.scene{display:block;width:100%;height:auto;background:#050a1f}
+.scene .mod{transform-box:fill-box;transform-origin:50% 100%}
+.scene .mod.new{animation:land 1.1s cubic-bezier(.3,1.5,.5,1)}
+@keyframes land{0%{transform:translateY(-120px) scale(.6);opacity:0}60%{opacity:1}}
+.scene .blink{animation:tw 1.4s ease-in-out infinite}
+.scene .orbit{animation:orbit 14s linear infinite;transform-origin:400px 520px}
+@keyframes orbit{from{transform:rotate(-14deg)}50%{transform:rotate(14deg)}to{transform:rotate(-14deg)}}
+.scene .beam{animation:beam 2.6s ease-in-out infinite;transform-origin:50% 100%;transform-box:fill-box}
+@keyframes beam{50%{opacity:.25}}
+.scene .lift{animation:lift 3s ease-in-out infinite}
+@keyframes lift{50%{transform:translateY(-4px)}}
+.ws-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.title-chip{padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;color:#141022;background:var(--g)}
+.custom{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.custom input{height:38px;border-radius:10px;border:1px solid var(--line-2);background:rgba(0,0,0,.35);padding:0 10px;font-weight:600;min-width:0;width:200px}
+.emb-pick{display:flex;gap:4px}
+.emb-pick button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);display:grid;place-items:center;padding:0}
+.emb-pick svg{width:20px;height:20px;fill:var(--ink-mut)}
+.emb-pick button[aria-pressed="true"]{border-color:var(--g);background:color-mix(in srgb,var(--g) 25%,transparent)}
+.emb-pick button[aria-pressed="true"] svg{fill:var(--g)}
+
+.shop{padding:12px;display:grid;gap:8px;max-height:min(78vh,820px);overflow:auto}
+.shop-h{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px}
+.item{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.22)}
+.item .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.05)}
+.item .ic svg{width:30px;height:30px}
+.item b{display:block;font-weight:600;font-size:15px;line-height:1.25}
+.item small{display:block;font-size:12px;color:var(--ink-mut);line-height:1.45}
+.buy{height:40px;min-width:78px;padding:0 10px;border:0;border-radius:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;color:#062430;background:linear-gradient(180deg,#c9f4ff,var(--sky));box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
+.buy svg{width:16px;height:16px}
+.buy:disabled{cursor:not-allowed;color:var(--ink-dim);background:rgba(255,255,255,.06);box-shadow:none}
+.item.built{border-color:color-mix(in srgb,var(--g) 50%,transparent);background:color-mix(in srgb,var(--g) 10%,transparent)}
+.item.built .ic{background:color-mix(in srgb,var(--g) 25%,transparent)}
+.done-tag{font-size:13px;font-weight:700;color:var(--g);white-space:nowrap}
+.fact{margin:0;padding:10px 12px;border-radius:12px;background:rgba(108,196,255,.08);border:1px dashed rgba(108,196,255,.35);font-size:13px;color:#cfe8ff}
+.fact b{color:var(--sky)}
+
+/* ---------- evaluation ---------- */
+.eval-bar{display:flex;flex-wrap:wrap;align-items:end;gap:10px;padding:14px 16px}
+.field{display:grid;gap:4px;flex:1 1 220px}
+.field label{font-size:12px;font-weight:600;color:var(--ink-mut)}
+.field input{height:44px;border-radius:12px;border:1px solid var(--line-2);padding:0 12px;background:rgba(0,0,0,.35);font-weight:600;font-size:16px}
+.field input:focus{border-color:var(--gold);outline:none}
+.btn{height:44px;padding:0 16px;border:1px solid var(--line-2);border-radius:12px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:rgba(255,255,255,.06)}
+.btn svg{width:18px;height:18px}
+.btn.gold{color:#251700;border-color:transparent;background:linear-gradient(180deg,#ffe39a,var(--gold) 55%,var(--gold-2));box-shadow:0 6px 18px rgba(255,201,77,.25)}
+.btn.danger{border-color:rgba(255,107,139,.5);color:#ffc2cf;background:rgba(255,107,139,.1)}
+.btn:active,.buy:active:not(:disabled){transform:translateY(2px)}
+.rules{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.rule{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px}
+.rule .ri{width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+.rule .ri svg{width:15px;height:15px}
+.rule b{color:var(--gold)}
+.ev-group{margin-top:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.ev{padding:12px 14px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);box-shadow:inset 3px 0 0 var(--g)}
+[dir=rtl] .ev{box-shadow:inset -3px 0 0 var(--g)}
+.ev-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ev-name{flex:1;min-width:0;border:0;background:none;padding:0;text-align:start;font-weight:600;font-size:15px;line-height:1.3}
+.ev-total{flex:none;min-width:58px;text-align:center;padding:1px 8px;border-radius:10px;background:rgba(0,0,0,.35);font-family:var(--f-display);font-size:22px;line-height:1.3;color:var(--gold)}
+.ev-total small{font-family:var(--f-body);font-size:12px;color:var(--ink-dim)}
+.crit{display:grid;grid-template-columns:66px minmax(0,1fr);align-items:center;gap:8px;margin-top:7px;transition:opacity .3s}
+.crit-l{font-weight:600;font-size:13px;color:var(--ink-mut);display:flex;align-items:center;gap:5px}
+.crit-l svg{width:15px;height:15px;flex:none}
+.crit.off{opacity:.3;pointer-events:none}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.opt{height:38px;border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:14px;background:rgba(0,0,0,.25);color:var(--ink-mut)}
+.opt[aria-pressed="true"]{color:#101026;border-color:transparent}
+.opt.v-p[aria-pressed="true"],.opt.v-w[aria-pressed="true"]{background:var(--mint)}
+.opt.v-l[aria-pressed="true"],.opt.v-d[aria-pressed="true"]{background:var(--gold)}
+.opt.v-a[aria-pressed="true"],.opt.v-x[aria-pressed="true"]{background:var(--rose)}
+.stars{display:flex;align-items:center;gap:4px}
+.star{width:38px;height:38px;border:1px solid var(--line);padding:5px;border-radius:10px;background:rgba(0,0,0,.25)}
+.star svg{width:100%;height:100%;fill:rgba(255,255,255,.16)}
+.star.on svg{fill:var(--gold)}
+.res-note{font-size:13px;font-weight:600;color:var(--ink-mut)}
+.gres-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-bottom:8px;padding:8px 12px;border-radius:14px;background:color-mix(in srgb,var(--g) 10%,transparent);border:1px solid color-mix(in srgb,var(--g) 35%,transparent)}
+.gres{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-mut)}
+.gres .opt{min-width:70px;padding:0 12px}
+.mor-word{margin-inline-start:4px;font-size:12px;font-weight:600;color:var(--gold);white-space:nowrap}
+
+/* ---------- report ---------- */
+.report{padding:16px}
+.table-wrap{overflow-x:auto;margin-top:10px;border-radius:14px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:820px;font-size:14px}
+th,td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--line)}
+th{font-size:12px;font-weight:600;color:var(--ink-mut);background:rgba(0,0,0,.3);white-space:nowrap}
+td.nm{text-align:start;font-weight:600;white-space:nowrap}
+td.nm button{border:0;background:none;padding:0;font-weight:600}
+td.tot{font-family:var(--f-display);font-size:19px;color:var(--gold)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--g);margin-inline-end:6px;vertical-align:middle}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.codes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.code{padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);text-align:center}
+.code b{display:block;font-size:24px;letter-spacing:.3em;direction:ltr;color:var(--g)}
+
+/* ---------- dialog ---------- */
+dialog{border:0;padding:0;background:none;color:var(--ink);max-width:min(640px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
+.sc{position:relative;padding:20px 18px 16px;border-radius:22px;background:radial-gradient(ellipse 80% 45% at 50% 0%,color-mix(in srgb,var(--g) 30%,transparent),transparent 70%),linear-gradient(180deg,var(--panel-2),var(--bg));border:1px solid color-mix(in srgb,var(--g) 60%,transparent);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.sc-close{position:absolute;top:10px;inset-inline-end:10px;width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.35)}
+.sc-top{display:grid;justify-items:center;text-align:center;gap:4px}
+.sc-rocket{width:130px;height:66px}
+.sc-top h2{margin:2px 0 0;font-family:var(--f-display);font-weight:400;font-size:clamp(22px,5vw,30px);line-height:1.2}
+.sc-sum{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-weight:600}
+.sc-sum .big{font-family:var(--f-display);font-size:36px;line-height:1;color:var(--gold)}
+.chip{padding:2px 10px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid var(--line);font-size:13px}
+.meters{display:grid;gap:9px;margin:14px 0}
+.meter{display:grid;grid-template-columns:28px minmax(0,1fr) 60px;align-items:center;gap:10px}
+.meter .mi{width:28px;height:28px;border-radius:8px;display:grid;place-items:center}
+.meter .mi svg{width:16px;height:16px}
+.meter-l{font-weight:600;font-size:13px}
+.bar{height:10px;border-radius:9px;background:rgba(0,0,0,.4);overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;width:0;border-radius:9px;transition:width 1.2s cubic-bezier(.25,.9,.3,1)}
+.meter .v{font-family:var(--f-display);font-size:19px;text-align:center}
+.sc table{min-width:0;font-size:13px}
+.sc th,.sc td{padding:6px 4px}
+.badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 2px}
+.badge{display:grid;justify-items:center;gap:2px;width:100px;padding:8px 4px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);text-align:center;font-size:12px;font-weight:600;line-height:1.25}
+.badge svg{width:42px;height:42px}
+.badge.off{opacity:.25;filter:grayscale(1)}
+.sc-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:12px}
+
+.toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;z-index:30;padding:10px 18px;border-radius:14px;font-weight:600;background:rgba(11,18,48,.96);border:1px solid var(--gold);box-shadow:0 12px 30px rgba(0,0,0,.5);opacity:0;transform:translateY(16px);transition:.3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:none}
+
+@media (max-width:980px){
+  .groups,.ws-pick{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ws{grid-template-columns:minmax(0,1fr)}
+  .shop{max-height:none}
+  .codes{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  :root{--rw:38px}
+  .lane,.scale{grid-template-columns:26px 92px minmax(0,1fr);gap:6px}
+  .rank{width:26px;height:26px;font-size:12px}
+  .who span{font-size:12.5px}
+  .race{padding:12px 10px}
+  .planets{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .pl{flex-direction:column;padding:8px 2px 6px;gap:4px;text-align:center}
+  .pl .orb{width:30px;height:30px}
+  .pl b{font-size:11px}
+  .pl small,.pl .st{display:none}
+  .tabs{width:100%}
+  .tab{flex:1;justify-content:center;padding:8px 4px;font-size:13px;gap:4px}
+  .tab svg{width:15px;height:15px}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .star{width:34px;height:34px}
+  .groups{gap:8px}
+  .gc{padding:10px 10px 10px}
+  .gc-name b{font-size:18px}
+  .gc-rank{font-size:24px}
+  .gc-stats b{font-size:16px}
+  .custom input{width:100%}
+  .pin input{width:48px;height:56px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media print{
+  body{background:#fff!important;color:#000;padding:0}
+  .sky,.tabs,.tools,.no-print,.toast,.codes-wrap{display:none!important}
+  .panel,.ev,.sc{background:#fff!important;box-shadow:none!important;color:#000;border-color:#ccc}
+  th{background:#eee!important;color:#000}
+  td.tot,.sc-sum .big{color:#000}
+  body.print-card main,body.print-card .top{display:none}
+  body.print-card dialog{position:static;max-height:none}
+}
+</style>
+</head>
+<body>
+<div class="sky" id="sky" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 56 56" aria-hidden="true">
+      <defs><radialGradient id="gB" cx=".35" cy=".3"><stop offset="0" stop-color="#d7e3ff"/><stop offset=".55" stop-color="#5a78ff"/><stop offset="1" stop-color="#1b2370"/></radialGradient></defs>
+      <circle cx="28" cy="28" r="17" fill="url(#gB)"/>
+      <g class="ring"><ellipse cx="28" cy="28" rx="26" ry="8" fill="none" stroke="#ffc94d" stroke-width="2.4" transform="rotate(-20 28 28)"/><circle cx="52" cy="22" r="2.6" fill="#ffc94d"/></g>
+    </svg>
+    <div>
+      <p class="kicker">مركز قيادة الفصل · ٤ مجموعات · ٥ مهمات</p>
+      <h1>مهمة <span>الكواكب الخمسة</span></h1>
+    </div>
+  </div>
+  <div style="display:grid;gap:6px;justify-items:end">
+    <nav class="tabs" role="tablist" aria-label="أقسام اللعبة">
+      <button class="tab" role="tab" data-view="hq" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>القيادة</button>
+      <button class="tab" role="tab" data-view="ws" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h5v6M10 20V9l5-4 4 4v11" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/></svg>ورشة البناء</button>
+      <button class="tab" role="tab" data-view="eval" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></svg>التقييم</button>
+      <button class="tab" role="tab" data-view="report" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12h7M9 16h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>التقرير</button>
+    </nav>
+    <span class="status"><i></i><span id="statusTxt">الأنظمة تعمل</span></span>
+  </div>
+</header>
+
+<main>
+  <!-- ===== القيادة ===== -->
+  <section class="view" id="view-hq">
+    <div class="sec" style="margin-top:8px"><div><h2 class="h2">ترتيب المجموعات</h2><p class="sub">كل نقطة يكسبها الطالب تصير كريستالة في خزنة مجموعته، والفوز يرفع نقاط المجموعة كلها.</p></div></div>
+    <div class="groups" id="groupCards"></div>
+    <div class="sec"><div><h2 class="h2">سباق الصواريخ</h2><p class="sub">الترتيب الفردي للطلاب العشرين. أعلى نتيجة في الفصل ٤٥ نقطة.</p></div></div>
+    <div class="planets" id="planetsHq"></div>
+    <div class="race panel corners" id="race"></div>
+  </section>
+
+  <!-- ===== ورشة البناء ===== -->
+  <section class="view" id="view-ws" hidden>
+    <div id="wsPick">
+      <div class="sec" style="margin-top:8px"><div><h2 class="h2">ورشة البناء</h2><p class="sub">اختاروا مجموعتكم، وأدخلوا رمز الدخول، وابنوا قاعدتكم الفضائية بالكريستالات التي كسبتموها.</p></div></div>
+      <div class="ws-pick" id="pickGrid"></div>
+    </div>
+    <form class="lock panel corners" id="lock" hidden novalidate>
+      <span class="emb" id="lockEmb"></span>
+      <h2 class="h2" id="lockTitle"></h2>
+      <p class="sub" style="margin:0">أدخلوا رمز المجموعة المكوّن من ٤ أرقام. يعطيكم إياه المعلّم.</p>
+      <div class="pin" id="pin">
+        <input inputmode="numeric" maxlength="1" aria-label="الرقم ١"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٢"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٣"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٤">
+      </div>
+      <p class="msg" id="lockMsg" aria-live="polite"></p>
+      <button class="btn" type="button" id="lockBack">رجوع</button>
+    </form>
+    <div class="ws" id="ws" hidden>
+      <div class="panel ws-scene">
+        <div class="ws-top">
+          <span class="emb" id="wsEmb"></span>
+          <div class="ws-title"><b id="wsName"></b><small id="wsSub"></small></div>
+          <div class="crys" title="الكريستالات المتاحة للبناء">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l6 6-6 14-6-14z" fill="#8fe9ff"/><path d="M12 2l6 6H6z" fill="#d8f8ff"/><path d="M12 22L6 8h12z" fill="#4cc3e8" opacity=".7"/></svg>
+            <div><b id="wsCrys" class="num">٠</b><br><span id="wsCrysSub"></span></div>
+          </div>
+        </div>
+        <div id="wsScene"></div>
+        <div class="ws-foot">
+          <span class="title-chip" id="wsTitleChip"></span>
+          <div class="custom">
+            <input id="baseName" maxlength="24" placeholder="سمّوا قاعدتكم" aria-label="اسم القاعدة" autocomplete="off">
+            <div class="emb-pick" id="embPick" role="group" aria-label="شعار المجموعة"></div>
+          </div>
+          <button class="btn" type="button" id="wsLeave" style="margin-inline-start:auto">خروج</button>
+        </div>
+      </div>
+      <aside class="panel shop">
+        <div class="shop-h"><b>قائمة البناء</b><span class="label" id="shopCount"></span></div>
+        <p class="fact" id="fact"></p>
+        <div id="shop" style="display:grid;gap:8px"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== التقييم ===== -->
+  <section class="view" id="view-eval" hidden>
+    <div class="planets" id="planetsEval" role="group" aria-label="اختر المهمة"></div>
+    <div class="eval-bar panel">
+      <div class="field"><label for="actTitle">اسم النشاط</label><input id="actTitle" maxlength="40" autocomplete="off"></div>
+      <div class="field" style="flex:0 1 180px"><label for="actDate">التاريخ</label><input id="actDate" type="date"></div>
+      <button class="btn" id="allPresent" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>الجميع حاضر</button>
+      <button class="btn gold" id="launch" type="button">أطلق الصواريخ</button>
+    </div>
+    <div class="rules" id="rules"></div>
+    <div id="evalGroups"></div>
+  </section>
+
+  <!-- ===== التقرير ===== -->
+  <section class="view" id="view-report" hidden>
+    <div class="report panel corners">
+      <h2 class="h2">تقرير الفصل</h2>
+      <p class="sub">مجموع كل طالب في المهمات الخمس على الأسس الثلاثة. اضغط على الاسم لبطاقة الطالب.</p>
+      <div class="table-wrap"><table id="reportTable"></table></div>
+      <div class="table-wrap"><table id="groupTable"></table></div>
+      <div class="codes-wrap" id="codesWrap">
+        <h3 style="margin:18px 0 0;font-size:16px">رموز دخول ورشة البناء <span class="label">(للمعلّم فقط)</span></h3>
+        <div class="codes" id="codes"></div>
+      </div>
+      <div class="tools">
+        <button class="btn gold" id="printReport" type="button">طباعة التقرير</button>
+        <button class="btn" id="exportBtn" type="button">حفظ نسخة من البيانات</button>
+        <button class="btn" id="importBtn" type="button">استرجاع نسخة</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+        <button class="btn danger" id="resetBtn" type="button">مسح كل الدرجات والقواعد</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog id="card" aria-labelledby="scName"><div class="sc" id="scBody"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===================== الإعدادات ===================== */
+const CONFIG = {
+  students: [
+    "سامي ناصر الهاشمي", "ياسر فهد المهيري", "مازن طارق السعدي", "رائد سالم الكندي", "باسل وليد الزهراني",
+    "نواف ماجد العتيبي", "هاني جاسم البلوشي", "زياد رامي الشامسي", "أنس كمال الحربي", "طلال منير القحطاني",
+    "عمار حسن الفارسي", "خالد سعيد المري", "يزن عادل الشمري", "معاذ راشد النعيمي", "فارس إياد الدوسري",
+    "حمزة بدر الكعبي", "سلطان عمر الرميثي", "مهند فيصل الغامدي", "إياد صالح المطيري", "قصي نبيل الجابري"
+  ],
+  // أربع مجموعات: members أرقام الطلاب في القائمة أعلاه (من ٠)، code رمز دخول ورشة البناء
+  groups: [
+    { id: "g1", name: "الشهاب",  color: "#4fb8ff", code: "4821", emblem: "comet",   members: [0, 1, 2, 3, 4] },
+    { id: "g2", name: "المجرّة", color: "#b48cff", code: "7395", emblem: "galaxy",  members: [5, 6, 7, 8, 9] },
+    { id: "g3", name: "النيزك",  color: "#ff9a4d", code: "2164", emblem: "diamond", members: [10, 11, 12, 13, 14] },
+    { id: "g4", name: "السديم",  color: "#48e0a8", code: "5937", emblem: "star",    members: [15, 16, 17, 18, 19] }
+  ],
+  planets: [
+    { name: "الياقوت",  c1: "#ffb3c1", c2: "#ff4d6d", c3: "#8a0f2e", ring: true  },
+    { name: "الزمرّد",  c1: "#c6ffd9", c2: "#2fd17f", c3: "#0b6b3c", ring: false },
+    { name: "الفيروز",  c1: "#c9f6ff", c2: "#33c3e8", c3: "#0d5a85", ring: true  },
+    { name: "الكهرمان", c1: "#fff0b8", c2: "#ffb22e", c3: "#9a4e05", ring: false },
+    { name: "اللؤلؤ",   c1: "#ffffff", c2: "#c9c2ff", c3: "#5b4bb5", ring: true  }
+  ],
+  points: { att: { p: 3, l: 1, a: 0 }, morMax: 3, res: { w: 3, d: 2, x: 1 } }   // الحضور، الانضباط (نجوم)، نتيجة المجموعة
+};
+/* وحدات القاعدة الفضائية: كل نقطة = كريستالة واحدة، ومجموع الأسعار ٢١٠ من ٢٢٥ ممكنة */
+const MODULES = [
+  { id: "pad",   name: "منصّة الهبوط",     cost: 10, fact: "منصّة الهبوط أول ما يُبنى في أي قاعدة، فعليها تهبط المركبات بأمان." },
+  { id: "solar", name: "الألواح الشمسية",  cost: 12, fact: "الألواح الشمسية تحوّل ضوء الشمس إلى كهرباء، وهي مصدر الطاقة في الفضاء." },
+  { id: "tank",  name: "خزّان الماء",      cost: 14, fact: "الماء في الفضاء ثمين جدًّا، ويُعاد تنقيته واستعماله مرّات كثيرة." },
+  { id: "dome",  name: "القبّة الرئيسية",  cost: 16, fact: "القبّة شكل قويّ يتحمّل الضغط، لذلك تُصمَّم بها كثير من المباني." },
+  { id: "antenna", name: "هوائي الاتصال",  cost: 18, fact: "الإشارة من القمر إلى الأرض تستغرق ثانية وثُلثًا تقريبًا." },
+  { id: "lab",   name: "مختبر الكريستال",  cost: 20, fact: "الكريستالات تنمو بأشكال منتظمة لأن ذرّاتها تترتّب في نظام دقيق." },
+  { id: "scope", name: "المرصد",           cost: 22, fact: "التلسكوب يجمع ضوء النجوم البعيدة فنراها أوضح بكثير من العين." },
+  { id: "tower", name: "برج الإطلاق",      cost: 26, fact: "تنطلق الصواريخ نحو الشرق غالبًا لتستفيد من دوران الأرض." },
+  { id: "sat",   name: "القمر الصناعي",    cost: 32, fact: "الأقمار الصناعية تدور حول الأرض وتنقل الاتصالات وصور الطقس." },
+  { id: "beacon",name: "منارة النجوم",     cost: 40, fact: "المنارة تُرشد المركبات في الظلام، وهي تاج القاعدة المكتملة." }
+];
+const TITLES = [[0, "أرض خالية"], [1, "معسكر البداية"], [3, "محطّة ناشئة"], [5, "قاعدة متقدّمة"], [8, "مدينة فضائية"], [10, "عاصمة المجرّة"]];
+const EMBLEMS = {
+  star: '<path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/>',
+  comet: '<circle cx="15.5" cy="8.5" r="5"/><path d="M12 12L3 21M10.5 9.5 4 13M14.5 13.5 11 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" style="stroke:inherit"/>',
+  galaxy: '<path d="M12 12m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0M12 3c5 0 8 3 8 6-2-2-5-3-8-2M12 21c-5 0-8-3-8-6 2 2 5 3 8 2M21 12c0 5-3 8-6 8 2-2 3-5 2-8M3 12c0-5 3-8 6-8-2 2-3 5-2 8"/>',
+  diamond: '<path d="M12 2l7 7-7 13-7-13z"/>',
+  crescent: '<path d="M15 3a9 9 0 1 0 6 15A8 8 0 0 1 15 3z"/>',
+  ringed: '<circle cx="12" cy="12" r="6"/><path d="M1.5 15c2 2.5 9 1 14-2.5S23 6 21.5 4.5c-.8-.8-2.7-.6-5 .3" fill="none" stroke-width="2" style="stroke:inherit"/>',
+  bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'
+};
+const N_ACT = CONFIG.planets.length, P = CONFIG.points;
+const MAX_ACT = Math.max(...Object.values(P.att)) + P.morMax + Math.max(...Object.values(P.res));
+const MAX_ALL = MAX_ACT * N_ACT;
+const MAX = { att: Math.max(...Object.values(P.att)) * N_ACT, mor: P.morMax * N_ACT, res: Math.max(...Object.values(P.res)) * N_ACT };
+const LABEL = { att: { p: "حاضر", l: "متأخر", a: "غائب" }, res: { w: "فاز", d: "تعادل", x: "خسر" }, mor: ["", "يحتاج إلى تحسين", "جيد", "ممتاز"] };
+const groupOf = i => CONFIG.groups.find(g => g.members.includes(i)) || CONFIG.groups[0];
+
+/* ===================== أدوات ===================== */
+const $ = s => document.querySelector(s);
+const ar = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ICON = {
+  star: '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="currentColor"/></svg>',
+  shield: '<svg viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5z" fill="currentColor"/><path d="M8 12l3 3 5-6" fill="none" stroke="#0b1230" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  cup: '<svg viewBox="0 0 24 24"><path d="M7 3h10v5a5 5 0 0 1-10 0zM7 5H4v1a3 3 0 0 0 3 3M17 5h3v1a3 3 0 0 1-3 3M10 14h4v3h-4zM8 20h8" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+  crys: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l6 6-6 14-6-14z" fill="#062430"/></svg>'
+};
+const embSVG = (k, col) => `<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:${col || "var(--g)"};stroke:${col || "var(--g)"}">${EMBLEMS[k] || EMBLEMS.star}</svg>`;
+function rocketSVG(color, cls = "") {
+  return `<svg viewBox="0 0 64 32" class="${cls}" aria-hidden="true">
+    <path class="flame" d="M52 9 Q66 16 52 23 Q58 16 52 9Z" fill="#ffb22e"/><path class="flame" d="M52 12 Q60 16 52 20 Q55 16 52 12Z" fill="#fff3b0"/>
+    <path d="M38 6 L52 0 L49 7Z" fill="${color}" opacity=".7"/><path d="M38 26 L52 32 L49 25Z" fill="${color}" opacity=".7"/>
+    <path d="M4 16 Q14 4 38 6 L50 7 Q53 16 50 25 L38 26 Q14 28 4 16Z" fill="${color}" stroke="#0b1230" stroke-width="1.4"/>
+    <path d="M4 16 Q9 10 16 8 Q12 16 16 24 Q9 22 4 16Z" fill="#fff" opacity=".45"/>
+    <circle cx="27" cy="16" r="5" fill="#d6f0ff" stroke="#0b1230" stroke-width="1.6"/><circle cx="25.6" cy="14.6" r="1.5" fill="#fff"/>
+    <rect x="49" y="10" width="4" height="12" rx="1.5" fill="#5b6390"/></svg>`;
+}
+let uid = 0;
+function planetSVG(pl, cls = "orb") {
+  const id = "pg" + (uid++);
+  return `<svg viewBox="0 0 60 60" class="${cls}" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3"><stop offset="0" stop-color="${pl.c1}"/><stop offset=".55" stop-color="${pl.c2}"/><stop offset="1" stop-color="${pl.c3}"/></radialGradient></defs>
+    ${pl.ring ? `<path d="M3 36 A28 8 -18 0 1 57 22" fill="none" stroke="${pl.c1}" stroke-width="3" opacity=".7"/>` : ""}
+    <circle cx="30" cy="30" r="20" fill="url(#${id})"/><circle cx="23" cy="23" r="4" fill="#fff" opacity=".35"/>
+    ${pl.ring ? `<path d="M57 22 A28 8 -18 0 1 3 36" fill="none" stroke="${pl.c1}" stroke-width="3"/>` : ""}</svg>`;
+}
+
+/* ===================== الحالة والحفظ ===================== */
+const KEY = "mohimmat-alkawakib-v2", OLD_KEY = "rehlat-alkawakib-v1", BKEY = "mohimmat-bases-v2";
+function blank() {
+  return { titles: Array(N_ACT).fill(""), dates: Array(N_ACT).fill(""),
+    gres: Array.from({ length: N_ACT }, () => ({})),   // نتيجة كل مجموعة في كل مهمة: w / d / x
+    s: CONFIG.students.map(() => Array.from({ length: N_ACT }, () => ({ att: null, mor: null }))) };
+}
+function normalize(d) {
+  const b = blank();
+  for (let a = 0; a < N_ACT; a++) { b.titles[a] = String((d.titles || [])[a] || ""); b.dates[a] = String((d.dates || [])[a] || ""); }
+  b.s.forEach((row, i) => row.forEach((e, a) => {
+    const o = (((d.s || [])[i] || [])[a]) || {};
+    e.att = o.att in P.att ? o.att : null;
+    e.mor = Number.isInteger(o.mor) && o.mor >= 0 ? Math.min(o.mor, P.morMax) : null;
+  }));
+  for (let a = 0; a < N_ACT; a++) CONFIG.groups.forEach(g => {
+    let r = ((d.gres || [])[a] || {})[g.id];
+    if (!(r in P.res)) { // نسخة قديمة: النتيجة كانت لكل طالب، فنأخذ الأكثر تكرارًا في المجموعة
+      const c = {}; g.members.forEach(i => { const v = (((d.s || [])[i] || [])[a] || {}).res; if (v in P.res) c[v] = (c[v] || 0) + 1; });
+      r = Object.keys(c).sort((x, y) => c[y] - c[x])[0];
+    }
+    if (r in P.res) b.gres[a][g.id] = r;
+  });
+  return b;
+}
+function blankBase(g) { return { built: [], name: "", emblem: g.emblem }; }
+function normBase(g, o) {
+  o = o || {};
+  const ids = MODULES.map(m => m.id);
+  return { built: Array.isArray(o.built) ? o.built.filter((x, k, a) => ids.includes(x) && a.indexOf(x) === k) : [],
+    name: typeof o.name === "string" ? o.name.slice(0, 24) : "", emblem: o.emblem in EMBLEMS ? o.emblem : g.emblem };
+}
+function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+let state = (() => { const d = lsGet(KEY) || lsGet(OLD_KEY); return d && Array.isArray(d.s) ? normalize(d) : blank(); })();
+let bases = (() => { const d = lsGet(BKEY) || {}; const o = {}; CONFIG.groups.forEach(g => o[g.id] = normBase(g, d[g.id])); return o; })();
+
+let remoteDb = null, canWrite = true, pushTimer = 0, gradesChain = Promise.resolve(), lastJSON = "";
+const baseChain = {}, baseJSON = {};
+function save() { lsSet(KEY, state); pushGrades(); }
+function pushGrades() {
+  if (!remoteDb || !canWrite) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(() => {
+    const json = JSON.stringify(state);
+    if (json === lastJSON) return;
+    lastJSON = json;
+    gradesChain = gradesChain.then(() => remoteDb.doc("grades/semester").set({ json, at: Date.now() }))
+      .catch(() => toast("تعذّر حفظ آخر تعديل في الدرجات، حاول مرة أخرى"));
+  }, 700);
+}
+function saveBase(gid) {
+  lsSet(BKEY, bases);
+  if (!remoteDb) return Promise.resolve(true);
+  const json = JSON.stringify(bases[gid]);
+  baseJSON[gid] = json;
+  const p = (baseChain[gid] || Promise.resolve()).then(() => remoteDb.doc("bases/" + gid).set({ json, at: Date.now() })).then(() => true, () => false);
+  baseChain[gid] = p;
+  return p;
+}
+function rerender() {
+  const typing = document.activeElement && document.activeElement.matches("input");
+  if (view === "hq") renderHQ();
+  else if (view === "ws") { if (!typing) renderWS(); }
+  else if (view === "eval") { if (!typing) renderEval(); }
+  else if (view === "report") renderReport();
+}
+function applyReadOnly() {
+  document.querySelector('.tab[data-view="eval"]').hidden = !canWrite;
+  ["#importBtn", "#resetBtn", "#codesWrap"].forEach(q => $(q).hidden = !canWrite);
+  if (!canWrite && view === "eval") show("hq");
+}
+(async function connect() {
+  const c = window.claude;
+  if (!c || !c.use) return;
+  const [db, user] = await Promise.all([c.use("db"), c.use("user")]);
+  if (!db) return;
+  if (user && typeof user.canEdit === "function") { try { canWrite = !!(await user.canEdit()); } catch (e) {} }
+  remoteDb = db; applyReadOnly();
+  $("#statusTxt").textContent = "متّصل · يُحفظ تلقائيًّا";
+  let first = true;
+  db.doc("grades/semester").onSnapshot(snap => {
+    if (snap.exists) {
+      const d = snap.data() || {};
+      if (typeof d.json === "string") {
+        lastJSON = d.json;
+        if (d.json !== JSON.stringify(state)) { try { state = normalize(JSON.parse(d.json)); lsSet(KEY, state); rerender(); } catch (e) {} }
+      }
+    } else if (first && canWrite && state.s.some((r, i) => r.some((e, a) => graded(i, a)))) pushGrades();
+    first = false;
+  }, () => {});
+  let firstB = true;
+  db.collection("bases").onSnapshot(qs => {
+    const seen = {};
+    qs.docs.forEach(d => {
+      const g = CONFIG.groups.find(x => x.id === d.id); if (!g) return;
+      seen[g.id] = 1;
+      const v = d.data() || {};
+      if (typeof v.json === "string" && v.json !== JSON.stringify(bases[g.id])) {
+        try { bases[g.id] = normBase(g, JSON.parse(v.json)); } catch (e) {}
+      }
+    });
+    if (firstB && canWrite) CONFIG.groups.forEach(g => { if (!seen[g.id] && bases[g.id].built.length) saveBase(g.id); });
+    firstB = false;
+    lsSet(BKEY, bases); rerender();
+  }, () => {});
+})();
+
+/* ===================== الحساب ===================== */
+const ptsWord = n => n === 1 ? "نقطة واحدة" : n === 2 ? "نقطتان" : n === 0 ? "بلا نقاط" : `${ar(n)} نقاط`;
+const gRes = (i, a) => state.gres[a][groupOf(i).id] || null;   // نتيجة مجموعة الطالب في المهمة
+const pts = (i, a) => { const e = state.s[i][a], r = gRes(i, a);
+  return { att: e.att ? P.att[e.att] : 0, mor: e.att === "a" ? 0 : (e.mor || 0), res: e.att === "a" || !r ? 0 : P.res[r] }; };
+const graded = (i, a) => { const e = state.s[i][a]; return e.att != null || e.mor != null; };
+const actTotal = (i, a) => { const p = pts(i, a); return p.att + p.mor + p.res; };
+function totals(i) {
+  const t = { att: 0, mor: 0, res: 0, wins: 0, presentAll: true, gradedCount: 0, morSum: 0, morCount: 0 };
+  state.s[i].forEach((e, a) => {
+    const p = pts(i, a); t.att += p.att; t.mor += p.mor; t.res += p.res;
+    if (graded(i, a)) { t.gradedCount++; if (e.att !== "p") t.presentAll = false; }
+    if (gRes(i, a) === "w" && e.att && e.att !== "a") t.wins++;
+    if (e.att && e.att !== "a" && e.mor != null) { t.morSum += e.mor; t.morCount++; }
+  });
+  t.total = t.att + t.mor + t.res;
+  return t;
+}
+function rankOf(list) { // list of {k, t} sorted desc → map k → rank (ties share)
+  const r = {}; list.forEach((o, n) => r[o.k] = n > 0 && list[n - 1].t === o.t ? r[list[n - 1].k] : n + 1); return r;
+}
+function ranking() {
+  const list = CONFIG.students.map((_, i) => ({ k: i, t: totals(i).total })).sort((a, b) => b.t - a.t || a.k - b.k);
+  return { list, rank: rankOf(list) };
+}
+function groupStats(g) {
+  const earned = g.members.reduce((s, i) => s + totals(i).total, 0);
+  const spent = bases[g.id].built.reduce((s, id) => s + (MODULES.find(m => m.id === id) || { cost: 0 }).cost, 0);
+  return { earned, spent, left: Math.max(0, earned - spent), built: bases[g.id].built.length };
+}
+function groupRanking() {
+  const list = CONFIG.groups.map(g => ({ k: g.id, t: groupStats(g).earned })).sort((a, b) => b.t - a.t);
+  return rankOf(list);
+}
+const titleOf = n => TITLES.filter(t => n >= t[0]).pop()[1];
+const actDone = a => state.s.some((r, i) => graded(i, a)) || Object.keys(state.gres[a]).length > 0;
+const actName = a => state.titles[a] || `المهمة ${ar(a + 1)}`;
+
+/* ===================== التبويبات ===================== */
+let view = "hq";
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
+function show(v) {
+  view = v;
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v));
+  ["hq", "ws", "eval", "report"].forEach(x => $("#view-" + x).hidden = x !== v);
+  ({ hq: renderHQ, ws: renderWS, eval: renderEval, report: renderReport })[v]();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function renderPlanets(el, pressed) {
+  el.innerHTML = CONFIG.planets.map((pl, a) => `
+    <button class="pl ${actDone(a) ? "done" : ""}" type="button" data-act="${a}" ${pressed ? `aria-pressed="${a === cur}"` : ""}>
+      ${planetSVG(pl)}<span><b>كوكب ${esc(pl.name)}</b><small>${esc(actName(a))}</small></span>
+      <span class="st">${actDone(a) ? "✓ تمّت" : ar(a + 1)}</span></button>`).join("");
+}
+
+/* ===================== القاعدة الفضائية (رسم) ===================== */
+function baseSVG(g, built, opts = {}) {
+  const has = id => built.includes(id), c = g.color, p = "b" + (uid++), fresh = opts.fresh;
+  const cls = id => `mod${fresh === id ? " new" : ""}`;
+  const ghost = !opts.mini ? MODULES.filter(m => !has(m.id)).map(m => GHOST[m.id] || "").join("") : "";
+  let stars = ""; for (let k = 0; k < (opts.mini ? 18 : 40); k++) stars += `<circle cx="${(k * 97) % 800}" cy="${(k * 53) % 250}" r="${k % 5 ? 1 : 1.8}" fill="#fff" opacity="${.3 + (k % 4) * .15}"/>`;
+  return `<svg class="scene" viewBox="0 0 800 420" role="img" aria-label="قاعدة مجموعة ${esc(g.name)}">
+  <defs>
+    <linearGradient id="${p}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050a1f"/><stop offset="1" stop-color="#16204e"/></linearGradient>
+    <linearGradient id="${p}gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f6b"/><stop offset="1" stop-color="#22253a"/></linearGradient>
+    <radialGradient id="${p}gl" cx=".4" cy=".3"><stop offset="0" stop-color="#eaf6ff" stop-opacity=".95"/><stop offset=".6" stop-color="#8fd3ff" stop-opacity=".55"/><stop offset="1" stop-color="${c}" stop-opacity=".5"/></radialGradient>
+    <radialGradient id="${p}ea" cx=".35" cy=".3"><stop offset="0" stop-color="#bfe6ff"/><stop offset=".6" stop-color="#2f7fd6"/><stop offset="1" stop-color="#0d2b66"/></radialGradient>
+  </defs>
+  <rect width="800" height="420" fill="url(#${p}sky)"/>${stars}
+  <circle cx="110" cy="80" r="34" fill="url(#${p}ea)"/><path d="M92 70q10-8 20 0t18 4M86 90q14 6 30 0" stroke="#7fd09a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>
+  <path d="M0 352 Q400 318 800 352 V420 H0Z" fill="url(#${p}gr)"/>
+  <ellipse cx="160" cy="380" rx="34" ry="7" fill="#1c1f30" opacity=".7"/><ellipse cx="620" cy="392" rx="46" ry="8" fill="#1c1f30" opacity=".7"/><ellipse cx="420" cy="402" rx="22" ry="5" fill="#1c1f30" opacity=".7"/>
+  ${ghost}
+  ${has("beacon") ? `<g class="${cls("beacon")}"><path class="beam" d="M40 150 L10 0 H70Z" fill="${c}" opacity=".35"/><path d="M30 348 L40 150 L50 348Z" fill="#c9d1e6" stroke="#5b6390" stroke-width="2"/><path d="M33 300h14M35 250h10M37 200h6" stroke="#5b6390" stroke-width="2"/><circle class="blink" cx="40" cy="146" r="9" fill="${c}"/><circle cx="40" cy="146" r="4" fill="#fff"/></g>` : ""}
+  ${has("solar") ? `<g class="${cls("solar")}"><path d="M95 346v-36M155 346v-36" stroke="#8a93b2" stroke-width="4"/><path d="M70 312 L120 296 L120 278 L70 294Z M130 312 L180 296 L180 278 L130 294Z" fill="#1f4fa8" stroke="#9ec6ff" stroke-width="2"/><path d="M78 302l34-11M138 302l34-11M95 289v20M155 289v20" stroke="#9ec6ff" stroke-width="1.2" opacity=".7"/><circle class="blink" cx="125" cy="342" r="3" fill="${c}"/></g>` : ""}
+  ${has("tank") ? `<g class="${cls("tank")}"><rect x="196" y="272" width="46" height="76" rx="22" fill="#dfe4ef" stroke="#7a84a6" stroke-width="2"/><rect x="196" y="300" width="46" height="10" fill="${c}"/><rect x="204" y="282" width="6" height="52" rx="3" fill="#fff" opacity=".6"/><path d="M219 272v-10" stroke="#7a84a6" stroke-width="3"/></g>` : ""}
+  ${has("tower") ? `<g class="${cls("tower")}"><path d="M256 348V160M292 348V160" stroke="#c9d1e6" stroke-width="4"/><path d="M256 340l36-24M292 340l-36-24M256 310l36-24M292 310l-36-24M256 280l36-24M292 280l-36-24M256 250l36-24M292 250l-36-24M256 220l36-24M292 220l-36-24M256 190l36-24M292 190l-36-24" stroke="#8a93b2" stroke-width="2"/><g class="lift"><path d="M310 200 Q318 176 326 200 V300 H310Z" fill="#f3f5fb" stroke="#5b6390" stroke-width="2"/><path d="M310 200 Q318 176 326 200Z" fill="${c}"/><circle cx="318" cy="226" r="5" fill="#8fd3ff" stroke="#5b6390" stroke-width="1.5"/><path d="M310 280 L300 304 L310 300Z M326 280 L336 304 L326 300Z" fill="${c}"/></g><path d="M292 230h18" stroke="#8a93b2" stroke-width="3"/></g>` : ""}
+  ${has("pad") ? `<g class="${cls("pad")}"><ellipse cx="400" cy="350" rx="118" ry="15" fill="#2f3550"/><ellipse cx="400" cy="346" rx="108" ry="11" fill="#59627a"/><path d="M322 346h156" stroke="${c}" stroke-width="3" stroke-dasharray="12 8"/><circle class="blink" cx="300" cy="348" r="4" fill="${c}"/><circle class="blink" cx="500" cy="348" r="4" fill="${c}" style="animation-delay:-.7s"/></g>` : ""}
+  ${has("dome") ? `<g class="${cls("dome")}"><path d="M328 344 A72 72 0 0 1 472 344Z" fill="url(#${p}gl)" stroke="#dff2ff" stroke-width="2.5"/><path d="M400 272 V344 M364 282 Q380 310 380 344 M436 282 Q420 310 420 344 M334 318 H466" stroke="#dff2ff" stroke-width="1.4" opacity=".55" fill="none"/><path d="M386 344v-24a14 14 0 0 1 28 0v24" fill="#2a3150" stroke="#dff2ff" stroke-width="2"/><circle cx="400" cy="314" r="3" fill="${c}"/><path d="M350 300 Q360 285 376 280" stroke="#fff" stroke-width="4" opacity=".6" fill="none" stroke-linecap="round"/></g>` : ""}
+  ${has("antenna") ? `<g class="${cls("antenna")}"><path d="M506 348V236" stroke="#c9d1e6" stroke-width="4"/><path d="M494 348l12-30 12 30" fill="none" stroke="#8a93b2" stroke-width="3"/><path d="M482 222 A28 28 0 0 0 530 250" fill="#e8ecf6" stroke="#7a84a6" stroke-width="2"/><path d="M506 236l14-16" stroke="#7a84a6" stroke-width="2"/><circle class="blink" cx="521" cy="219" r="4" fill="${c}"/><path class="beam" d="M528 210q14-8 24 0M532 200q20-12 34 0" stroke="${c}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>` : ""}
+  ${has("lab") ? `<g class="${cls("lab")}"><path d="M472 336h70" stroke="#8a93b2" stroke-width="8"/><rect x="540" y="296" width="100" height="52" rx="10" fill="#e8ecf6" stroke="#7a84a6" stroke-width="2"/><rect x="540" y="296" width="100" height="10" rx="5" fill="${c}"/><path d="M556 316h16v16h-16zM584 316h16v16h-16z" fill="#2a3150"/><path d="M620 296l8-22 8 22z M612 296l6-14 6 14z" fill="#8fe9ff" stroke="#4cc3e8" stroke-width="1.5"/><circle class="blink" cx="628" cy="330" r="3" fill="${c}"/></g>` : ""}
+  ${has("scope") ? `<g class="${cls("scope")}"><rect x="662" y="306" width="84" height="42" rx="6" fill="#dfe4ef" stroke="#7a84a6" stroke-width="2"/><path d="M670 306 A34 34 0 0 1 738 306Z" fill="#c9d1e6" stroke="#7a84a6" stroke-width="2"/><path d="M698 276 L730 248" stroke="#5b6390" stroke-width="10" stroke-linecap="round"/><path d="M727 251 L736 243" stroke="${c}" stroke-width="12" stroke-linecap="round"/><path d="M676 330h56" stroke="${c}" stroke-width="3"/></g>` : ""}
+  ${has("sat") ? `<g class="${cls("sat")}"><g class="orbit"><rect x="592" y="66" width="34" height="22" rx="4" fill="#e8ecf6" stroke="#7a84a6" stroke-width="2"/><rect x="548" y="70" width="40" height="14" fill="#1f4fa8" stroke="#9ec6ff" stroke-width="1.5"/><rect x="630" y="70" width="40" height="14" fill="#1f4fa8" stroke="#9ec6ff" stroke-width="1.5"/><path d="M609 88v10" stroke="#7a84a6" stroke-width="2"/><circle cx="609" cy="100" r="4" fill="${c}"/><circle class="blink" cx="600" cy="72" r="2.4" fill="${c}"/></g></g>` : ""}
+  ${built.length === MODULES.length ? `<g><text x="400" y="40" text-anchor="middle" font-family="Lalezar,sans-serif" font-size="30" fill="${c}">اكتملت القاعدة!</text></g>` : ""}
+  </svg>`;
+}
+const GH = 'fill="none" stroke="rgba(160,190,255,.22)" stroke-width="2" stroke-dasharray="6 6"';
+const GHOST = {
+  beacon: `<path d="M30 348 L40 160 L50 348Z" ${GH}/>`, solar: `<path d="M70 312 L120 296 L120 278 L70 294Z M130 312 L180 296 L180 278 L130 294Z" ${GH}/>`,
+  tank: `<rect x="196" y="272" width="46" height="76" rx="22" ${GH}/>`, tower: `<rect x="256" y="170" width="36" height="178" ${GH}/>`,
+  pad: `<ellipse cx="400" cy="348" rx="112" ry="13" ${GH}/>`, dome: `<path d="M328 344 A72 72 0 0 1 472 344Z" ${GH}/>`,
+  antenna: `<path d="M506 348V236 M482 222 A28 28 0 0 0 530 250" ${GH}/>`, lab: `<rect x="540" y="296" width="100" height="52" rx="10" ${GH}/>`,
+  scope: `<rect x="662" y="306" width="84" height="42" rx="6" ${GH}/>`, sat: `<rect x="548" y="66" width="122" height="22" rx="4" ${GH}/>`
+};
+function modIcon(id, c) {
+  const I = {
+    pad: `<ellipse cx="16" cy="22" rx="13" ry="4" fill="#59627a"/><path d="M6 21h20" stroke="${c}" stroke-width="2" stroke-dasharray="3 2"/>`,
+    solar: `<path d="M4 20 L16 15 V9 L4 14Z M17 20 L28 15 V9 L17 14Z" fill="#1f4fa8" stroke="#9ec6ff" stroke-width="1.2"/><path d="M10 18v8M22 18v8" stroke="#8a93b2" stroke-width="2"/>`,
+    tank: `<rect x="10" y="5" width="12" height="22" rx="6" fill="#dfe4ef"/><rect x="10" y="13" width="12" height="3" fill="${c}"/>`,
+    dome: `<path d="M3 26 A13 13 0 0 1 29 26Z" fill="#8fd3ff" stroke="#dff2ff" stroke-width="1.5"/><path d="M13 26v-5a3 3 0 0 1 6 0v5" fill="#2a3150"/>`,
+    antenna: `<path d="M16 28V12" stroke="#c9d1e6" stroke-width="2"/><path d="M6 8 A10 10 0 0 0 24 17" fill="#e8ecf6"/><circle cx="23" cy="6" r="2.5" fill="${c}"/>`,
+    lab: `<rect x="3" y="12" width="26" height="14" rx="3" fill="#e8ecf6"/><rect x="3" y="12" width="26" height="3" fill="${c}"/><path d="M22 12l3-8 3 8z" fill="#8fe9ff"/>`,
+    scope: `<rect x="5" y="18" width="22" height="10" rx="2" fill="#dfe4ef"/><path d="M7 18 A9 9 0 0 1 25 18Z" fill="#c9d1e6"/><path d="M14 13 L26 4" stroke="${c}" stroke-width="4" stroke-linecap="round"/>`,
+    tower: `<path d="M9 28V5M17 28V5M9 24l8-5M17 24l-8-5M9 14l8-5M17 14l-8-5" stroke="#c9d1e6" stroke-width="1.6"/><path d="M21 12 Q24 4 27 12V24H21Z" fill="#f3f5fb"/><path d="M21 12 Q24 4 27 12Z" fill="${c}"/>`,
+    sat: `<rect x="12" y="11" width="8" height="8" rx="1.5" fill="#e8ecf6"/><rect x="2" y="12" width="9" height="6" fill="#1f4fa8"/><rect x="21" y="12" width="9" height="6" fill="#1f4fa8"/><circle cx="16" cy="23" r="2" fill="${c}"/>`,
+    beacon: `<path d="M13 28 L16 8 L19 28Z" fill="#c9d1e6"/><circle cx="16" cy="7" r="4" fill="${c}"/><path d="M16 3 L10 -4 H22Z" fill="${c}" opacity=".4"/>`
+  };
+  return `<svg viewBox="0 0 32 32" aria-hidden="true" style="overflow:visible">${I[id]}</svg>`;
+}
+
+/* ===================== القيادة ===================== */
+let shown = CONFIG.students.map(() => 0);
+function renderHQ() {
+  const gr = groupRanking();
+  $("#groupCards").innerHTML = CONFIG.groups.map(g => {
+    const s = groupStats(g), b = bases[g.id];
+    return `<article class="gc" style="--g:${g.color}">
+      <div class="gc-head"><span class="emb">${embSVG(b.emblem)}</span>
+        <div class="gc-name"><b>${esc(g.name)}</b><small>${esc(b.name || titleOf(s.built))}</small></div>
+        <span class="gc-rank num ${gr[g.id] === 1 && s.earned ? "r1" : ""}">${ar(gr[g.id])}</span></div>
+      <div class="gc-mini">${baseSVG(g, b.built, { mini: true })}</div>
+      <div class="gc-stats"><div><b class="num">${ar(s.earned)}</b><span>نقطة</span></div><div><b class="num">${ar(s.left)}</b><span>كريستالة</span></div><div><b class="num">${ar(s.built)}/${ar(MODULES.length)}</b><span>وحدة</span></div></div>
+      <div class="gc-bar" title="تقدّم المجموعة من ${ar(MAX_ALL * g.members.length)}"><i style="width:${s.earned / (MAX_ALL * g.members.length) * 100}%"></i></div>
+    </article>`;
+  }).join("");
+  renderPlanets($("#planetsHq"), false);
+  const { rank } = ranking();
+  const lines = CONFIG.planets.map((pl, a) => `<span class="cp" style="--k:${(a + 1) / N_ACT}"></span>`).join("");
+  const ticks = CONFIG.planets.map((pl, a) => `<span class="tick" style="--k:${(a + 1) / N_ACT}">${ar((a + 1) * MAX_ACT)}</span>`).join("");
+  let html = `<div class="scale" aria-hidden="true"><span></span><span class="label">الطالب</span><div class="track">${ticks}</div></div>`;
+  CONFIG.groups.forEach(g => {
+    html += `<div class="lane-group" style="--g:${g.color}"><div class="lg-head"><span class="emb">${embSVG(bases[g.id].emblem)}</span>مجموعة ${esc(g.name)}</div>`;
+    g.members.forEach(i => {
+      const t = totals(i).total, r = rank[i];
+      html += `<div class="lane" data-i="${i}"><span class="rank num ${t > 0 && r <= 3 ? "r" + r : ""}">${ar(r)}</span>
+        <button class="who" type="button" data-open="${i}"><span>${esc(CONFIG.students[i])}</span><small>${ar(t)} نقطة</small></button>
+        <div class="track" role="img" aria-label="${esc(CONFIG.students[i])}: ${ar(t)} من ${ar(MAX_ALL)}">${lines}
+          <span class="trail" style="--p:${shown[i] / MAX_ALL}"></span><span class="rocket" style="--p:${shown[i] / MAX_ALL}">${rocketSVG(g.color)}</span></div></div>`;
+    });
+    html += `</div>`;
+  });
+  $("#race").innerHTML = html;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll("#race .lane").forEach(lane => {
+      const i = +lane.dataset.i, t = totals(i).total, diff = t - shown[i], p = t / MAX_ALL;
+      lane.querySelector(".rocket").style.setProperty("--p", p);
+      lane.querySelector(".trail").style.setProperty("--p", p);
+      if (diff) {
+        const rk = lane.querySelector(".rocket"); rk.classList.add("boost"); setTimeout(() => rk.classList.remove("boost"), 1900);
+        if (diff > 0) { const f = document.createElement("span"); f.className = "plus"; f.style.setProperty("--p", p); f.textContent = "+" + ar(diff); lane.querySelector(".track").appendChild(f); setTimeout(() => f.remove(), 2700); }
+      }
+      shown[i] = t;
+    });
+  }));
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b) openCard(+b.dataset.open); });
+$("#planetsHq").addEventListener("click", e => { const b = e.target.closest("[data-act]"); if (b && canWrite) { cur = +b.dataset.act; show("eval"); } });
+
+/* ===================== ورشة البناء ===================== */
+let wsGroup = null, fresh = null;
+const unlocked = new Set();
+try { (JSON.parse(sessionStorage.getItem("ws-unlocked")) || []).forEach(x => unlocked.add(x)); } catch (e) {}
+function renderWS() {
+  const g = CONFIG.groups.find(x => x.id === wsGroup);
+  $("#wsPick").hidden = !!g; $("#lock").hidden = true; $("#ws").hidden = true;
+  if (!g) {
+    $("#pickGrid").innerHTML = CONFIG.groups.map(x => { const s = groupStats(x);
+      return `<button class="pick" type="button" data-g="${x.id}" style="--g:${x.color}"><span class="emb">${embSVG(bases[x.id].emblem)}</span><b>${esc(x.name)}</b><small>${ar(s.left)} كريستالة · ${ar(s.built)} من ${ar(MODULES.length)} وحدات</small></button>`; }).join("");
+    return;
+  }
+  if (!canWrite && !unlocked.has(g.id)) { showLock(g); return; }
+  const s = groupStats(g), b = bases[g.id];
+  $("#ws").hidden = false; $("#ws").style.setProperty("--g", g.color);
+  $("#wsEmb").innerHTML = embSVG(b.emblem);
+  $("#wsName").textContent = b.name || `قاعدة ${g.name}`;
+  $("#wsSub").textContent = `مجموعة ${g.name} · ${g.members.map(i => CONFIG.students[i].split(" ")[0]).join("، ")}`;
+  $("#wsCrys").textContent = ar(s.left);
+  $("#wsCrysSub").textContent = `كريستالة متاحة من ${ar(s.earned)}`;
+  $("#wsScene").innerHTML = baseSVG(g, b.built, { fresh });
+  $("#wsTitleChip").textContent = titleOf(s.built);
+  if (document.activeElement !== $("#baseName")) $("#baseName").value = b.name;
+  $("#embPick").innerHTML = Object.keys(EMBLEMS).map(k => `<button type="button" data-emb="${k}" aria-pressed="${b.emblem === k}" aria-label="شعار">${embSVG(k, "currentColor")}</button>`).join("");
+  $("#shopCount").textContent = `${ar(s.built)} من ${ar(MODULES.length)}`;
+  const last = MODULES.find(m => m.id === fresh) || MODULES.find(m => !b.built.includes(m.id)) || MODULES[MODULES.length - 1];
+  $("#fact").innerHTML = `<b>هل تعلم؟</b> ${esc(last.fact)}`;
+  const needPad = !b.built.includes("pad");
+  $("#shop").innerHTML = MODULES.map(m => {
+    const has = b.built.includes(m.id), lockedByPad = needPad && m.id !== "pad";
+    const can = !has && !lockedByPad && s.left >= m.cost;
+    const why = lockedByPad ? "ابنوا منصّة الهبوط أولًا" : (!has && s.left < m.cost ? `تحتاجون ${ar(m.cost - s.left)} كريستالة أخرى` : m.fact);
+    return `<div class="item ${has ? "built" : ""}"><span class="ic">${modIcon(m.id, g.color)}</span>
+      <span><b>${esc(m.name)}</b><small>${esc(has ? "تمّ البناء" : why)}</small></span>
+      ${has ? `<span class="done-tag">✓ مبنيّة</span>` : `<button class="buy num" type="button" data-buy="${m.id}" ${can ? "" : "disabled"}>${ICON.crys}${ar(m.cost)}</button>`}</div>`;
+  }).join("");
+  fresh = null;
+}
+function showLock(g) {
+  $("#wsPick").hidden = true; $("#lock").hidden = false; $("#lock").style.setProperty("--g", g.color);
+  $("#lockEmb").innerHTML = embSVG(bases[g.id].emblem); $("#lockTitle").textContent = `مجموعة ${g.name}`; $("#lockMsg").textContent = "";
+  const ins = [...document.querySelectorAll("#pin input")]; ins.forEach(x => x.value = ""); setTimeout(() => ins[0].focus(), 50);
+}
+$("#pickGrid").addEventListener("click", e => { const b = e.target.closest("[data-g]"); if (b) { wsGroup = b.dataset.g; renderWS(); } });
+$("#lockBack").addEventListener("click", () => { wsGroup = null; renderWS(); });
+$("#wsLeave").addEventListener("click", () => { if (!canWrite) { unlocked.delete(wsGroup); try { sessionStorage.setItem("ws-unlocked", JSON.stringify([...unlocked])); } catch (e) {} } wsGroup = null; renderWS(); });
+$("#pin").addEventListener("input", e => {
+  const ins = [...document.querySelectorAll("#pin input")], k = ins.indexOf(e.target);
+  e.target.value = e.target.value.replace(/[^\d٠-٩]/g, "").slice(-1).replace(/[٠-٩]/, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+  if (e.target.value && k < 3) ins[k + 1].focus();
+  const code = ins.map(x => x.value).join("");
+  if (code.length === 4) {
+    const g = CONFIG.groups.find(x => x.id === wsGroup);
+    if (code === g.code) { unlocked.add(g.id); try { sessionStorage.setItem("ws-unlocked", JSON.stringify([...unlocked])); } catch (er) {} toast(`أهلًا بمجموعة ${g.name}!`); renderWS(); }
+    else { $("#lockMsg").textContent = "الرمز غير صحيح. اسألوا المعلّم."; const l = $("#lock"); l.classList.remove("shake"); void l.offsetWidth; l.classList.add("shake"); ins.forEach(x => x.value = ""); ins[0].focus(); }
+  }
+});
+$("#pin").addEventListener("keydown", e => {
+  const ins = [...document.querySelectorAll("#pin input")], k = ins.indexOf(e.target);
+  if (e.key === "Backspace" && !e.target.value && k > 0) ins[k - 1].focus();
+});
+$("#shop").addEventListener("click", async e => {
+  const b = e.target.closest("[data-buy]"); if (!b || b.disabled) return;
+  const g = CONFIG.groups.find(x => x.id === wsGroup), m = MODULES.find(x => x.id === b.dataset.buy), s = groupStats(g);
+  if (s.left < m.cost || bases[g.id].built.includes(m.id)) return;
+  b.disabled = true;
+  bases[g.id].built.push(m.id); fresh = m.id; renderWS();
+  const ok = await saveBase(g.id);
+  if (!ok) { bases[g.id].built = bases[g.id].built.filter(x => x !== m.id); renderWS(); toast("لم يُحفظ البناء من هذا الجهاز. ابنوا من جهاز المعلّم."); return; }
+  const n = bases[g.id].built.length;
+  toast(n === MODULES.length ? "ما شاء الله! اكتملت قاعدتكم كلها" : `بُنيت ${m.name}! صرتم: ${titleOf(n)}`);
+});
+let nameTimer;
+$("#baseName").addEventListener("input", e => {
+  const g = wsGroup; bases[g].name = e.target.value.trim().slice(0, 24);
+  $("#wsName").textContent = bases[g].name || `قاعدة ${CONFIG.groups.find(x => x.id === g).name}`;
+  clearTimeout(nameTimer); nameTimer = setTimeout(() => saveBase(g), 800);
+});
+$("#embPick").addEventListener("click", e => {
+  const b = e.target.closest("[data-emb]"); if (!b) return;
+  bases[wsGroup].emblem = b.dataset.emb; saveBase(wsGroup); renderWS();
+});
+
+/* ===================== التقييم ===================== */
+let cur = CONFIG.planets.findIndex((p, a) => !actDone(a)); if (cur < 0) cur = N_ACT - 1;
+$("#rules").innerHTML = `
+  <span class="rule"><span class="ri" style="background:rgba(79,227,181,.18);color:var(--mint)">${ICON.clock}</span>الحضور: حاضر <b>${ar(P.att.p)}</b> · متأخر <b>${ar(P.att.l)}</b> · غائب <b>${ar(P.att.a)}</b></span>
+  <span class="rule"><span class="ri" style="background:rgba(255,201,77,.18);color:var(--gold)">${ICON.shield}</span>الانضباط: نقطة لكل نجمة حتى <b>${ar(P.morMax)}</b></span>
+  <span class="rule"><span class="ri" style="background:rgba(255,107,139,.18);color:var(--rose)">${ICON.cup}</span>نتيجة المجموعة (تُحسب لكل أفرادها): فاز <b>${ar(P.res.w)}</b> · تعادل <b>${ar(P.res.d)}</b> · خسر <b>${ar(P.res.x)}</b></span>`;
+function cardHTML(i) {
+  const e = state.s[i][cur], g = groupOf(i), off = e.att === "a" ? "off" : "", r = gRes(i, cur);
+  const seg = (k, vals) => Object.keys(vals).map(v => `<button class="opt v-${v}" type="button" data-i="${i}" data-k="${k}" data-v="${v}" aria-pressed="${e[k] === v}">${LABEL[k][v]}</button>`).join("");
+  const stars = Array.from({ length: P.morMax }, (_, k) => `<button class="star ${e.mor > k ? "on" : ""}" type="button" data-i="${i}" data-k="mor" data-v="${k + 1}" aria-label="${ar(k + 1)} نجمة" aria-pressed="${e.mor === k + 1}">${ICON.star}</button>`).join("");
+  return `<article class="ev" style="--g:${g.color}" id="ev${i}">
+    <div class="ev-head"><button class="ev-name" type="button" data-open="${i}">${esc(CONFIG.students[i])}</button><span class="ev-total num">${ar(actTotal(i, cur))}<small>/${ar(MAX_ACT)}</small></span></div>
+    <div class="crit"><span class="crit-l"><span style="color:var(--mint);display:flex">${ICON.clock}</span>الحضور</span><div class="seg">${seg("att", P.att)}</div></div>
+    <div class="crit ${off}"><span class="crit-l"><span style="color:var(--gold);display:flex">${ICON.shield}</span>الانضباط</span><div class="stars">${stars}<span class="mor-word">${e.mor ? LABEL.mor[e.mor] : ""}</span></div></div>
+    <div class="crit ${off}"><span class="crit-l"><span style="color:var(--rose);display:flex">${ICON.cup}</span>النتيجة</span><span class="res-note">${e.att === "a" ? "غائب، لا تُحسب له" : r ? `${LABEL.res[r]} مع مجموعته، ${ptsWord(P.res[r])}` : "تُحدَّد من نتيجة المجموعة أعلاه"}</span></div></article>`;
+}
+function renderEval() {
+  renderPlanets($("#planetsEval"), true);
+  $("#actTitle").value = state.titles[cur];
+  $("#actTitle").placeholder = `كوكب ${CONFIG.planets[cur].name}: اكتب اسم النشاط`;
+  $("#actDate").value = state.dates[cur];
+  $("#evalGroups").innerHTML = CONFIG.groups.map(g => `<section class="ev-group" style="--g:${g.color}">
+    <div class="gres-bar"><div class="lg-head" style="margin:0"><span class="emb">${embSVG(bases[g.id].emblem)}</span>مجموعة ${esc(g.name)}</div>
+      <div class="gres"><span>نتيجة المجموعة:</span>${Object.keys(P.res).map(v => `<button class="opt v-${v}" type="button" data-gres="${g.id}" data-v="${v}" aria-pressed="${state.gres[cur][g.id] === v}">${LABEL.res[v]}</button>`).join("")}</div></div>
+    <div class="cards">${g.members.map(cardHTML).join("")}</div></section>`).join("");
+}
+$("#planetsEval").addEventListener("click", e => { const b = e.target.closest("[data-act]"); if (b) { cur = +b.dataset.act; renderEval(); } });
+$("#evalGroups").addEventListener("click", e => {
+  const gb = e.target.closest("button[data-gres]");
+  if (gb) {
+    const gid = gb.dataset.gres, v = gb.dataset.v;
+    if (state.gres[cur][gid] === v) delete state.gres[cur][gid]; else state.gres[cur][gid] = v;
+    save(); renderEval();
+    const again = document.querySelector(`button[data-gres="${gid}"][data-v="${v}"]`); if (again) again.focus({ preventScroll: true });
+    return;
+  }
+  const b = e.target.closest("button[data-k]"); if (!b) return;
+  const i = +b.dataset.i, k = b.dataset.k, entry = state.s[i][cur], v = k === "mor" ? +b.dataset.v : b.dataset.v;
+  entry[k] = entry[k] === v ? null : v;
+  if (k === "att" && entry.att === "a") entry.mor = null;
+  save();
+  $("#ev" + i).outerHTML = cardHTML(i);
+  const again = document.querySelector(`#ev${i} button[data-k="${k}"][data-v="${b.dataset.v}"]`); if (again) again.focus({ preventScroll: true });
+  renderPlanets($("#planetsEval"), true);
+});
+$("#actTitle").addEventListener("input", e => { state.titles[cur] = e.target.value.trim(); save(); renderPlanets($("#planetsEval"), true); });
+$("#actDate").addEventListener("change", e => { state.dates[cur] = e.target.value; save(); });
+$("#allPresent").addEventListener("click", () => { state.s.forEach(r => { if (!r[cur].att) r[cur].att = "p"; }); save(); renderEval(); toast("سُجّل حضور كل من لم يُحدَّد حضوره"); });
+$("#launch").addEventListener("click", () => { show("hq"); toast(`انطلقت الصواريخ من كوكب ${CONFIG.planets[cur].name}!`); });
+
+/* ===================== التقرير ===================== */
+function renderReport() {
+  const { list, rank } = ranking();
+  $("#reportTable").innerHTML = `<thead><tr><th>الترتيب</th><th>الاسم</th><th>المجموعة</th>${CONFIG.planets.map((p, a) => `<th title="${esc(actName(a))}">${ar(a + 1)}. ${esc(p.name)}</th>`).join("")}
+    <th>الحضور /${ar(MAX.att)}</th><th>الانضباط /${ar(MAX.mor)}</th><th>نتائج المجموعة /${ar(MAX.res)}</th><th>المجموع /${ar(MAX_ALL)}</th></tr></thead><tbody>` +
+    list.map(({ k: i }) => { const t = totals(i), g = groupOf(i);
+      return `<tr style="--g:${g.color}"><td class="num">${ar(rank[i])}</td><td class="nm"><button type="button" data-open="${i}">${esc(CONFIG.students[i])}</button></td><td><span class="dot"></span>${esc(g.name)}</td>
+        ${state.s[i].map((e, a) => `<td class="num">${graded(i, a) ? ar(actTotal(i, a)) : "–"}</td>`).join("")}
+        <td class="num">${ar(t.att)}</td><td class="num">${ar(t.mor)}</td><td class="num">${ar(t.res)}</td><td class="tot num">${ar(t.total)}</td></tr>`; }).join("") + "</tbody>";
+  const gr = groupRanking();
+  $("#groupTable").innerHTML = `<thead><tr><th>الترتيب</th><th>المجموعة</th><th>الحضور</th><th>الانضباط</th><th>النتائج (فوز/تعادل/خسارة)</th><th>المجموع /${ar(MAX_ALL * 5)}</th><th>الوحدات المبنيّة</th><th>لقب القاعدة</th></tr></thead><tbody>` +
+    [...CONFIG.groups].sort((a, b) => gr[a.id] - gr[b.id]).map(g => {
+      const s = groupStats(g), sum = k => g.members.reduce((x, i) => x + totals(i)[k], 0);
+      return `<tr style="--g:${g.color}"><td class="num">${ar(gr[g.id])}</td><td class="nm"><span class="dot"></span>${esc(g.name)}</td><td class="num">${ar(sum("att"))}</td><td class="num">${ar(sum("mor"))}</td><td class="num">${ar(sum("res"))} <small class="sub">(${CONFIG.planets.map((p, a) => state.gres[a][g.id] ? LABEL.res[state.gres[a][g.id]] : "–").join(" · ")})</small></td><td class="tot num">${ar(s.earned)}</td><td class="num">${ar(s.built)}/${ar(MODULES.length)}</td><td>${esc(titleOf(s.built))}</td></tr>`;
+    }).join("") + "</tbody>";
+  $("#codes").innerHTML = CONFIG.groups.map(g => `<div class="code" style="--g:${g.color}"><span>مجموعة ${esc(g.name)}</span><b>${g.code}</b></div>`).join("");
+}
+$("#printReport").addEventListener("click", () => window.print());
+$("#exportBtn").addEventListener("click", async () => {
+  const filename = "mohimmat-alkawakib-" + new Date().toISOString().slice(0, 10) + ".json";
+  const data = JSON.stringify({ grades: state, bases }, null, 2);
+  const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+  if (dl) { try { await dl.save({ filename, data }); toast("حُفظت نسخة من البيانات"); } catch (e) { if (e && e.code !== "declined") toast("لم تُحفظ النسخة"); } return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "application/json" })); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); toast("نُزّلت نسخة من البيانات");
+});
+$("#importBtn").addEventListener("click", () => $("#importFile").click());
+$("#importFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text()), gd = d.grades || d;
+    if (!gd || !Array.isArray(gd.s)) throw 0;
+    state = normalize(gd); save();
+    if (d.bases) CONFIG.groups.forEach(g => { bases[g.id] = normBase(g, d.bases[g.id]); saveBase(g.id); });
+    renderReport(); toast("استُرجعت البيانات");
+  } catch (err) { toast("هذا الملف ليس نسخة صحيحة من اللعبة"); }
+  e.target.value = "";
+});
+let armed = 0;
+$("#resetBtn").addEventListener("click", e => {
+  const btn = e.currentTarget;
+  if (Date.now() - armed > 4000) { armed = Date.now(); btn.textContent = "اضغط مرة أخرى للتأكيد"; setTimeout(() => btn.textContent = "مسح كل الدرجات والقواعد", 4000); return; }
+  state = blank(); save(); shown = shown.map(() => 0); armed = 0; btn.textContent = "مسح كل الدرجات والقواعد";
+  CONFIG.groups.forEach(g => { bases[g.id] = blankBase(g); saveBase(g.id); });
+  renderReport(); toast("مُسحت كل الدرجات والقواعد");
+});
+
+/* ===================== بطاقة الطالب ===================== */
+const dlg = $("#card");
+function openCard(i) {
+  const t = totals(i), { rank } = ranking(), g = groupOf(i);
+  const meter = (ic, col, label, v, max) => `<div class="meter"><span class="mi" style="background:color-mix(in srgb,${col} 20%,transparent);color:${col}">${ic}</span>
+    <div><div class="meter-l">${label}</div><div class="bar"><i style="background:${col}" data-w="${max ? v / max * 100 : 0}"></i></div></div><span class="v num">${ar(v)}<small class="sub" style="font-size:12px">/${ar(max)}</small></span></div>`;
+  const rows = state.s[i].map((e, a) => `<tr><td style="text-align:start"><span style="display:inline-flex;align-items:center;gap:6px">${planetSVG(CONFIG.planets[a], "").replace("<svg", '<svg style="width:24px;height:24px;flex:none"')}<b>${esc(actName(a))}</b></span></td>
+      <td>${e.att ? LABEL.att[e.att] : "–"}</td><td style="color:var(--gold);white-space:nowrap">${e.att === "a" || !e.mor ? "–" : "★".repeat(e.mor) + '<span style="opacity:.25">' + "★".repeat(P.morMax - e.mor) + "</span>"}</td>
+      <td>${e.att === "a" || !gRes(i, a) ? "–" : LABEL.res[gRes(i, a)]}</td><td class="tot num">${graded(i, a) ? ar(actTotal(i, a)) : "–"}</td></tr>`).join("");
+  const morAvg = t.morCount ? t.morSum / t.morCount : 0;
+  const badges = [
+    { on: t.gradedCount > 0 && t.presentAll, col: "#4fe3b5", ic: "clock", name: "نجم الحضور" },
+    { on: t.morCount > 0 && morAvg >= P.morMax - .5, col: "#ffc94d", ic: "shield", name: "وسام الانضباط" },
+    { on: t.wins >= 3, col: "#ff6b8b", ic: "cup", name: "بطل السباق" },
+    { on: t.total > 0 && rank[i] === 1, col: "#b48cff", ic: "star", name: "قائد الأسطول" }
+  ];
+  $("#scBody").style.setProperty("--g", g.color);
+  $("#scBody").innerHTML = `<button class="sc-close no-print" type="button" aria-label="إغلاق" id="scClose">✕</button>
+    <div class="sc-top">${rocketSVG(g.color, "sc-rocket")}<span class="label">مجموعة ${esc(g.name)}</span><h2 id="scName">${esc(CONFIG.students[i])}</h2>
+      <div class="sc-sum"><span class="big num">${ar(t.total)}</span><span class="sub" style="margin:0">من ${ar(MAX_ALL)} نقطة</span>${t.total > 0 ? `<span class="chip">المركز ${ar(rank[i])} من ${ar(CONFIG.students.length)}</span>` : ""}<span class="chip">قُيّم في ${ar(t.gradedCount)} من ${ar(N_ACT)} مهمات</span></div></div>
+    <div class="meters">${meter(ICON.clock, "var(--mint)", "الحضور", t.att, MAX.att)}${meter(ICON.shield, "var(--gold)", "الانضباط", t.mor, MAX.mor)}${meter(ICON.cup, "var(--rose)", "نتائج المجموعة", t.res, MAX.res)}</div>
+    <div class="table-wrap"><table><thead><tr><th style="text-align:start">المهمة</th><th>الحضور</th><th>الانضباط</th><th>نتيجة المجموعة</th><th>النقاط</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="badges">${badges.map(b => `<div class="badge ${b.on ? "" : "off"}">${badgeSVG(b.col, b.ic)}<span>${b.name}</span></div>`).join("")}</div>
+    <div class="sc-foot no-print"><span style="display:flex;gap:8px"><button class="btn" type="button" id="scPrev">السابق</button><button class="btn" type="button" id="scNext">التالي</button></span><button class="btn gold" type="button" id="scPrint">طباعة البطاقة</button></div>`;
+  if (!dlg.open) dlg.showModal();
+  requestAnimationFrame(() => requestAnimationFrame(() => dlg.querySelectorAll(".bar i").forEach(b => b.style.width = b.dataset.w + "%")));
+  const n = CONFIG.students.length;
+  $("#scClose").onclick = () => dlg.close();
+  $("#scPrev").onclick = () => openCard((i - 1 + n) % n);
+  $("#scNext").onclick = () => openCard((i + 1) % n);
+  $("#scPrint").onclick = () => { document.body.classList.add("print-card"); window.print(); };
+}
+window.addEventListener("afterprint", () => document.body.classList.remove("print-card"));
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+function badgeSVG(col, ic) {
+  return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3l5 4 6-1 2 6 6 3-2 6 3 5-5 4 0 6-6 1-3 5-6-2-6 2-3-5-6-1 0-6-5-4 3-5-2-6 6-3 2-6 6 1z" fill="${col}"/>
+    <circle cx="24" cy="22" r="12" fill="#fff" opacity=".92"/><g fill="#141022" color="#141022">${ICON[ic].replace("<svg", '<svg x="14" y="12" width="20" height="20"')}</g></svg>`;
+}
+
+/* ===================== عام ===================== */
+let tt;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2800); }
+(function stars() { let h = ""; for (let k = 0; k < 90; k++) h += `<i style="top:${(Math.random() * 100).toFixed(1)}%;left:${(Math.random() * 100).toFixed(1)}%;animation-delay:${(-Math.random() * 3).toFixed(2)}s;animation-duration:${(2 + Math.random() * 3).toFixed(1)}s"></i>`; $("#sky").innerHTML = h; })();
+show("hq");
+</script>
+</body>
+</html>
