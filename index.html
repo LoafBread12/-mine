@@ -590,6 +590,9 @@ const CONFIG = {
   ],
   // بصمة الرقم السري للمعلّم خارج Claude (مثل GitHub)، لا الرقم نفسه. لتغييره: احسب بصمة الرقم الجديد بالدالة pinHash.
   teacherPinHash: "7f7d502",
+  // رابط تطبيق الويب من Google Apps Script (ينتهي بـ /exec). إن وُضع، تُشارَك الكريستالات والقواعد والكواكب المفتوحة
+  // بين كل الأجهزة خارج Claude، ويصير الرقم السري للمعلّم هو المكتوب في السكربت. انظر google-apps-script.gs
+  syncUrl: "",
   points: { att: { p: 3, l: 1, a: 0 }, morMax: 3, res: { w: 3, d: 2, x: 1 } }   // الحضور، الانضباط (نجوم)، نتيجة المجموعة
 };
 /* وحدات القاعدة الفضائية: كل نقطة = كريستالة واحدة، ومجموع الأسعار ٢١٠ من ٢٢٥ ممكنة */
@@ -698,7 +701,61 @@ let localTeacher = false;
 try { localTeacher = !inClaude && sessionStorage.getItem("teacher-ok") === CONFIG.teacherPinHash; } catch (e) {}
 let remoteDb = null, canWrite = localTeacher, pushTimer = 0, gradesChain = Promise.resolve(), lastJSON = "";
 const baseChain = {}, baseJSON = {};
-function save() { lsSet(KEY, state); pushGrades(); pushPublic(); }
+function save() { lsSet(KEY, state); pushGrades(); pushPublic(); pushSheet(); }
+
+/* ===================== ربط جدول Google (خارج Claude) ===================== */
+const SYNC = !inClaude && CONFIG.syncUrl ? CONFIG.syncUrl : "";
+let teacherPin = "";
+try { teacherPin = localTeacher ? sessionStorage.getItem("teacher-pin") || "" : ""; } catch (e) {}
+const pendingBase = {};
+async function sheetGet(q) {
+  const r = await fetch(SYNC + (SYNC.includes("?") ? "&" : "?") + q + "&t=" + Date.now(), { cache: "no-store" });
+  return r.json();
+}
+async function sheetPost(body) {
+  const r = await fetch(SYNC, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+  return r.json();
+}
+async function pollSheet() {
+  if (!SYNC) return;
+  try {
+    const d = await sheetGet("action=state");
+    if (!d || !d.ok) return;
+    $("#statusTxt").textContent = "متّصل بجدول Google";
+    if (d.public) pub = d.public;
+    let changed = !canWrite;
+    if (d.bases) CONFIG.groups.forEach(g => {
+      if (!d.bases[g.id] || pendingBase[g.id]) return;
+      const nb = normBase(g, d.bases[g.id]);
+      if (JSON.stringify(nb) !== JSON.stringify(bases[g.id])) { bases[g.id] = nb; changed = true; }
+    });
+    lsSet(BKEY, bases);
+    if (changed) rerender();
+  } catch (e) { $("#statusTxt").textContent = "غير متّصل بالجدول"; }
+}
+async function loadTeacherGrades() {
+  if (!SYNC || !teacherPin) return;
+  try {
+    const d = await sheetGet("action=grades&key=" + encodeURIComponent(teacherPin));
+    if (d && d.ok && d.grades && Array.isArray(d.grades.s)) { state = normalize(d.grades); lsSet(KEY, state); rerender(); toast("حُمّلت الدرجات من الجدول"); }
+    else if (d && d.ok) pushSheet(true);   // الجدول فارغ: ارفع درجات هذا الجهاز
+  } catch (e) {}
+}
+let sheetTimer = 0, lastSheet = "";
+function pushSheet(now) {
+  if (!SYNC || !localTeacher || !teacherPin) return;
+  clearTimeout(sheetTimer);
+  sheetTimer = setTimeout(async () => {
+    const body = { type: "teacher", key: teacherPin, grades: state, public: publicSummary() };
+    const json = JSON.stringify(body);
+    if (json === lastSheet) return;
+    lastSheet = json;
+    try {
+      const d = await sheetPost(body);
+      if (!d || !d.ok) { lastSheet = ""; toast(d && d.error === "key" ? "الرقم السري لا يطابق رقم الجدول" : "تعذّر الحفظ في الجدول"); }
+    } catch (e) { lastSheet = ""; toast("تعذّر الاتصال بالجدول، سيُعاد الحفظ مع التعديل القادم"); }
+  }, now ? 0 : 1200);
+}
 /* ملخّص عامّ يقرؤه الطلاب: الكواكب المفتوحة ومجموع كل مجموعة فقط، بلا درجات الأفراد */
 let pub = null, pubTimer = 0, lastPub = "";
 function publicSummary() {
@@ -728,6 +785,13 @@ function pushGrades() {
 }
 function saveBase(gid) {
   lsSet(BKEY, bases);
+  if (SYNC) {
+    const g = CONFIG.groups.find(x => x.id === gid);
+    pendingBase[gid] = (pendingBase[gid] || 0) + 1;
+    const done = () => { pendingBase[gid]--; };
+    return sheetPost({ type: "base", group: gid, base: bases[gid], code: g.code, key: localTeacher ? teacherPin : "" })
+      .then(d => { done(); if (d && d.ok) return true; if (d && d.error === "crystals") toast("الكريستالات لا تكفي حسب الجدول"); return false; }, () => { done(); return false; });
+  }
   if (!remoteDb) return Promise.resolve(true);
   const json = JSON.stringify(bases[gid]);
   baseJSON[gid] = json;
@@ -766,13 +830,22 @@ function openGate() {
   const ins = [...document.querySelectorAll("#gatePin input")]; ins.forEach(x => x.value = ""); setTimeout(() => ins[0].focus(), 50);
 }
 function closeGate() { $("#gate").hidden = true; if (/teacher/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search); }
-function tryGate() {
+let gateBusy = false;
+async function tryGate() {
   const ins = [...document.querySelectorAll("#gatePin input")], code = ins.map(x => x.value).join("");
   if (code.length < 4) { $("#gateMsg").textContent = "اكتب الأرقام الأربعة."; return; }
-  if (pinHash(code) === CONFIG.teacherPinHash) {
-    localTeacher = true; canWrite = true; preview = false;
-    try { sessionStorage.setItem("teacher-ok", CONFIG.teacherPinHash); } catch (e) {}
+  if (gateBusy) return;
+  let ok = pinHash(code) === CONFIG.teacherPinHash;
+  if (SYNC) {   // مع الجدول: الرقم الصحيح هو المكتوب في السكربت
+    gateBusy = true; $("#gateMsg").textContent = "لحظة، نتحقّق…";
+    try { const d = await sheetGet("action=grades&key=" + encodeURIComponent(code)); if (d) ok = !!d.ok; } catch (e) {}
+    gateBusy = false; $("#gateMsg").textContent = "";
+  }
+  if (ok) {
+    localTeacher = true; canWrite = true; preview = false; teacherPin = code;
+    try { sessionStorage.setItem("teacher-ok", CONFIG.teacherPinHash); sessionStorage.setItem("teacher-pin", code); } catch (e) {}
     closeGate(); applyRole(); show("hq"); toast("أهلًا بالمعلّم");
+    loadTeacherGrades();
   } else {
     $("#gateMsg").textContent = "الرقم غير صحيح.";
     const c = $("#gateCard"); c.classList.remove("shake"); void c.offsetWidth; c.classList.add("shake");
@@ -795,7 +868,8 @@ $("#gate").addEventListener("keydown", e => { if (e.key === "Escape") closeGate(
 $("#teacherEntry").addEventListener("click", openGate);
 $("#teacherOut").addEventListener("click", () => {
   localTeacher = false; canWrite = false; wsGroup = null;
-  try { sessionStorage.removeItem("teacher-ok"); } catch (e) {}
+  teacherPin = "";
+  try { sessionStorage.removeItem("teacher-ok"); sessionStorage.removeItem("teacher-pin"); } catch (e) {}
   applyRole(); show("map"); toast("خرجت من لوحة المعلّم");
 });
 $("#roleBtn").addEventListener("click", () => { preview = !preview; wsGroup = null; applyRole(); show(studentSide() ? "map" : "hq"); });
@@ -871,7 +945,7 @@ function ranking() {
   return { list, rank: rankOf(list) };
 }
 function groupStats(g) {
-  const earned = !canWrite && remoteDb ? ((pub && pub.earned && +pub.earned[g.id]) || 0) : g.members.reduce((s, i) => s + totals(i).total, 0);
+  const earned = !canWrite && (remoteDb || SYNC) ? ((pub && pub.earned && +pub.earned[g.id]) || 0) : g.members.reduce((s, i) => s + totals(i).total, 0);
   const spent = bases[g.id].built.reduce((s, id) => s + (MODULES.find(m => m.id === id) || { cost: 0 }).cost, 0);
   return { earned, spent, left: Math.max(0, earned - spent), built: bases[g.id].built.length };
 }
@@ -960,11 +1034,11 @@ function modIcon(id, c) {
 const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" style="stroke:var(--ink-mut)"/></svg>';
 const planetOpen = a => {
   if (!CONFIG.planets[a].game) return false;
-  const o = canWrite || !remoteDb ? state.open : (pub && pub.open) || [];
+  const o = canWrite || !(remoteDb || SYNC) ? state.open : (pub && pub.open) || [];
   return o[a] !== false;
 };
 const planetTitle = a => {
-  const t = canWrite || !remoteDb ? state.titles[a] : ((pub && pub.titles) || [])[a];
+  const t = canWrite || !(remoteDb || SYNC) ? state.titles[a] : ((pub && pub.titles) || [])[a];
   return t || CONFIG.planets[a].gameName || "";
 };
 function renderMap() {
@@ -1121,7 +1195,7 @@ $("#shop").addEventListener("click", async e => {
   b.disabled = true;
   bases[g.id].built.push(m.id); fresh = m.id; renderWS();
   const ok = await saveBase(g.id);
-  if (!ok) { bases[g.id].built = bases[g.id].built.filter(x => x !== m.id); renderWS(); toast("لم يُحفظ البناء من هذا الجهاز. ابنوا من جهاز المعلّم."); return; }
+  if (!ok) { bases[g.id].built = bases[g.id].built.filter(x => x !== m.id); renderWS(); toast(SYNC ? "لم يُحفظ البناء. تأكّدوا من الاتصال وحاولوا مرة أخرى." : "لم يُحفظ البناء من هذا الجهاز. ابنوا من جهاز المعلّم."); return; }
   const n = bases[g.id].built.length;
   toast(n === MODULES.length ? "ما شاء الله! اكتملت قاعدتكم كلها" : `بُنيت ${m.name}! صرتم: ${titleOf(n)}`);
 });
@@ -1284,6 +1358,7 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 applyRole();
 show(studentSide() ? "map" : "hq");
 if (/(^|[#&])teacher\b/.test(location.hash) && !canWrite) openGate();
+if (SYNC) { pollSheet(); setInterval(pollSheet, 15000); if (localTeacher) loadTeacherGrades(); }
 </script>
 </body>
 </html>
