@@ -4,12 +4,12 @@
  * يحفظ هذا السكربت في الجدول:
  *   - ملخّصًا عامًّا يقرؤه الطلاب: الكواكب المفتوحة، وأسماء الأنشطة، وكريستالات كل مجموعة.
  *   - قاعدة كل مجموعة في ورشة البناء.
- *   - درجات الطلاب كاملة، ولا يقرؤها إلا المعلّم بالرقم السري.
+ *   - درجات الطلاب كاملة، ولا يقرؤها إلا المعلّم بكلمة السر.
  *
  * طريقة التركيب:
  *   ١. أنشئ جدول Google جديدًا (sheets.new).
  *   ٢. من القائمة: الإضافات (Extensions) ← Apps Script.
- *   ٣. احذف ما في المحرّر، والصق هذا الملف كله، ثم غيّر الرقم السري أدناه.
+ *   ٣. احذف ما في المحرّر، والصق هذا الملف كله، ثم اكتب كلمة سر المعلّم ومعرّف جدولك أدناه.
  *   ٤. احفظ، ثم: نشر (Deploy) ← نشر جديد (New deployment) ← النوع: تطبيق ويب (Web app).
  *        - التنفيذ بصفتي (Execute as: Me)
  *        - من يمكنه الوصول: أي شخص (Who has access: Anyone)
@@ -18,8 +18,11 @@
  * عند تعديل السكربت لاحقًا: نشر ← إدارة عمليات النشر ← تعديل ← إصدار جديد، حتى يبقى الرابط نفسه.
  */
 
-// الرقم السري للمعلّم: نفس الرقم الذي يُدخله في «دخول المعلّم». غيّره.
-const TEACHER_PIN = "اكتب-رقمك-هنا";
+// كلمة سر المعلّم: نفس ما يكتبه في «دخول المعلّم» في ملف المعلّم. ١٠ أحرف على الأقل، فيها حروف وأرقام.
+// لا ترفعها إلى GitHub ولا تكتبها في أي ملف آخر.
+const TEACHER_PIN = "اكتب-كلمة-السر-هنا";
+// بعد ١٠ محاولات خاطئة يُقفل دخول المعلّم ١٥ دقيقة، حتى لا يمكن تخمين كلمة السر.
+const MAX_FAILS = 10, LOCK_SECONDS = 900;
 
 // رموز دخول ورشة البناء لكل مجموعة (نفس الرموز في index.html).
 const GROUP_CODES = { g1: "4821", g2: "7395", g3: "2164", g4: "5937" };
@@ -40,14 +43,19 @@ const GROUP_IDS = { "الشهاب": "g1", "المجرة": "g2", "المجرّة"
 
 /* ---------------- الطلبات ---------------- */
 
+// يتحقّق من كلمة السر، ويقفل الدخول بعد محاولات خاطئة كثيرة. يرجع "ok" أو "key" أو "locked".
+function checkKey_(key) {
+  const c = CacheService.getScriptCache();
+  const fails = Number(c.get("fails") || 0);
+  if (fails >= MAX_FAILS) return "locked";
+  if (String(key || "").length >= 8 && String(key) === TEACHER_PIN && TEACHER_PIN.indexOf("اكتب") !== 0) return "ok";
+  c.put("fails", String(fails + 1), LOCK_SECONDS);
+  Utilities.sleep(1000);
+  return fails + 1 >= MAX_FAILS ? "locked" : "key";
+}
+
+// الطلاب: الملخّص العام وقواعد المجموعات فقط (بلا أسماء ولا درجات)
 function doGet(e) {
-  const p = (e && e.parameter) || {};
-  if (p.action === "grades") {
-    if (String(p.key) !== TEACHER_PIN) return out_({ ok: false, error: "key" });
-    let roster = null;
-    try { roster = roster_(); } catch (x) { roster = null; }   // إن تعذّر فتح «تقييم الفصل» تبقى الأسماء الافتراضية
-    return out_({ ok: true, grades: read_("grades"), roster: roster });
-  }
   const bases = {};
   Object.keys(GROUP_CODES).forEach(g => { bases[g] = read_("base:" + g); });
   return out_({ ok: true, public: read_("public"), bases: bases });
@@ -59,7 +67,17 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const teacher = String(d.key || "") === TEACHER_PIN;
+    const auth = d.key ? checkKey_(d.key) : "none";   // الطالب لا يرسل كلمة سر، فلا تُحسب عليه محاولة
+    const teacher = auth === "ok";
+    if (d.key && !teacher && d.type !== "base") return out_({ ok: false, error: auth });
+
+    // المعلّم يقرأ الأسماء والدرجات (كلمة السر داخل الطلب، لا في الرابط)
+    if (d.type === "grades") {
+      if (!teacher) return out_({ ok: false, error: "key" });
+      let roster = null;
+      try { roster = roster_(); } catch (x) { roster = null; }   // إن تعذّر فتح «تقييم الفصل» تبقى الأسماء الافتراضية
+      return out_({ ok: true, grades: read_("grades"), roster: roster });
+    }
 
     // المعلّم يحفظ الدرجات والملخّص العام
     if (d.type === "teacher") {

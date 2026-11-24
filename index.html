@@ -350,6 +350,8 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
 .gate .pin input{border:2px solid var(--wood-900);background:#f2e6c9;color:#3a2414}
 .gate .pin input:focus{border-color:#f4c34f;box-shadow:0 0 0 3px rgba(244,195,79,.4)}
 .gate .msg{color:#ffd0c4}
+.gate-pass{width:100%;height:50px;border-radius:8px;border:2px solid var(--wood-900);background:#f2e6c9;color:#3a2414;font-size:20px;font-weight:700;text-align:center;padding:0 12px;direction:ltr}
+.gate-pass:focus{outline:none;border-color:#f4c34f;box-shadow:0 0 0 3px rgba(244,195,79,.4)}
 .gate-row{display:flex;gap:8px}
 .gate-row button{height:44px;padding:0 18px;border:0;border-radius:8px;font-weight:700;cursor:pointer}
 .gate-go{color:#0b2a3b;background:linear-gradient(180deg,#d4f2ff,#86d6ff 55%,#4fb2e2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}
@@ -412,24 +414,16 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       <g class="ring"><ellipse cx="28" cy="28" rx="26" ry="8" fill="none" stroke="#ffc94d" stroke-width="2.4" transform="rotate(-20 28 28)"/><circle cx="52" cy="22" r="2.6" fill="#ffc94d"/></g>
     </svg>
     <div>
-      <p class="kicker" id="kicker">لوحة المعلّم · ٤ مجموعات · ٥ مهمات</p>
+      <p class="kicker" id="kicker">جهة الطالب · ٤ مجموعات · ٥ كواكب</p>
       <h1>مهمة <span>الكواكب الخمسة</span></h1>
     </div>
   </div>
   <div style="display:grid;gap:6px;justify-items:end">
-    <nav class="tabs" role="tablist" aria-label="أقسام لوحة المعلّم" id="tabsT">
-      <button class="tab" role="tab" data-view="hq" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>القيادة</button>
-      <button class="tab" role="tab" data-view="ws" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h5v6M10 20V9l5-4 4 4v11" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/></svg>ورشة البناء</button>
-      <button class="tab" role="tab" data-view="eval" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></svg>التقييم</button>
-      <button class="tab" role="tab" data-view="report" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12h7M9 16h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>التقرير</button>
-    </nav>
-    <nav class="tabs" role="tablist" aria-label="أقسام الطالب" id="tabsS" hidden>
+    <nav class="tabs" role="tablist" aria-label="أقسام الطالب" id="tabsS">
       <button class="tab" role="tab" data-view="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"/><ellipse cx="12" cy="12" rx="11" ry="3.5" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-20 12 12)"/></svg>الكواكب</button>
       <button class="tab" role="tab" data-view="ws" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h5v6M10 20V9l5-4 4 4v11" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/></svg>ورشة البناء</button>
     </nav>
     <span style="display:flex;gap:10px;align-items:center">
-      <button class="role-btn" type="button" id="roleBtn" hidden></button>
-      <button class="role-btn" type="button" id="teacherOut" hidden>خروج المعلّم</button>
       <span class="status"><i></i><span id="statusTxt">الأنظمة تعمل</span></span>
     </span>
   </div>
@@ -457,16 +451,6 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       <button class="btn" type="button" id="playFull"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>ملء الشاشة</button>
     </div>
     <div class="play-wrap" id="playWrap"><iframe class="play-frame" id="playFrame" title="لعبة الكوكب" allow="fullscreen"></iframe></div>
-  </section>
-
-  <!-- ===== القيادة ===== -->
-  <section class="view" id="view-hq">
-    <div class="roster-note" id="rosterNote" hidden></div>
-    <div class="sec" style="margin-top:8px"><div><h2 class="h2">ترتيب المجموعات</h2><p class="sub">كل نقطة يكسبها الطالب تصير كريستالة في خزنة مجموعته، والفوز يرفع نقاط المجموعة كلها.</p></div></div>
-    <div class="groups" id="groupCards"></div>
-    <div class="sec"><div><h2 class="h2">سباق الصواريخ</h2><p class="sub">الترتيب الفردي للطلاب العشرين. أعلى نتيجة في الفصل ٤٥ نقطة.</p></div></div>
-    <div class="planets" id="planetsHq"></div>
-    <div class="race panel corners" id="race"></div>
   </section>
 
   <!-- ===== ورشة البناء ===== -->
@@ -513,63 +497,8 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
     </div>
   </section>
 
-  <!-- ===== التقييم ===== -->
-  <section class="view" id="view-eval" hidden>
-    <div class="planets" id="planetsEval" role="group" aria-label="اختر المهمة"></div>
-    <div class="eval-bar panel">
-      <div class="field"><label for="actTitle">اسم النشاط</label><input id="actTitle" maxlength="40" autocomplete="off"></div>
-      <div class="field" style="flex:0 1 180px"><label for="actDate">التاريخ</label><input id="actDate" type="date"></div>
-      <button class="btn" id="allPresent" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>الجميع حاضر</button>
-      <label class="open-toggle" id="openWrap"><input type="checkbox" id="openChk">الكوكب مفتوح للطلاب</label>
-      <button class="btn" id="previewGame" type="button">جرّب لعبة الكوكب</button>
-      <button class="btn gold" id="launch" type="button">أطلق الصواريخ</button>
-    </div>
-    <div class="rules" id="rules"></div>
-    <div id="evalGroups"></div>
-  </section>
-
-  <!-- ===== التقرير ===== -->
-  <section class="view" id="view-report" hidden>
-    <div class="report panel corners">
-      <h2 class="h2">تقرير الفصل</h2>
-      <p class="sub">مجموع كل طالب في المهمات الخمس على الأسس الثلاثة. اضغط على الاسم لبطاقة الطالب.</p>
-      <div class="table-wrap"><table id="reportTable"></table></div>
-      <div class="table-wrap"><table id="groupTable"></table></div>
-      <div class="codes-wrap" id="linksWrap">
-        <h3 style="margin:18px 0 0;font-size:16px">روابط اللعبة</h3>
-        <div class="codes links" id="links"></div>
-      </div>
-      <div class="codes-wrap" id="codesWrap">
-        <h3 style="margin:18px 0 0;font-size:16px">رموز دخول ورشة البناء <span class="label">(للمعلّم فقط)</span></h3>
-        <div class="codes" id="codes"></div>
-      </div>
-      <div class="tools">
-        <button class="btn gold" id="printReport" type="button">طباعة التقرير</button>
-        <button class="btn" id="exportBtn" type="button">حفظ نسخة من البيانات</button>
-        <button class="btn" id="importBtn" type="button">استرجاع نسخة</button>
-        <input type="file" id="importFile" accept="application/json,.json" hidden>
-        <button class="btn danger" id="resetBtn" type="button">مسح كل الدرجات والقواعد</button>
-      </div>
-    </div>
-  </section>
 </main>
 
-<footer class="foot"><button class="teacher-entry" type="button" id="teacherEntry" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>دخول المعلّم</button></footer>
-
-<div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-  <form class="gate-card" id="gateCard" novalidate>
-    <span class="gate-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5z"/></svg></span>
-    <h2 id="gateTitle">دخول المعلّم</h2>
-    <p>هذه الواجهة للمعلّم فقط. اكتب الرقم السري للدخول إلى لوحة التقييم.</p>
-    <div class="pin" id="gatePin">
-      <input inputmode="numeric" maxlength="1" aria-label="الرقم ١" autocomplete="off"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٢" autocomplete="off"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٣" autocomplete="off"><input inputmode="numeric" maxlength="1" aria-label="الرقم ٤" autocomplete="off">
-    </div>
-    <p class="msg" id="gateMsg" aria-live="polite"></p>
-    <div class="gate-row"><button class="gate-go" type="submit">ادخل</button><button class="gate-cancel" type="button" id="gateCancel">رجوع</button></div>
-  </form>
-</div>
-
-<dialog id="card" aria-labelledby="scName"><div class="sc" id="scBody"></div></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -578,8 +507,8 @@ const CONFIG = {
   students: [
     "سامي ناصر الهاشمي", "ياسر فهد المهيري", "مازن طارق السعدي", "رائد سالم الكندي", "باسل وليد الزهراني",
     "نواف ماجد العتيبي", "هاني جاسم البلوشي", "زياد رامي الشامسي", "أنس كمال الحربي", "طلال منير القحطاني",
-    "عمار حسن الفارسي", "خالد سعيد المري", "يزن عادل الشمري", "معاذ راشد النعيمي", "فارس إياد الدوسري",
-    "حمزة بدر الكعبي", "سلطان عمر الرميثي", "مهند فيصل الغامدي", "إياد صالح المطيري", "قصي نبيل الجابري"
+    "عمار حسن الفارسي", "خالد سعيد المري", "يزن عادل الشمري", "معاذ راشد النعيمي", "فارس إياد المزروعي",
+    "حمزة بدر السويدي", "سلطان عمر الرميثي", "مهند فيصل الغامدي", "إياد صالح المطيري", "قصي نبيل الجابري"
   ],
   // أربع مجموعات: members أرقام الطلاب في القائمة أعلاه (من ٠)، code رمز دخول ورشة البناء
   groups: [
@@ -598,7 +527,6 @@ const CONFIG = {
     { name: "اللؤلؤ",   c1: "#ffffff", c2: "#c9c2ff", c3: "#5b4bb5", ring: true  }
   ],
   // بصمة الرقم السري للمعلّم خارج Claude (مثل GitHub)، لا الرقم نفسه. لتغييره: احسب بصمة الرقم الجديد بالدالة pinHash.
-  teacherPinHash: "7f7d502",
   // رابط تطبيق الويب من Google Apps Script (ينتهي بـ /exec). إن وُضع، تُشارَك الكريستالات والقواعد والكواكب المفتوحة
   // بين كل الأجهزة خارج Claude، ويصير الرقم السري للمعلّم هو المكتوب في السكربت. انظر google-apps-script.gs
   // روابط الموقع على GitHub Pages، تظهر للمعلّم في قسم التقرير ليرسلها
@@ -638,22 +566,7 @@ const LABEL = { att: { p: "حاضر", l: "متأخر", a: "غائب" }, res: { w
 const groupOf = i => CONFIG.groups.find(g => g.members.includes(i)) || CONFIG.groups[0];
 /* أسماء الطلاب الحقيقية تأتي من جدول «تقييم الفصل» (العمود H، والمجموعة في G) عبر السكربت، للمعلّم فقط.
    لا تُكتب في هذا الملف، وتُحفظ على جهاز المعلّم وحده. */
-const ROSTER_KEY = "mohimmat-roster-v1";
 let rosterOn = false;
-function applyRoster(list) {
-  if (!Array.isArray(list) || !list.length) return false;
-  const names = list.map(r => String(r.name || "").trim()).filter(Boolean);
-  if (!names.length) return false;
-  CONFIG.students = names;
-  CONFIG.groups.forEach(g => g.members = []);
-  list.forEach((r, i) => { const g = CONFIG.groups.find(x => x.id === r.group); if (g) g.members.push(i); });
-  // من لم تُكتب مجموعته في العمود G يذهب إلى أصغر مجموعة
-  names.forEach((n, i) => { if (!CONFIG.groups.some(g => g.members.includes(i))) CONFIG.groups.reduce((a, b) => b.members.length < a.members.length ? b : a).members.push(i); });
-  CONFIG.groups.forEach(g => g.members.sort((a, b) => a - b));
-  rosterOn = true;
-  return true;
-}
-try { if (sessionStorage.getItem("teacher-ok")) applyRoster(JSON.parse(localStorage.getItem(ROSTER_KEY))); } catch (e) {}
 
 /* ===================== أدوات ===================== */
 const $ = s => document.querySelector(s);
@@ -724,6 +637,8 @@ function normBase(g, o) {
 }
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+// الأسماء الحقيقية لا تُحفظ على الجهاز: تُحفظ الدرجات بلا أسماء، والأسماء تأتي من الجدول عند كل دخول
+const saveLocal = () => lsSet(KEY, rosterOn ? Object.assign({}, state, { names: [] }) : state);
 let state = (() => { const d = lsGet(KEY) || lsGet(OLD_KEY); return d && Array.isArray(d.s) ? normalize(d) : blank(); })();
 let bases = (() => { const d = lsGet(BKEY) || {}; const o = {}; CONFIG.groups.forEach(g => o[g.id] = normBase(g, d[g.id])); return o; })();
 
@@ -731,15 +646,13 @@ let bases = (() => { const d = lsGet(BKEY) || {}; const o = {}; CONFIG.groups.fo
    إلا من أدخل رقم المعلّم السري في هذا التبويب. */
 const inClaude = !!(window.claude && window.claude.use);
 let localTeacher = false;
-try { localTeacher = !inClaude && sessionStorage.getItem("teacher-ok") === CONFIG.teacherPinHash; } catch (e) {}
 let remoteDb = null, canWrite = localTeacher, pushTimer = 0, gradesChain = Promise.resolve(), lastJSON = "";
 const baseChain = {}, baseJSON = {};
-function save() { lsSet(KEY, state); pushGrades(); pushPublic(); pushSheet(); }
+function save() { saveLocal(); pushGrades(); pushPublic(); pushSheet(); }
 
 /* ===================== ربط جدول Google (خارج Claude) ===================== */
 const SYNC = !inClaude && CONFIG.syncUrl ? CONFIG.syncUrl : "";
-let teacherPin = "";
-try { teacherPin = localTeacher ? sessionStorage.getItem("teacher-pin") || "" : ""; } catch (e) {}
+let teacherPin = "", pub = null;
 const pendingBase = {};
 async function sheetGet(q) {
   const r = await fetch(SYNC + (SYNC.includes("?") ? "&" : "?") + q + "&t=" + Date.now(), { cache: "no-store" });
@@ -765,84 +678,6 @@ async function pollSheet() {
     lsSet(BKEY, bases);
     if (changed) rerender();
   } catch (e) { $("#statusTxt").textContent = "غير متّصل بالجدول"; }
-}
-/* حالة أسماء الطلاب، تظهر للمعلّم أعلى «القيادة» ليعرف من أين جاءت الأسماء */
-let rosterStatus = rosterOn ? "cached" : "";
-function rosterNote() {
-  const el = $("#rosterNote"); if (!el) return;
-  const msg = {
-    ok: `الأسماء من جدول «تقييم الفصل»: ${ar(CONFIG.students.length)} طالبًا.`,
-    cached: `الأسماء من آخر نسخة حُفظت من جدول «تقييم الفصل» (${ar(CONFIG.students.length)} طالبًا)، ونحاول تحديثها الآن.`,
-    old: "تظهر الأسماء الوهمية: السكربت المنشور لا يرسل الأسماء. الصق السكربت الجديد في Apps Script، ثم Deploy ← Manage deployments ← Edit ← New version.",
-    empty: "تظهر الأسماء الوهمية: السكربت لم يستطع قراءة جدول «تقييم الفصل». تأكّد أن CLASS_SHEET_ID في السكربت هو معرّف جدولك، وأن الأسماء في العمود H من الصف ٣، وأنك وافقت على أذونات Google بعد النشر.",
-    offline: "تظهر الأسماء الوهمية: تعذّر الاتصال بسكربت Google. تأكّد من الإنترنت ومن رابط السكربت.",
-    nosync: "تظهر الأسماء الوهمية: اللعبة غير مربوطة بسكربت Google (syncUrl فارغ)."
-  }[rosterStatus];
-  el.hidden = !msg || !canWrite || inClaude;
-  el.classList.toggle("ok", rosterStatus === "ok" || rosterStatus === "cached");
-  if (msg) el.textContent = msg;
-}
-async function loadTeacherGrades() {
-  if (!SYNC) { rosterStatus = "nosync"; rosterNote(); return; }
-  if (!teacherPin) return;
-  try {
-    const d = await sheetGet("action=grades&key=" + encodeURIComponent(teacherPin));
-    if (d && d.ok && !("roster" in d)) rosterStatus = "old";
-    else if (d && d.ok && !(Array.isArray(d.roster) && d.roster.length)) rosterStatus = "empty";
-    if (d && d.ok && Array.isArray(d.roster) && applyRoster(d.roster)) {
-      try { localStorage.setItem(ROSTER_KEY, JSON.stringify(d.roster)); } catch (e) {}
-      shown = CONFIG.students.map(() => 0);
-      state = normalize(state);   // أعد ترتيب درجات هذا الجهاز على قائمة الجدول
-      rosterStatus = "ok";
-    }
-    if (d && d.ok && d.grades && Array.isArray(d.grades.s)) { state = normalize(d.grades); lsSet(KEY, state); rerender(); toast(rosterOn ? `حُمّلت الدرجات و${ar(CONFIG.students.length)} طالبًا من الجدول` : "حُمّلت الدرجات من الجدول"); }
-    else if (d && d.ok) { lsSet(KEY, state); rerender(); pushSheet(true); }   // الجدول فارغ: ارفع درجات هذا الجهاز
-  } catch (e) { rosterStatus = rosterOn ? "cached" : "offline"; }
-  rosterNote();
-}
-let sheetTimer = 0, lastSheet = "";
-function pushSheet(now) {
-  if (!SYNC || !localTeacher || !teacherPin) return;
-  clearTimeout(sheetTimer);
-  sheetTimer = setTimeout(async () => {
-    const { rank } = ranking();
-    const report = rosterOn ? CONFIG.students.map((name, i) => { const t = totals(i); return { name, att: t.att, mor: t.mor, res: t.res, total: t.total, rank: rank[i] }; }) : undefined;
-    const body = { type: "teacher", key: teacherPin, grades: state, public: publicSummary(), report };
-    const json = JSON.stringify(body);
-    if (json === lastSheet) return;
-    lastSheet = json;
-    try {
-      const d = await sheetPost(body);
-      if (!d || !d.ok) { lastSheet = ""; toast(d && d.error === "key" ? "الرقم السري لا يطابق رقم الجدول" : "تعذّر الحفظ في الجدول"); }
-    } catch (e) { lastSheet = ""; toast("تعذّر الاتصال بالجدول، سيُعاد الحفظ مع التعديل القادم"); }
-  }, now ? 0 : 1200);
-}
-/* ملخّص عامّ يقرؤه الطلاب: الكواكب المفتوحة ومجموع كل مجموعة فقط، بلا درجات الأفراد */
-let pub = null, pubTimer = 0, lastPub = "";
-function publicSummary() {
-  const earned = {}; CONFIG.groups.forEach(g => earned[g.id] = groupEarned(g));
-  return { open: CONFIG.planets.map((p, a) => state.open[a] !== false), titles: state.titles.slice(), earned };
-}
-function pushPublic() {
-  if (!remoteDb || !canWrite) return;
-  clearTimeout(pubTimer);
-  pubTimer = setTimeout(() => {
-    const json = JSON.stringify(publicSummary());
-    if (json === lastPub) return;
-    lastPub = json;
-    remoteDb.doc("public/summary").set({ json, at: Date.now() }).catch(() => {});
-  }, 900);
-}
-function pushGrades() {
-  if (!remoteDb || !canWrite) return;
-  clearTimeout(pushTimer);
-  pushTimer = setTimeout(() => {
-    const json = JSON.stringify(state);
-    if (json === lastJSON) return;
-    lastJSON = json;
-    gradesChain = gradesChain.then(() => remoteDb.doc("grades/semester").set({ json, at: Date.now() }))
-      .catch(() => toast("تعذّر حفظ آخر تعديل في الدرجات، حاول مرة أخرى"));
-  }, 700);
 }
 function saveBase(gid) {
   lsSet(BKEY, bases);
@@ -871,113 +706,19 @@ function rerender() {
 /* الجهتان: المعلّم (من يملك التعديل) يرى لوحة المعلّم، والطالب يرى الكواكب وورشة البناء فقط */
 let preview = /(^|[#&])student\b/.test(location.hash);
 const studentSide = () => !canWrite || preview;
+const setHidden = (q, v) => { const e = $(q); if (e) e.hidden = v; };
 function applyRole() {
   const st = studentSide();
-  $("#tabsT").hidden = st; $("#tabsS").hidden = !st;
+  setHidden("#tabsT", st); setHidden("#tabsS", !st);
   $("#kicker").textContent = st ? "جهة الطالب · ٤ مجموعات · ٥ كواكب" : "لوحة المعلّم · ٤ مجموعات · ٥ مهمات";
-  $("#roleBtn").hidden = !canWrite;
-  $("#teacherEntry").hidden = inClaude || canWrite;
-  $("#teacherOut").hidden = !localTeacher;
-  $("#roleBtn").innerHTML = st ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>العودة إلى لوحة المعلّم'
+  setHidden("#roleBtn", !canWrite);
+  setHidden("#teacherEntry", inClaude || canWrite || !SYNC);
+  setHidden("#teacherOut", !localTeacher);
+  if ($("#roleBtn")) $("#roleBtn").innerHTML = st ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>العودة إلى لوحة المعلّم'
     : '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>معاينة جهة الطالب';
-  ["#importBtn", "#resetBtn", "#codesWrap"].forEach(q => $(q).hidden = !canWrite);
+  ["#importBtn", "#resetBtn", "#codesWrap"].forEach(q => setHidden(q, !canWrite));
   const okViews = st ? ["map", "play", "ws"] : ["hq", "ws", "eval", "report", "play"];
   if (!okViews.includes(view)) show(st ? "map" : "hq");
-}
-const pinHash = v => { let x = 0x811c9dc5; for (const c of "pin:" + v) { x ^= c.codePointAt(0); x = Math.imul(x, 16777619) >>> 0; } return x.toString(16); };
-function openGate() {
-  if (inClaude) return;
-  $("#gate").hidden = false; $("#gateMsg").textContent = "";
-  const ins = [...document.querySelectorAll("#gatePin input")]; ins.forEach(x => x.value = ""); setTimeout(() => ins[0].focus(), 50);
-}
-function closeGate() { $("#gate").hidden = true; if (/teacher/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search); }
-let gateBusy = false;
-async function tryGate() {
-  const ins = [...document.querySelectorAll("#gatePin input")], code = ins.map(x => x.value).join("");
-  if (code.length < 4) { $("#gateMsg").textContent = "اكتب الأرقام الأربعة."; return; }
-  if (gateBusy) return;
-  let ok = pinHash(code) === CONFIG.teacherPinHash;
-  if (SYNC) {   // مع الجدول: الرقم الصحيح هو المكتوب في السكربت
-    gateBusy = true; $("#gateMsg").textContent = "لحظة، نتحقّق…";
-    try { const d = await sheetGet("action=grades&key=" + encodeURIComponent(code)); if (d) ok = !!d.ok; } catch (e) {}
-    gateBusy = false; $("#gateMsg").textContent = "";
-  }
-  if (ok) {
-    localTeacher = true; canWrite = true; preview = false; teacherPin = code;
-    try { sessionStorage.setItem("teacher-ok", CONFIG.teacherPinHash); sessionStorage.setItem("teacher-pin", code); } catch (e) {}
-    closeGate(); applyRole(); show("hq"); toast("أهلًا بالمعلّم");
-    loadTeacherGrades();
-  } else {
-    $("#gateMsg").textContent = "الرقم غير صحيح.";
-    const c = $("#gateCard"); c.classList.remove("shake"); void c.offsetWidth; c.classList.add("shake");
-    ins.forEach(x => x.value = ""); ins[0].focus();
-  }
-}
-$("#gatePin").addEventListener("input", e => {
-  const ins = [...document.querySelectorAll("#gatePin input")], k = ins.indexOf(e.target);
-  e.target.value = e.target.value.replace(/[^\d٠-٩]/g, "").slice(-1).replace(/[٠-٩]/, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
-  if (e.target.value && k < 3) ins[k + 1].focus();
-  if (ins.every(x => x.value)) tryGate();
-});
-$("#gatePin").addEventListener("keydown", e => {
-  const ins = [...document.querySelectorAll("#gatePin input")], k = ins.indexOf(e.target);
-  if (e.key === "Backspace" && !e.target.value && k > 0) ins[k - 1].focus();
-});
-$("#gateCard").addEventListener("submit", e => { e.preventDefault(); tryGate(); });
-$("#gateCancel").addEventListener("click", closeGate);
-$("#gate").addEventListener("keydown", e => { if (e.key === "Escape") closeGate(); });
-$("#teacherEntry").addEventListener("click", openGate);
-$("#teacherOut").addEventListener("click", () => {
-  localTeacher = false; canWrite = false; wsGroup = null;
-  teacherPin = "";
-  try { sessionStorage.removeItem("teacher-ok"); sessionStorage.removeItem("teacher-pin"); } catch (e) {}
-  applyRole(); show("map"); toast("خرجت من لوحة المعلّم");
-});
-$("#roleBtn").addEventListener("click", () => { preview = !preview; wsGroup = null; applyRole(); show(studentSide() ? "map" : "hq"); });
-(async function connect() {
-  const c = window.claude;
-  if (!c || !c.use) return;
-  const [db, user] = await Promise.all([c.use("db"), c.use("user")]);
-  if (!db) return;
-  canWrite = false;
-  if (user && typeof user.canEdit === "function") { try { canWrite = !!(await user.canEdit()); } catch (e) {} }
-  remoteDb = db; applyRole();
-  $("#statusTxt").textContent = "متّصل · يُحفظ تلقائيًّا";
-  db.doc("public/summary").onSnapshot(snap => {
-    const d = snap.exists ? snap.data() || {} : {};
-    if (typeof d.json === "string") { try { pub = JSON.parse(d.json); lastPub = d.json; } catch (e) {} }
-    if (canWrite) pushPublic(); else rerender();
-  }, () => {});
-  watchBases(db);
-  if (!canWrite) return;   // الطالب لا يقرأ درجات الأفراد
-  let first = true;
-  db.doc("grades/semester").onSnapshot(snap => {
-    if (snap.exists) {
-      const d = snap.data() || {};
-      if (typeof d.json === "string") {
-        lastJSON = d.json;
-        if (d.json !== JSON.stringify(state)) { try { state = normalize(JSON.parse(d.json)); lsSet(KEY, state); rerender(); } catch (e) {} }
-      }
-    } else if (first && canWrite && state.s.some((r, i) => r.some((e, a) => graded(i, a)))) pushGrades();
-    first = false;
-  }, () => {});
-})();
-function watchBases(db) {
-  let firstB = true;
-  db.collection("bases").onSnapshot(qs => {
-    const seen = {};
-    qs.docs.forEach(d => {
-      const g = CONFIG.groups.find(x => x.id === d.id); if (!g) return;
-      seen[g.id] = 1;
-      const v = d.data() || {};
-      if (typeof v.json === "string" && v.json !== JSON.stringify(bases[g.id])) {
-        try { bases[g.id] = normBase(g, JSON.parse(v.json)); } catch (e) {}
-      }
-    });
-    if (firstB && canWrite) CONFIG.groups.forEach(g => { if (!seen[g.id] && bases[g.id].built.length) saveBase(g.id); });
-    firstB = false;
-    lsSet(BKEY, bases); rerender();
-  }, () => {});
 }
 
 /* ===================== الحساب ===================== */
@@ -1025,14 +766,14 @@ const actDone = a => state.s.some((r, i) => graded(i, a)) || Object.keys(state.g
 const actName = a => state.titles[a] || `المهمة ${ar(a + 1)}`;
 
 /* ===================== التبويبات ===================== */
-let view = "hq";
+let view = "map";
 document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
 function show(v) {
   view = v;
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v));
-  ["map", "play", "hq", "ws", "eval", "report"].forEach(x => $("#view-" + x).hidden = x !== v);
+  ["map", "play", "hq", "ws", "eval", "report"].forEach(x => setHidden("#view-" + x, x !== v));
   if (v !== "play") { const f = $("#playFrame"); if (f.getAttribute("src")) f.removeAttribute("src"); }
-  ({ map: renderMap, play: () => {}, hq: renderHQ, ws: renderWS, eval: renderEval, report: renderReport })[v]();
+  ({ map: () => renderMap(), play: () => {}, hq: () => renderHQ(), ws: () => renderWS(), eval: () => renderEval(), report: () => renderReport() })[v]();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 function renderPlanets(el, pressed) {
@@ -1156,55 +897,6 @@ $("#playFull").addEventListener("click", () => {
   else toast("ملء الشاشة غير متاح هنا");
 });
 
-/* ===================== القيادة ===================== */
-let shown = CONFIG.students.map(() => 0);
-function renderHQ() {
-  rosterNote();
-  const gr = groupRanking();
-  $("#groupCards").innerHTML = CONFIG.groups.map(g => {
-    const s = groupStats(g), b = bases[g.id];
-    return `<article class="gc" style="--g:${g.color}">
-      <div class="gc-head"><span class="emb">${embSVG(b.emblem)}</span>
-        <div class="gc-name"><b>${esc(g.name)}</b><small>${esc(b.name || titleOf(s.built))}</small></div>
-        <span class="gc-rank num ${gr[g.id] === 1 && s.earned ? "r1" : ""}">${ar(gr[g.id])}</span></div>
-      <div class="gc-mini">${baseSVG(g, b.built, { mini: true })}</div>
-      <div class="gc-stats"><div><b class="num">${ar(s.earned)}</b><span>نقطة</span></div><div><b class="num">${ar(s.left)}</b><span>كريستالة</span></div><div><b class="num">${ar(s.built)}/${ar(MODULES.length)}</b><span>وحدة</span></div></div>
-      <div class="gc-bar" title="تقدّم المجموعة من ${ar(MAX_ALL * CREW)}"><i style="width:${s.earned / (MAX_ALL * CREW) * 100}%"></i></div>
-    </article>`;
-  }).join("");
-  renderPlanets($("#planetsHq"), false);
-  const { rank } = ranking();
-  const lines = CONFIG.planets.map((pl, a) => `<span class="cp" style="--k:${(a + 1) / N_ACT}"></span>`).join("");
-  const ticks = CONFIG.planets.map((pl, a) => `<span class="tick" style="--k:${(a + 1) / N_ACT}">${ar((a + 1) * MAX_ACT)}</span>`).join("");
-  let html = `<div class="scale" aria-hidden="true"><span></span><span class="label">الطالب</span><div class="track">${ticks}</div></div>`;
-  CONFIG.groups.forEach(g => {
-    html += `<div class="lane-group" style="--g:${g.color}"><div class="lg-head"><span class="emb">${embSVG(bases[g.id].emblem)}</span>مجموعة ${esc(g.name)}</div>`;
-    g.members.forEach(i => {
-      const t = totals(i).total, r = rank[i];
-      html += `<div class="lane" data-i="${i}"><span class="rank num ${t > 0 && r <= 3 ? "r" + r : ""}">${ar(r)}</span>
-        <button class="who" type="button" data-open="${i}"><span>${esc(CONFIG.students[i])}</span><small>${ar(t)} نقطة</small></button>
-        <div class="track" role="img" aria-label="${esc(CONFIG.students[i])}: ${ar(t)} من ${ar(MAX_ALL)}">${lines}
-          <span class="trail" style="--p:${shown[i] / MAX_ALL}"></span><span class="rocket" style="--p:${shown[i] / MAX_ALL}">${rocketSVG(g.color)}</span></div></div>`;
-    });
-    html += `</div>`;
-  });
-  $("#race").innerHTML = html;
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll("#race .lane").forEach(lane => {
-      const i = +lane.dataset.i, t = totals(i).total, diff = t - shown[i], p = t / MAX_ALL;
-      lane.querySelector(".rocket").style.setProperty("--p", p);
-      lane.querySelector(".trail").style.setProperty("--p", p);
-      if (diff) {
-        const rk = lane.querySelector(".rocket"); rk.classList.add("boost"); setTimeout(() => rk.classList.remove("boost"), 1900);
-        if (diff > 0) { const f = document.createElement("span"); f.className = "plus"; f.style.setProperty("--p", p); f.textContent = "+" + ar(diff); lane.querySelector(".track").appendChild(f); setTimeout(() => f.remove(), 2700); }
-      }
-      shown[i] = t;
-    });
-  }));
-}
-document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b) openCard(+b.dataset.open); });
-$("#planetsHq").addEventListener("click", e => { const b = e.target.closest("[data-act]"); if (b && canWrite) { cur = +b.dataset.act; show("eval"); } });
-
 /* ===================== ورشة البناء ===================== */
 let wsGroup = null, fresh = null;
 const unlocked = new Set();
@@ -1288,161 +980,13 @@ $("#embPick").addEventListener("click", e => {
   bases[wsGroup].emblem = b.dataset.emb; saveBase(wsGroup); renderWS();
 });
 
-/* ===================== التقييم ===================== */
-let cur = CONFIG.planets.findIndex((p, a) => !actDone(a)); if (cur < 0) cur = N_ACT - 1;
-$("#rules").innerHTML = `
-  <span class="rule"><span class="ri" style="background:rgba(79,227,181,.18);color:var(--mint)">${ICON.clock}</span>الحضور: حاضر <b>${ar(P.att.p)}</b> · متأخر <b>${ar(P.att.l)}</b> · غائب <b>${ar(P.att.a)}</b></span>
-  <span class="rule"><span class="ri" style="background:rgba(255,201,77,.18);color:var(--gold)">${ICON.shield}</span>الانضباط: نقطة لكل نجمة حتى <b>${ar(P.morMax)}</b></span>
-  <span class="rule"><span class="ri" style="background:rgba(255,107,139,.18);color:var(--rose)">${ICON.cup}</span>نتيجة المجموعة (تُحسب لكل أفرادها): فاز <b>${ar(P.res.w)}</b> · تعادل <b>${ar(P.res.d)}</b> · خسر <b>${ar(P.res.x)}</b></span>`;
-function cardHTML(i) {
-  const e = state.s[i][cur], g = groupOf(i), off = e.att === "a" ? "off" : "", r = gRes(i, cur);
-  const seg = (k, vals) => Object.keys(vals).map(v => `<button class="opt v-${v}" type="button" data-i="${i}" data-k="${k}" data-v="${v}" aria-pressed="${e[k] === v}">${LABEL[k][v]}</button>`).join("");
-  const stars = Array.from({ length: P.morMax }, (_, k) => `<button class="star ${e.mor > k ? "on" : ""}" type="button" data-i="${i}" data-k="mor" data-v="${k + 1}" aria-label="${ar(k + 1)} نجمة" aria-pressed="${e.mor === k + 1}">${ICON.star}</button>`).join("");
-  return `<article class="ev" style="--g:${g.color}" id="ev${i}">
-    <div class="ev-head"><button class="ev-name" type="button" data-open="${i}">${esc(CONFIG.students[i])}</button><span class="ev-total num">${ar(actTotal(i, cur))}<small>/${ar(MAX_ACT)}</small></span></div>
-    <div class="crit"><span class="crit-l"><span style="color:var(--mint);display:flex">${ICON.clock}</span>الحضور</span><div class="seg">${seg("att", P.att)}</div></div>
-    <div class="crit ${off}"><span class="crit-l"><span style="color:var(--gold);display:flex">${ICON.shield}</span>الانضباط</span><div class="stars">${stars}<span class="mor-word">${e.mor ? LABEL.mor[e.mor] : ""}</span></div></div>
-    <div class="crit ${off}"><span class="crit-l"><span style="color:var(--rose);display:flex">${ICON.cup}</span>النتيجة</span><span class="res-note">${e.att === "a" ? "غائب، لا تُحسب له" : r ? `${LABEL.res[r]} مع مجموعته، ${ptsWord(P.res[r])}` : "تُحدَّد من نتيجة المجموعة أعلاه"}</span></div></article>`;
-}
-function renderEval() {
-  renderPlanets($("#planetsEval"), true);
-  $("#actTitle").value = state.titles[cur];
-  $("#actTitle").placeholder = `كوكب ${CONFIG.planets[cur].name}: اكتب اسم النشاط`;
-  $("#actDate").value = state.dates[cur];
-  const hasGame = !!CONFIG.planets[cur].game;
-  $("#openWrap").hidden = !hasGame; $("#previewGame").hidden = !hasGame;
-  $("#openChk").checked = state.open[cur] !== false;
-  $("#evalGroups").innerHTML = CONFIG.groups.map(g => `<section class="ev-group" style="--g:${g.color}">
-    <div class="gres-bar"><div class="lg-head" style="margin:0"><span class="emb">${embSVG(bases[g.id].emblem)}</span>مجموعة ${esc(g.name)}</div>
-      <div class="gres"><span>نتيجة المجموعة:</span>${Object.keys(P.res).map(v => `<button class="opt v-${v}" type="button" data-gres="${g.id}" data-v="${v}" aria-pressed="${state.gres[cur][g.id] === v}">${LABEL.res[v]}</button>`).join("")}</div></div>
-    <div class="cards">${g.members.map(cardHTML).join("")}</div></section>`).join("");
-}
-$("#planetsEval").addEventListener("click", e => { const b = e.target.closest("[data-act]"); if (b) { cur = +b.dataset.act; renderEval(); } });
-$("#evalGroups").addEventListener("click", e => {
-  const gb = e.target.closest("button[data-gres]");
-  if (gb) {
-    const gid = gb.dataset.gres, v = gb.dataset.v;
-    if (state.gres[cur][gid] === v) delete state.gres[cur][gid]; else state.gres[cur][gid] = v;
-    save(); renderEval();
-    const again = document.querySelector(`button[data-gres="${gid}"][data-v="${v}"]`); if (again) again.focus({ preventScroll: true });
-    return;
-  }
-  const b = e.target.closest("button[data-k]"); if (!b) return;
-  const i = +b.dataset.i, k = b.dataset.k, entry = state.s[i][cur], v = k === "mor" ? +b.dataset.v : b.dataset.v;
-  entry[k] = entry[k] === v ? null : v;
-  if (k === "att" && entry.att === "a") entry.mor = null;
-  save();
-  $("#ev" + i).outerHTML = cardHTML(i);
-  const again = document.querySelector(`#ev${i} button[data-k="${k}"][data-v="${b.dataset.v}"]`); if (again) again.focus({ preventScroll: true });
-  renderPlanets($("#planetsEval"), true);
-});
-$("#actTitle").addEventListener("input", e => { state.titles[cur] = e.target.value.trim(); save(); renderPlanets($("#planetsEval"), true); });
-$("#actDate").addEventListener("change", e => { state.dates[cur] = e.target.value; save(); });
-$("#openChk").addEventListener("change", e => { state.open[cur] = e.target.checked; save(); renderPlanets($("#planetsEval"), true); toast(e.target.checked ? "صار الكوكب مفتوحًا للطلاب" : "أُغلق الكوكب عن الطلاب"); });
-$("#previewGame").addEventListener("click", () => openPlanet(cur, true));
-$("#allPresent").addEventListener("click", () => { state.s.forEach(r => { if (!r[cur].att) r[cur].att = "p"; }); save(); renderEval(); toast("سُجّل حضور كل من لم يُحدَّد حضوره"); });
-$("#launch").addEventListener("click", () => { show("hq"); toast(`انطلقت الصواريخ من كوكب ${CONFIG.planets[cur].name}!`); });
-
-/* ===================== التقرير ===================== */
-function renderReport() {
-  const { list, rank } = ranking();
-  $("#reportTable").innerHTML = `<thead><tr><th>الترتيب</th><th>الاسم</th><th>المجموعة</th>${CONFIG.planets.map((p, a) => `<th title="${esc(actName(a))}">${ar(a + 1)}. ${esc(p.name)}</th>`).join("")}
-    <th>الحضور /${ar(MAX.att)}</th><th>الانضباط /${ar(MAX.mor)}</th><th>نتائج المجموعة /${ar(MAX.res)}</th><th>المجموع /${ar(MAX_ALL)}</th></tr></thead><tbody>` +
-    list.map(({ k: i }) => { const t = totals(i), g = groupOf(i);
-      return `<tr style="--g:${g.color}"><td class="num">${ar(rank[i])}</td><td class="nm"><button type="button" data-open="${i}">${esc(CONFIG.students[i])}</button></td><td><span class="dot"></span>${esc(g.name)}</td>
-        ${state.s[i].map((e, a) => `<td class="num">${graded(i, a) ? ar(actTotal(i, a)) : "–"}</td>`).join("")}
-        <td class="num">${ar(t.att)}</td><td class="num">${ar(t.mor)}</td><td class="num">${ar(t.res)}</td><td class="tot num">${ar(t.total)}</td></tr>`; }).join("") + "</tbody>";
-  const gr = groupRanking();
-  $("#groupTable").innerHTML = `<thead><tr><th>الترتيب</th><th>المجموعة</th><th>الحضور</th><th>الانضباط</th><th>النتائج (فوز/تعادل/خسارة)</th><th>الكريستالات المكتسبة /${ar(MAX_ALL * CREW)}</th><th>الوحدات المبنيّة</th><th>لقب القاعدة</th></tr></thead><tbody>` +
-    [...CONFIG.groups].sort((a, b) => gr[a.id] - gr[b.id]).map(g => {
-      const s = groupStats(g), sum = k => g.members.reduce((x, i) => x + totals(i)[k], 0);
-      return `<tr style="--g:${g.color}"><td class="num">${ar(gr[g.id])}</td><td class="nm"><span class="dot"></span>${esc(g.name)}</td><td class="num">${ar(sum("att"))}</td><td class="num">${ar(sum("mor"))}</td><td class="num">${ar(sum("res"))} <small class="sub">(${CONFIG.planets.map((p, a) => state.gres[a][g.id] ? LABEL.res[state.gres[a][g.id]] : "–").join(" · ")})</small></td><td class="tot num">${ar(s.earned)}</td><td class="num">${ar(s.built)}/${ar(MODULES.length)}</td><td>${esc(titleOf(s.built))}</td></tr>`;
-    }).join("") + "</tbody>";
-  $("#links").innerHTML = [["رابط الطلاب", CONFIG.studentUrl, "#4fe3b5"], ["رابط المعلّم", CONFIG.teacherUrl, "#ffc94d"]].filter(x => x[1]).map(([t, u, c]) =>
-    `<div class="code" style="--g:${c};text-align:start"><span>${t}</span><a href="${esc(u)}" target="_blank" rel="noopener" style="display:block;direction:ltr;text-align:left;font-size:13px;color:var(--g);word-break:break-all;margin:4px 0 8px">${esc(u)}</a><button class="btn" type="button" data-copy="${esc(u)}" style="height:34px;font-size:13px">نسخ الرابط</button></div>`).join("");
-  $("#codes").innerHTML = CONFIG.groups.map(g => `<div class="code" style="--g:${g.color}"><span>مجموعة ${esc(g.name)}</span><b>${g.code}</b></div>`).join("");
-}
-$("#links").addEventListener("click", async e => {
-  const b = e.target.closest("[data-copy]"); if (!b) return;
-  try { await navigator.clipboard.writeText(b.dataset.copy); toast("نُسخ الرابط"); } catch (er) { toast("انسخ الرابط يدويًّا من فوق الزر"); }
-});
-$("#printReport").addEventListener("click", () => window.print());
-$("#exportBtn").addEventListener("click", async () => {
-  const filename = "mohimmat-alkawakib-" + new Date().toISOString().slice(0, 10) + ".json";
-  const data = JSON.stringify({ grades: state, bases }, null, 2);
-  const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
-  if (dl) { try { await dl.save({ filename, data }); toast("حُفظت نسخة من البيانات"); } catch (e) { if (e && e.code !== "declined") toast("لم تُحفظ النسخة"); } return; }
-  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "application/json" })); a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); toast("نُزّلت نسخة من البيانات");
-});
-$("#importBtn").addEventListener("click", () => $("#importFile").click());
-$("#importFile").addEventListener("change", async e => {
-  const f = e.target.files[0]; if (!f) return;
-  try {
-    const d = JSON.parse(await f.text()), gd = d.grades || d;
-    if (!gd || !Array.isArray(gd.s)) throw 0;
-    state = normalize(gd); save();
-    if (d.bases) CONFIG.groups.forEach(g => { bases[g.id] = normBase(g, d.bases[g.id]); saveBase(g.id); });
-    renderReport(); toast("استُرجعت البيانات");
-  } catch (err) { toast("هذا الملف ليس نسخة صحيحة من اللعبة"); }
-  e.target.value = "";
-});
-let armed = 0;
-$("#resetBtn").addEventListener("click", e => {
-  const btn = e.currentTarget;
-  if (Date.now() - armed > 4000) { armed = Date.now(); btn.textContent = "اضغط مرة أخرى للتأكيد"; setTimeout(() => btn.textContent = "مسح كل الدرجات والقواعد", 4000); return; }
-  state = blank(); save(); shown = shown.map(() => 0); armed = 0; btn.textContent = "مسح كل الدرجات والقواعد";
-  CONFIG.groups.forEach(g => { bases[g.id] = blankBase(g); saveBase(g.id); });
-  renderReport(); toast("مُسحت كل الدرجات والقواعد");
-});
-
-/* ===================== بطاقة الطالب ===================== */
-const dlg = $("#card");
-function openCard(i) {
-  const t = totals(i), { rank } = ranking(), g = groupOf(i);
-  const meter = (ic, col, label, v, max) => `<div class="meter"><span class="mi" style="background:color-mix(in srgb,${col} 20%,transparent);color:${col}">${ic}</span>
-    <div><div class="meter-l">${label}</div><div class="bar"><i style="background:${col}" data-w="${max ? v / max * 100 : 0}"></i></div></div><span class="v num">${ar(v)}<small class="sub" style="font-size:12px">/${ar(max)}</small></span></div>`;
-  const rows = state.s[i].map((e, a) => `<tr><td style="text-align:start"><span style="display:inline-flex;align-items:center;gap:6px">${planetSVG(CONFIG.planets[a], "").replace("<svg", '<svg style="width:24px;height:24px;flex:none"')}<b>${esc(actName(a))}</b></span></td>
-      <td>${e.att ? LABEL.att[e.att] : "–"}</td><td style="color:var(--gold);white-space:nowrap">${e.att === "a" || !e.mor ? "–" : "★".repeat(e.mor) + '<span style="opacity:.25">' + "★".repeat(P.morMax - e.mor) + "</span>"}</td>
-      <td>${e.att === "a" || !gRes(i, a) ? "–" : LABEL.res[gRes(i, a)]}</td><td class="tot num">${graded(i, a) ? ar(actTotal(i, a)) : "–"}</td></tr>`).join("");
-  const morAvg = t.morCount ? t.morSum / t.morCount : 0;
-  const badges = [
-    { on: t.gradedCount > 0 && t.presentAll, col: "#4fe3b5", ic: "clock", name: "نجم الحضور" },
-    { on: t.morCount > 0 && morAvg >= P.morMax - .5, col: "#ffc94d", ic: "shield", name: "وسام الانضباط" },
-    { on: t.wins >= 3, col: "#ff6b8b", ic: "cup", name: "بطل السباق" },
-    { on: t.total > 0 && rank[i] === 1, col: "#b48cff", ic: "star", name: "قائد الأسطول" }
-  ];
-  $("#scBody").style.setProperty("--g", g.color);
-  $("#scBody").innerHTML = `<button class="sc-close no-print" type="button" aria-label="إغلاق" id="scClose">✕</button>
-    <div class="sc-top">${rocketSVG(g.color, "sc-rocket")}<span class="label">مجموعة ${esc(g.name)}</span><h2 id="scName">${esc(CONFIG.students[i])}</h2>
-      <div class="sc-sum"><span class="big num">${ar(t.total)}</span><span class="sub" style="margin:0">من ${ar(MAX_ALL)} نقطة</span>${t.total > 0 ? `<span class="chip">المركز ${ar(rank[i])} من ${ar(CONFIG.students.length)}</span>` : ""}<span class="chip">قُيّم في ${ar(t.gradedCount)} من ${ar(N_ACT)} مهمات</span></div></div>
-    <div class="meters">${meter(ICON.clock, "var(--mint)", "الحضور", t.att, MAX.att)}${meter(ICON.shield, "var(--gold)", "الانضباط", t.mor, MAX.mor)}${meter(ICON.cup, "var(--rose)", "نتائج المجموعة", t.res, MAX.res)}</div>
-    <div class="table-wrap"><table><thead><tr><th style="text-align:start">المهمة</th><th>الحضور</th><th>الانضباط</th><th>نتيجة المجموعة</th><th>النقاط</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <div class="badges">${badges.map(b => `<div class="badge ${b.on ? "" : "off"}">${badgeSVG(b.col, b.ic)}<span>${b.name}</span></div>`).join("")}</div>
-    <div class="sc-foot no-print"><span style="display:flex;gap:8px"><button class="btn" type="button" id="scPrev">السابق</button><button class="btn" type="button" id="scNext">التالي</button></span><button class="btn gold" type="button" id="scPrint">طباعة البطاقة</button></div>`;
-  if (!dlg.open) dlg.showModal();
-  requestAnimationFrame(() => requestAnimationFrame(() => dlg.querySelectorAll(".bar i").forEach(b => b.style.width = b.dataset.w + "%")));
-  const n = CONFIG.students.length;
-  $("#scClose").onclick = () => dlg.close();
-  $("#scPrev").onclick = () => openCard((i - 1 + n) % n);
-  $("#scNext").onclick = () => openCard((i + 1) % n);
-  $("#scPrint").onclick = () => { document.body.classList.add("print-card"); window.print(); };
-}
-window.addEventListener("afterprint", () => document.body.classList.remove("print-card"));
-dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
-function badgeSVG(col, ic) {
-  return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3l5 4 6-1 2 6 6 3-2 6 3 5-5 4 0 6-6 1-3 5-6-2-6 2-3-5-6-1 0-6-5-4 3-5-2-6 6-3 2-6 6 1z" fill="${col}"/>
-    <circle cx="24" cy="22" r="12" fill="#fff" opacity=".92"/><g fill="#141022" color="#141022">${ICON[ic].replace("<svg", '<svg x="14" y="12" width="20" height="20"')}</g></svg>`;
-}
-
 /* ===================== عام ===================== */
 let tt;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2800); }
 (function stars() { let h = ""; for (let k = 0; k < 90; k++) h += `<i style="top:${(Math.random() * 100).toFixed(1)}%;left:${(Math.random() * 100).toFixed(1)}%;animation-delay:${(-Math.random() * 3).toFixed(2)}s;animation-duration:${(2 + Math.random() * 3).toFixed(1)}s"></i>`; $("#sky").innerHTML = h; })();
 applyRole();
 show(studentSide() ? "map" : "hq");
-if (/(^|[#&])teacher\b/.test(location.hash) && !canWrite) openGate();
-if (SYNC) { pollSheet(); setInterval(pollSheet, 15000); if (localTeacher) loadTeacherGrades(); }
+if (SYNC) { pollSheet(); setInterval(pollSheet, 15000); }
 </script>
 </body>
 </html>
