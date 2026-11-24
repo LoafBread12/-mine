@@ -1010,7 +1010,19 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 (function stars() { let h = ""; for (let k = 0; k < 90; k++) h += `<i style="top:${(Math.random() * 100).toFixed(1)}%;left:${(Math.random() * 100).toFixed(1)}%;animation-delay:${(-Math.random() * 3).toFixed(2)}s;animation-duration:${(2 + Math.random() * 3).toFixed(1)}s"></i>`; $("#sky").innerHTML = h; })();
 applyRole();
 show(studentSide() ? "map" : "hq");
-if (SYNC) { pollSheet(); setInterval(pollSheet, 15000); }
+// لوحة المعلّم تتحدّث كل ٣ ثوانٍ، وأجهزة الطلاب كل ١٥ ثانية حتى لا يزدحم السكربت، ولا تحديث والصفحة مخفية
+if (SYNC) {
+  let polling = false, last = 0;
+  const loop = async () => {
+    if (!document.hidden && !polling && Date.now() - last >= (canWrite ? 3000 : 15000)) {
+      polling = true; last = Date.now();
+      try { await pollSheet(); } finally { polling = false; }
+    }
+    setTimeout(loop, 500);
+  };
+  loop();
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !polling) pollSheet(); });
+}
 </script>
 </body>
 </html>
