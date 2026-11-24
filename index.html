@@ -194,6 +194,19 @@ main{max-width:1200px;margin:0 auto}
 .item.built{border-color:color-mix(in srgb,var(--g) 50%,transparent);background:color-mix(in srgb,var(--g) 10%,transparent)}
 .item.built .ic{background:color-mix(in srgb,var(--g) 25%,transparent)}
 .done-tag{font-size:13px;font-weight:700;color:var(--g);white-space:nowrap}
+.my-perks{display:grid;gap:6px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--g) 12%,transparent);border:1px solid color-mix(in srgb,var(--g) 45%,transparent);font-size:13px;line-height:1.6}
+.my-perks b{font-size:15px;color:var(--g)}
+.my-perks span{color:var(--ink-mut)}
+.perks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.my-perks .perks{margin-top:0}
+.perk{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid color-mix(in srgb,var(--g) 60%,transparent);background:color-mix(in srgb,var(--g) 18%,transparent);color:#fff}
+button.perk{cursor:pointer}
+.perk.used{opacity:.45;text-decoration:line-through;background:transparent}
+.perk-act{margin:0 0 10px;font-size:13px;color:var(--ink-mut)}
+.perk-act b{color:var(--gold)}
+.perk-none{font-size:12px;color:var(--ink-dim)}
+.item .perk-line{color:#d9e4ff}
+.item .perk-line b{display:inline;font-size:inherit;color:var(--g);font-weight:700}
 .fact{margin:0;padding:10px 12px;border-radius:12px;background:rgba(108,196,255,.08);border:1px dashed rgba(108,196,255,.35);font-size:13px;color:#cfe8ff}
 .fact b{color:var(--sky)}
 
@@ -491,6 +504,7 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       </div>
       <aside class="panel shop">
         <div class="shop-h"><b>قائمة البناء</b><span class="label" id="shopCount"></span></div>
+        <div class="my-perks" id="myPerks"></div>
         <p class="fact" id="fact"></p>
         <div id="shop" style="display:grid;gap:8px"></div>
       </aside>
@@ -537,16 +551,16 @@ const CONFIG = {
 };
 /* وحدات القاعدة الفضائية: كل نقطة = كريستالة واحدة، ومجموع الأسعار ٢١٠ من ٢٢٥ ممكنة */
 const MODULES = [
-  { id: "pad",   name: "منصّة الهبوط",     cost: 10, fact: "منصّة الهبوط أول ما يُبنى في أي قاعدة، فعليها تهبط المركبات بأمان." },
-  { id: "solar", name: "الألواح الشمسية",  cost: 12, fact: "الألواح الشمسية تحوّل ضوء الشمس إلى كهرباء، وهي مصدر الطاقة في الفضاء." },
-  { id: "tank",  name: "خزّان الماء",      cost: 14, fact: "الماء في الفضاء ثمين جدًّا، ويُعاد تنقيته واستعماله مرّات كثيرة." },
-  { id: "dome",  name: "القبّة الرئيسية",  cost: 16, fact: "القبّة شكل قويّ يتحمّل الضغط، لذلك تُصمَّم بها كثير من المباني." },
-  { id: "antenna", name: "هوائي الاتصال",  cost: 18, fact: "الإشارة من القمر إلى الأرض تستغرق ثانية وثُلثًا تقريبًا." },
-  { id: "lab",   name: "مختبر الكريستال",  cost: 20, fact: "الكريستالات تنمو بأشكال منتظمة لأن ذرّاتها تترتّب في نظام دقيق." },
-  { id: "scope", name: "المرصد",           cost: 22, fact: "التلسكوب يجمع ضوء النجوم البعيدة فنراها أوضح بكثير من العين." },
-  { id: "tower", name: "برج الإطلاق",      cost: 26, fact: "تنطلق الصواريخ نحو الشرق غالبًا لتستفيد من دوران الأرض." },
-  { id: "sat",   name: "القمر الصناعي",    cost: 32, fact: "الأقمار الصناعية تدور حول الأرض وتنقل الاتصالات وصور الطقس." },
-  { id: "beacon",name: "منارة النجوم",     cost: 40, fact: "المنارة تُرشد المركبات في الظلام، وهي تاج القاعدة المكتملة." }
+  { id: "pad",   name: "منصّة الهبوط",     cost: 10, perk: "أوّل الدور", perkText: "تختار المجموعة دورها في النشاط: تبدأ أوّلًا أو تؤجّل.", fact: "منصّة الهبوط أول ما يُبنى في أي قاعدة، فعليها تهبط المركبات بأمان." },
+  { id: "solar", name: "الألواح الشمسية",  cost: 12, perk: "طاقة إضافية", perkText: "دقيقتان إضافيتان في تحدٍّ واحد.", fact: "الألواح الشمسية تحوّل ضوء الشمس إلى كهرباء، وهي مصدر الطاقة في الفضاء." },
+  { id: "tank",  name: "خزّان الماء",      cost: 14, perk: "محاولة ثانية", perkText: "إعادة محاولة سؤال أو مهمة أخطأت فيها المجموعة.", fact: "الماء في الفضاء ثمين جدًّا، ويُعاد تنقيته واستعماله مرّات كثيرة." },
+  { id: "dome",  name: "القبّة الرئيسية",  cost: 16, perk: "درع القاعدة", perkText: "تُلغى خسارة نقطة واحدة في التحدّي.", fact: "القبّة شكل قويّ يتحمّل الضغط، لذلك تُصمَّم بها كثير من المباني." },
+  { id: "antenna", name: "هوائي الاتصال",  cost: 18, perk: "اتصال بالقيادة", perkText: "تلميح واحد من المعلّم.", fact: "الإشارة من القمر إلى الأرض تستغرق ثانية وثُلثًا تقريبًا." },
+  { id: "lab",   name: "مختبر الكريستال",  cost: 20, perk: "تبديل السؤال", perkText: "تستبدل المجموعة سؤالًا صعبًا بسؤال آخر.", fact: "الكريستالات تنمو بأشكال منتظمة لأن ذرّاتها تترتّب في نظام دقيق." },
+  { id: "scope", name: "المرصد",           cost: 22, perk: "رؤية بعيدة", perkText: "تعرف المجموعة موضوع النشاط القادم قبل غيرها.", fact: "التلسكوب يجمع ضوء النجوم البعيدة فنراها أوضح بكثير من العين." },
+  { id: "tower", name: "برج الإطلاق",      cost: 26, perk: "إطلاق مبكر", perkText: "تختار المجموعة المحطة أو التحدّي الذي تبدأ به.", fact: "تنطلق الصواريخ نحو الشرق غالبًا لتستفيد من دوران الأرض." },
+  { id: "sat",   name: "القمر الصناعي",    cost: 32, perk: "حذف إجابتين", perkText: "يحذف المعلّم إجابتين خاطئتين من سؤال اختيار.", fact: "الأقمار الصناعية تدور حول الأرض وتنقل الاتصالات وصور الطقس." },
+  { id: "beacon",name: "منارة النجوم",     cost: 40, perk: "حرّاس المجرّة", perkText: "لقب الشرف وشهادة من المعلّم في نهاية الفصل، ومضاعفة نقاط فوز المجموعة في تحدٍّ واحد.", fact: "المنارة تُرشد المركبات في الظلام، وهي تاج القاعدة المكتملة." }
 ];
 const TITLES = [[0, "أرض خالية"], [1, "معسكر البداية"], [3, "محطّة ناشئة"], [5, "قاعدة متقدّمة"], [8, "مدينة فضائية"], [10, "عاصمة المجرّة"]];
 const EMBLEMS = {
@@ -606,6 +620,7 @@ function blank() {
     gres: Array.from({ length: N_ACT }, () => ({})),   // نتيجة كل مجموعة في كل مهمة: w / d / x
     open: Array(N_ACT).fill(true),                     // هل يرى الطلاب لعبة الكوكب
     names: CONFIG.students.slice(),                    // لمطابقة الدرجات بالأسماء إن تغيّر ترتيب الطلاب
+    used: Array.from({ length: N_ACT }, () => ({})),   // القدرات التي استعملتها كل مجموعة في كل نشاط
     s: CONFIG.students.map(() => Array.from({ length: N_ACT }, () => ({ att: null, mor: null }))) };
 }
 function normalize(d) {
@@ -618,6 +633,10 @@ function normalize(d) {
     e.att = o.att in P.att ? o.att : null;
     e.mor = Number.isInteger(o.mor) && o.mor >= 0 ? Math.min(o.mor, P.morMax) : null;
   }));
+  for (let a = 0; a < N_ACT; a++) CONFIG.groups.forEach(g => {
+    const u = ((d.used || [])[a] || {})[g.id];
+    if (Array.isArray(u)) b.used[a][g.id] = u.filter((x, k, arr) => MODULES.some(m => m.id === x) && arr.indexOf(x) === k);
+  });
   for (let a = 0; a < N_ACT; a++) CONFIG.groups.forEach(g => {
     let r = ((d.gres || [])[a] || {})[g.id];
     if (!(r in P.res)) { // نسخة قديمة: النتيجة كانت لكل طالب، فنأخذ الأكثر تكرارًا في المجموعة
@@ -923,15 +942,19 @@ function renderWS() {
   if (document.activeElement !== $("#baseName")) $("#baseName").value = b.name;
   $("#embPick").innerHTML = Object.keys(EMBLEMS).map(k => `<button type="button" data-emb="${k}" aria-pressed="${b.emblem === k}" aria-label="شعار">${embSVG(k, "currentColor")}</button>`).join("");
   $("#shopCount").textContent = `${ar(s.built)} من ${ar(MODULES.length)}`;
+  const mine = MODULES.filter(m => b.built.includes(m.id));
+  $("#myPerks").innerHTML = mine.length
+    ? `<b>قدرات مجموعتكم</b><span>كل قدرة تُستعمل مرة واحدة في كل نشاط. اطلبوها من المعلّم في وقتها.</span><div class="perks">${mine.map(m => `<span class="perk" title="${esc(m.perkText)}">${esc(m.perk)}</span>`).join("")}</div>`
+    : `<b>لماذا نبني؟</b><span>كل وحدة تبنونها تفتح لمجموعتكم قدرة تستعملونها في الأنشطة: تلميح، أو محاولة ثانية، أو وقت إضافي، وغيرها. ابدؤوا بمنصّة الهبوط.</span>`;
   const last = MODULES.find(m => m.id === fresh) || MODULES.find(m => !b.built.includes(m.id)) || MODULES[MODULES.length - 1];
   $("#fact").innerHTML = `<b>هل تعلم؟</b> ${esc(last.fact)}`;
   const needPad = !b.built.includes("pad");
   $("#shop").innerHTML = MODULES.map(m => {
     const has = b.built.includes(m.id), lockedByPad = needPad && m.id !== "pad";
     const can = !has && !lockedByPad && s.left >= m.cost;
-    const why = lockedByPad ? "ابنوا منصّة الهبوط أولًا" : (!has && s.left < m.cost ? `تحتاجون ${ar(m.cost - s.left)} كريستالة أخرى` : m.fact);
+    const why = lockedByPad ? "ابنوا منصّة الهبوط أولًا" : (!has && s.left < m.cost ? `تحتاجون ${ar(m.cost - s.left)} كريستالة أخرى` : "");
     return `<div class="item ${has ? "built" : ""}"><span class="ic">${modIcon(m.id, g.color)}</span>
-      <span><b>${esc(m.name)}</b><small>${esc(has ? "تمّ البناء" : why)}</small></span>
+      <span><b>${esc(m.name)}</b><small class="perk-line">${has ? "قدرتكم" : "تفتح قدرة"}: <b>${esc(m.perk)}</b>، ${esc(m.perkText)}</small>${why ? `<small>${esc(why)}</small>` : ""}</span>
       ${has ? `<span class="done-tag">✓ مبنيّة</span>` : `<button class="buy num" type="button" data-buy="${m.id}" ${can ? "" : "disabled"}>${ICON.crys}${ar(m.cost)}</button>`}</div>`;
   }).join("");
   fresh = null;
