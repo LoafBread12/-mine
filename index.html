@@ -725,7 +725,8 @@ function applyRole() {
 const ptsWord = n => n === 1 ? "نقطة واحدة" : n === 2 ? "نقطتان" : n === 0 ? "بلا نقاط" : `${ar(n)} نقاط`;
 const gRes = (i, a) => state.gres[a][groupOf(i).id] || null;   // نتيجة مجموعة الطالب في المهمة
 const pts = (i, a) => { const e = state.s[i][a], r = gRes(i, a);
-  return { att: e.att ? P.att[e.att] : 0, mor: e.att === "a" ? 0 : (e.mor || 0), res: e.att === "a" || !r ? 0 : P.res[r] }; };
+  const here = e.att === "p" || e.att === "l";   // نتيجة المجموعة لمن حضر فقط (حاضر أو متأخر)
+  return { att: e.att ? P.att[e.att] : 0, mor: e.att === "a" ? 0 : (e.mor || 0), res: here && r ? P.res[r] : 0 }; };
 const graded = (i, a) => { const e = state.s[i][a]; return e.att != null || e.mor != null; };
 const actTotal = (i, a) => { const p = pts(i, a); return p.att + p.mor + p.res; };
 function totals(i) {
