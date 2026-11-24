@@ -28,13 +28,25 @@ const GROUP_CODES = { g1: "4821", g2: "7395", g3: "2164", g4: "5937" };
 const COSTS = { pad: 10, solar: 12, tank: 14, dome: 16, antenna: 18, lab: 20, scope: 22, tower: 26, sat: 32, beacon: 40 };
 const EMBLEMS = ["star", "comet", "galaxy", "diamond", "crescent", "ringed", "bolt"];
 
+// جدول «تقييم الفصل»: منه تأخذ اللعبة أسماء الطلاب ومجموعاتهم، وفيه تكتب درجاتهم.
+const CLASS_SHEET_ID = "14YwHmMgcw068YQHudMvV3iok3nQGLtSyab4ZqkLhTtg";
+const CLASS_TAB = "Sheet1";
+const FIRST_ROW = 3;      // أوّل صف فيه اسم طالب
+const NAME_COL = 8;       // H: اسم الطالب
+const GROUP_COL = 7;      // G: اسم مجموعته (الشهاب، المجرّة، النيزك، السديم)
+// الدرجات تُكتب في الأعمدة B إلى F بجانب الاسم:
+// F الحضور، E الانضباط، D نتائج المجموعة، C المجموع، B الترتيب
+const GROUP_IDS = { "الشهاب": "g1", "المجرة": "g2", "المجرّة": "g2", "النيزك": "g3", "السديم": "g4" };
+
 /* ---------------- الطلبات ---------------- */
 
 function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.action === "grades") {
     if (String(p.key) !== TEACHER_PIN) return out_({ ok: false, error: "key" });
-    return out_({ ok: true, grades: read_("grades") });
+    let roster = null;
+    try { roster = roster_(); } catch (x) { roster = null; }   // إن تعذّر فتح «تقييم الفصل» تبقى الأسماء الافتراضية
+    return out_({ ok: true, grades: read_("grades"), roster: roster });
   }
   const bases = {};
   Object.keys(GROUP_CODES).forEach(g => { bases[g] = read_("base:" + g); });
@@ -54,6 +66,7 @@ function doPost(e) {
       if (!teacher) return out_({ ok: false, error: "key" });
       if (d.grades && typeof d.grades === "object") write_("grades", d.grades);
       if (d.public && typeof d.public === "object") write_("public", cleanPublic_(d.public));
+      if (Array.isArray(d.report)) { try { writeReport_(d.report); } catch (x) {} }
       return out_({ ok: true });
     }
 
@@ -80,6 +93,39 @@ function doPost(e) {
     lock.releaseLock();
   }
 }
+
+/* ---------------- جدول «تقييم الفصل» ---------------- */
+
+function classSheet_() {
+  return SpreadsheetApp.openById(CLASS_SHEET_ID).getSheetByName(CLASS_TAB);
+}
+
+// أسماء الطلاب (H) ومجموعاتهم (G). لا تُرسَل إلا للمعلّم بالرقم السري.
+function roster_() {
+  const sh = classSheet_(), n = sh.getLastRow() - FIRST_ROW + 1;
+  if (n < 1) return [];
+  return sh.getRange(FIRST_ROW, GROUP_COL, n, 2).getValues()
+    .filter(r => String(r[1]).trim())
+    .map(r => ({ name: String(r[1]).trim(), group: GROUP_IDS[String(r[0]).trim()] || "" }));
+}
+
+// يكتب درجات كل طالب في صفّه (يُطابَق بالاسم في العمود H)
+function writeReport_(rows) {
+  const sh = classSheet_(), n = sh.getLastRow() - FIRST_ROW + 1;
+  if (n < 1) return;
+  const byName = {};
+  rows.forEach(r => { if (r && r.name) byName[String(r.name).trim()] = r; });
+  const names = sh.getRange(FIRST_ROW, NAME_COL, n, 1).getValues();
+  const out = names.map(([nm]) => {
+    const r = byName[String(nm).trim()];
+    if (!r) return ["", "", "", "", ""];
+    return [num_(r.rank), num_(r.total), num_(r.res), num_(r.mor), num_(r.att)];   // B C D E F
+  });
+  sh.getRange(FIRST_ROW, 2, n, 5).setValues(out);
+  sh.getRange(FIRST_ROW - 1, 2, 1, 5).setValues([["الترتيب", "المجموع /٤٥", "نتائج المجموعة /١٥", "الانضباط /١٥", "الحضور /١٥"]]);
+}
+
+function num_(v) { const x = Number(v); return isFinite(x) ? x : ""; }
 
 /* ---------------- أدوات ---------------- */
 

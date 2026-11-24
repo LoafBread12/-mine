@@ -634,6 +634,24 @@ const MAX_ALL = MAX_ACT * N_ACT;
 const MAX = { att: Math.max(...Object.values(P.att)) * N_ACT, mor: P.morMax * N_ACT, res: Math.max(...Object.values(P.res)) * N_ACT };
 const LABEL = { att: { p: "حاضر", l: "متأخر", a: "غائب" }, res: { w: "فاز", d: "تعادل", x: "خسر" }, mor: ["", "يحتاج إلى تحسين", "جيد", "ممتاز"] };
 const groupOf = i => CONFIG.groups.find(g => g.members.includes(i)) || CONFIG.groups[0];
+/* أسماء الطلاب الحقيقية تأتي من جدول «تقييم الفصل» (العمود H، والمجموعة في G) عبر السكربت، للمعلّم فقط.
+   لا تُكتب في هذا الملف، وتُحفظ على جهاز المعلّم وحده. */
+const ROSTER_KEY = "mohimmat-roster-v1";
+let rosterOn = false;
+function applyRoster(list) {
+  if (!Array.isArray(list) || !list.length) return false;
+  const names = list.map(r => String(r.name || "").trim()).filter(Boolean);
+  if (!names.length) return false;
+  CONFIG.students = names;
+  CONFIG.groups.forEach(g => g.members = []);
+  list.forEach((r, i) => { const g = CONFIG.groups.find(x => x.id === r.group); if (g) g.members.push(i); });
+  // من لم تُكتب مجموعته في العمود G يذهب إلى أصغر مجموعة
+  names.forEach((n, i) => { if (!CONFIG.groups.some(g => g.members.includes(i))) CONFIG.groups.reduce((a, b) => b.members.length < a.members.length ? b : a).members.push(i); });
+  CONFIG.groups.forEach(g => g.members.sort((a, b) => a - b));
+  rosterOn = true;
+  return true;
+}
+try { if (sessionStorage.getItem("teacher-ok")) applyRoster(JSON.parse(localStorage.getItem(ROSTER_KEY))); } catch (e) {}
 
 /* ===================== أدوات ===================== */
 const $ = s => document.querySelector(s);
@@ -672,13 +690,16 @@ function blank() {
   return { titles: Array(N_ACT).fill(""), dates: Array(N_ACT).fill(""),
     gres: Array.from({ length: N_ACT }, () => ({})),   // نتيجة كل مجموعة في كل مهمة: w / d / x
     open: Array(N_ACT).fill(true),                     // هل يرى الطلاب لعبة الكوكب
+    names: CONFIG.students.slice(),                    // لمطابقة الدرجات بالأسماء إن تغيّر ترتيب الطلاب
     s: CONFIG.students.map(() => Array.from({ length: N_ACT }, () => ({ att: null, mor: null }))) };
 }
 function normalize(d) {
   const b = blank();
   for (let a = 0; a < N_ACT; a++) { b.titles[a] = String((d.titles || [])[a] || ""); b.dates[a] = String((d.dates || [])[a] || ""); b.open[a] = (d.open || [])[a] !== false; }
+  // الدرجات تُطابَق بالاسم؛ ودرجات نسخة قديمة بلا أسماء لا تُنقل إلى قائمة الجدول
+  const from = i => Array.isArray(d.names) ? d.names.indexOf(CONFIG.students[i]) : (rosterOn ? -1 : i);
   b.s.forEach((row, i) => row.forEach((e, a) => {
-    const o = (((d.s || [])[i] || [])[a]) || {};
+    const k = from(i), o = (k < 0 ? null : (((d.s || [])[k] || [])[a])) || {};
     e.att = o.att in P.att ? o.att : null;
     e.mor = Number.isInteger(o.mor) && o.mor >= 0 ? Math.min(o.mor, P.morMax) : null;
   }));
@@ -747,8 +768,13 @@ async function loadTeacherGrades() {
   if (!SYNC || !teacherPin) return;
   try {
     const d = await sheetGet("action=grades&key=" + encodeURIComponent(teacherPin));
-    if (d && d.ok && d.grades && Array.isArray(d.grades.s)) { state = normalize(d.grades); lsSet(KEY, state); rerender(); toast("حُمّلت الدرجات من الجدول"); }
-    else if (d && d.ok) pushSheet(true);   // الجدول فارغ: ارفع درجات هذا الجهاز
+    if (d && d.ok && Array.isArray(d.roster) && applyRoster(d.roster)) {
+      try { localStorage.setItem(ROSTER_KEY, JSON.stringify(d.roster)); } catch (e) {}
+      shown = CONFIG.students.map(() => 0);
+      state = normalize(state);   // أعد ترتيب درجات هذا الجهاز على قائمة الجدول
+    }
+    if (d && d.ok && d.grades && Array.isArray(d.grades.s)) { state = normalize(d.grades); lsSet(KEY, state); rerender(); toast(rosterOn ? `حُمّلت الدرجات و${ar(CONFIG.students.length)} طالبًا من الجدول` : "حُمّلت الدرجات من الجدول"); }
+    else if (d && d.ok) { lsSet(KEY, state); rerender(); pushSheet(true); }   // الجدول فارغ: ارفع درجات هذا الجهاز
   } catch (e) {}
 }
 let sheetTimer = 0, lastSheet = "";
@@ -756,7 +782,9 @@ function pushSheet(now) {
   if (!SYNC || !localTeacher || !teacherPin) return;
   clearTimeout(sheetTimer);
   sheetTimer = setTimeout(async () => {
-    const body = { type: "teacher", key: teacherPin, grades: state, public: publicSummary() };
+    const { rank } = ranking();
+    const report = rosterOn ? CONFIG.students.map((name, i) => { const t = totals(i); return { name, att: t.att, mor: t.mor, res: t.res, total: t.total, rank: rank[i] }; }) : undefined;
+    const body = { type: "teacher", key: teacherPin, grades: state, public: publicSummary(), report };
     const json = JSON.stringify(body);
     if (json === lastSheet) return;
     lastSheet = json;
@@ -769,7 +797,7 @@ function pushSheet(now) {
 /* ملخّص عامّ يقرؤه الطلاب: الكواكب المفتوحة ومجموع كل مجموعة فقط، بلا درجات الأفراد */
 let pub = null, pubTimer = 0, lastPub = "";
 function publicSummary() {
-  const earned = {}; CONFIG.groups.forEach(g => earned[g.id] = g.members.reduce((x, i) => x + totals(i).total, 0));
+  const earned = {}; CONFIG.groups.forEach(g => earned[g.id] = groupEarned(g));
   return { open: CONFIG.planets.map((p, a) => state.open[a] !== false), titles: state.titles.slice(), earned };
 }
 function pushPublic() {
@@ -954,8 +982,14 @@ function ranking() {
   const list = CONFIG.students.map((_, i) => ({ k: i, t: totals(i).total })).sort((a, b) => b.t - a.t || a.k - b.k);
   return { list, rank: rankOf(list) };
 }
+/* كريستالات المجموعة = متوسّط نقاط أفرادها × ٥، فتتساوى المجموعات مهما اختلف عدد طلابها (أقصاها ٢٢٥) */
+const CREW = 5;
+function groupEarned(g) {
+  if (!g.members.length) return 0;
+  return Math.round(g.members.reduce((s, i) => s + totals(i).total, 0) * CREW / g.members.length);
+}
 function groupStats(g) {
-  const earned = !canWrite && (remoteDb || SYNC) ? ((pub && pub.earned && +pub.earned[g.id]) || 0) : g.members.reduce((s, i) => s + totals(i).total, 0);
+  const earned = !canWrite && (remoteDb || SYNC) ? ((pub && pub.earned && +pub.earned[g.id]) || 0) : groupEarned(g);
   const spent = bases[g.id].built.reduce((s, id) => s + (MODULES.find(m => m.id === id) || { cost: 0 }).cost, 0);
   return { earned, spent, left: Math.max(0, earned - spent), built: bases[g.id].built.length };
 }
@@ -1111,7 +1145,7 @@ function renderHQ() {
         <span class="gc-rank num ${gr[g.id] === 1 && s.earned ? "r1" : ""}">${ar(gr[g.id])}</span></div>
       <div class="gc-mini">${baseSVG(g, b.built, { mini: true })}</div>
       <div class="gc-stats"><div><b class="num">${ar(s.earned)}</b><span>نقطة</span></div><div><b class="num">${ar(s.left)}</b><span>كريستالة</span></div><div><b class="num">${ar(s.built)}/${ar(MODULES.length)}</b><span>وحدة</span></div></div>
-      <div class="gc-bar" title="تقدّم المجموعة من ${ar(MAX_ALL * g.members.length)}"><i style="width:${s.earned / (MAX_ALL * g.members.length) * 100}%"></i></div>
+      <div class="gc-bar" title="تقدّم المجموعة من ${ar(MAX_ALL * CREW)}"><i style="width:${s.earned / (MAX_ALL * CREW) * 100}%"></i></div>
     </article>`;
   }).join("");
   renderPlanets($("#planetsHq"), false);
@@ -1164,7 +1198,7 @@ function renderWS() {
   $("#ws").hidden = false; $("#ws").style.setProperty("--g", g.color);
   $("#wsEmb").innerHTML = embSVG(b.emblem);
   $("#wsName").textContent = b.name || `قاعدة ${g.name}`;
-  $("#wsSub").textContent = `مجموعة ${g.name} · ${g.members.map(i => CONFIG.students[i].split(" ")[0]).join("، ")}`;
+  $("#wsSub").textContent = canWrite && !preview ? `مجموعة ${g.name} · ${g.members.map(i => CONFIG.students[i].split(" ")[0]).join("، ")}` : `مجموعة ${g.name}`;
   $("#wsCrys").textContent = ar(s.left);
   $("#wsCrysSub").textContent = `كريستالة متاحة من ${ar(s.earned)}`;
   $("#wsScene").innerHTML = baseSVG(g, b.built, { fresh });
@@ -1295,7 +1329,7 @@ function renderReport() {
         ${state.s[i].map((e, a) => `<td class="num">${graded(i, a) ? ar(actTotal(i, a)) : "–"}</td>`).join("")}
         <td class="num">${ar(t.att)}</td><td class="num">${ar(t.mor)}</td><td class="num">${ar(t.res)}</td><td class="tot num">${ar(t.total)}</td></tr>`; }).join("") + "</tbody>";
   const gr = groupRanking();
-  $("#groupTable").innerHTML = `<thead><tr><th>الترتيب</th><th>المجموعة</th><th>الحضور</th><th>الانضباط</th><th>النتائج (فوز/تعادل/خسارة)</th><th>المجموع /${ar(MAX_ALL * 5)}</th><th>الوحدات المبنيّة</th><th>لقب القاعدة</th></tr></thead><tbody>` +
+  $("#groupTable").innerHTML = `<thead><tr><th>الترتيب</th><th>المجموعة</th><th>الحضور</th><th>الانضباط</th><th>النتائج (فوز/تعادل/خسارة)</th><th>الكريستالات المكتسبة /${ar(MAX_ALL * CREW)}</th><th>الوحدات المبنيّة</th><th>لقب القاعدة</th></tr></thead><tbody>` +
     [...CONFIG.groups].sort((a, b) => gr[a.id] - gr[b.id]).map(g => {
       const s = groupStats(g), sum = k => g.members.reduce((x, i) => x + totals(i)[k], 0);
       return `<tr style="--g:${g.color}"><td class="num">${ar(gr[g.id])}</td><td class="nm"><span class="dot"></span>${esc(g.name)}</td><td class="num">${ar(sum("att"))}</td><td class="num">${ar(sum("mor"))}</td><td class="num">${ar(sum("res"))} <small class="sub">(${CONFIG.planets.map((p, a) => state.gres[a][g.id] ? LABEL.res[state.gres[a][g.id]] : "–").join(" · ")})</small></td><td class="tot num">${ar(s.earned)}</td><td class="num">${ar(s.built)}/${ar(MODULES.length)}</td><td>${esc(titleOf(s.built))}</td></tr>`;
