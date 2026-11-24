@@ -19,7 +19,7 @@
  */
 
 // الرقم السري للمعلّم: نفس الرقم الذي يُدخله في «دخول المعلّم». غيّره.
-const TEACHER_PIN = "1447";
+const TEACHER_PIN = "اكتب-رقمك-هنا";
 
 // رموز دخول ورشة البناء لكل مجموعة (نفس الرموز في index.html).
 const GROUP_CODES = { g1: "4821", g2: "7395", g3: "2164", g4: "5937" };
@@ -29,7 +29,7 @@ const COSTS = { pad: 10, solar: 12, tank: 14, dome: 16, antenna: 18, lab: 20, sc
 const EMBLEMS = ["star", "comet", "galaxy", "diamond", "crescent", "ringed", "bolt"];
 
 // جدول «تقييم الفصل»: منه تأخذ اللعبة أسماء الطلاب ومجموعاتهم، وفيه تكتب درجاتهم.
-const CLASS_SHEET_ID = "14YwHmMgcw068YQHudMvV3iok3nQGLtSyab4ZqkLhTtg";
+const CLASS_SHEET_ID = "ضع-معرّف-جدول-تقييم-الفصل-هنا";   // الجزء بين /d/ و /edit في رابط الجدول
 const CLASS_TAB = "Sheet1";
 const FIRST_ROW = 3;      // أوّل صف فيه اسم طالب
 const NAME_COL = 8;       // H: اسم الطالب
