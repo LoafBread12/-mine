@@ -252,6 +252,8 @@ td.nm button{border:0;background:none;padding:0;font-weight:600}
 td.tot{font-family:var(--f-display);font-size:19px;color:var(--gold)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--g);margin-inline-end:6px;vertical-align:middle}
 .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.codes.links{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:640px){.codes.links{grid-template-columns:minmax(0,1fr)}}
 .codes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
 .code{padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);text-align:center}
 .code b{display:block;font-size:24px;letter-spacing:.3em;direction:ltr;color:var(--g)}
@@ -530,6 +532,10 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
       <p class="sub">مجموع كل طالب في المهمات الخمس على الأسس الثلاثة. اضغط على الاسم لبطاقة الطالب.</p>
       <div class="table-wrap"><table id="reportTable"></table></div>
       <div class="table-wrap"><table id="groupTable"></table></div>
+      <div class="codes-wrap" id="linksWrap">
+        <h3 style="margin:18px 0 0;font-size:16px">روابط اللعبة</h3>
+        <div class="codes links" id="links"></div>
+      </div>
       <div class="codes-wrap" id="codesWrap">
         <h3 style="margin:18px 0 0;font-size:16px">رموز دخول ورشة البناء <span class="label">(للمعلّم فقط)</span></h3>
         <div class="codes" id="codes"></div>
@@ -592,6 +598,9 @@ const CONFIG = {
   teacherPinHash: "7f7d502",
   // رابط تطبيق الويب من Google Apps Script (ينتهي بـ /exec). إن وُضع، تُشارَك الكريستالات والقواعد والكواكب المفتوحة
   // بين كل الأجهزة خارج Claude، ويصير الرقم السري للمعلّم هو المكتوب في السكربت. انظر google-apps-script.gs
+  // روابط الموقع على GitHub Pages، تظهر للمعلّم في قسم التقرير ليرسلها
+  studentUrl: "https://loafbread12.github.io/-mine/",
+  teacherUrl: "https://loafbread12.github.io/-mine/teacher.html",
   syncUrl: "https://script.google.com/macros/s/AKfycbxOvdI8cHAP2AwdEEdtCLE-USef_SQJvj362a_cNWW8SO1euBuqOyt1ZyGTWWerPQsDQw/exec",
   points: { att: { p: 3, l: 1, a: 0 }, morMax: 3, res: { w: 3, d: 2, x: 1 } }   // الحضور، الانضباط (نجوم)، نتيجة المجموعة
 };
@@ -1069,7 +1078,17 @@ function openPlanet(a, fromTeacher) {
   $("#playName").textContent = `كوكب ${pl.name}`;
   $("#playSub").textContent = planetTitle(a) + (pl.gameDesc ? " · " + pl.gameDesc : "");
   show("play");
-  $("#playFrame").setAttribute("src", pl.game);
+  $("#playFrame").setAttribute("src", gameUrl(pl.game));
+}
+/* في نسخة «الملف الواحد» تكون ألعاب الكواكب مضمّنة داخل الصفحة (EMBEDDED_GAMES) بدل ملفات بجانبها */
+let gameBlob = "";
+function gameUrl(name) {
+  const src = (window.EMBEDDED_GAMES || {})[name];
+  if (!src) return name;
+  if (gameBlob) URL.revokeObjectURL(gameBlob);
+  const bytes = Uint8Array.from(atob(src), c => c.charCodeAt(0));
+  gameBlob = URL.createObjectURL(new Blob([bytes], { type: "text/html;charset=utf-8" }));
+  return gameBlob;
 }
 $("#playBack").addEventListener("click", () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); show(playFrom); });
 $("#playFull").addEventListener("click", () => {
@@ -1280,8 +1299,14 @@ function renderReport() {
       const s = groupStats(g), sum = k => g.members.reduce((x, i) => x + totals(i)[k], 0);
       return `<tr style="--g:${g.color}"><td class="num">${ar(gr[g.id])}</td><td class="nm"><span class="dot"></span>${esc(g.name)}</td><td class="num">${ar(sum("att"))}</td><td class="num">${ar(sum("mor"))}</td><td class="num">${ar(sum("res"))} <small class="sub">(${CONFIG.planets.map((p, a) => state.gres[a][g.id] ? LABEL.res[state.gres[a][g.id]] : "–").join(" · ")})</small></td><td class="tot num">${ar(s.earned)}</td><td class="num">${ar(s.built)}/${ar(MODULES.length)}</td><td>${esc(titleOf(s.built))}</td></tr>`;
     }).join("") + "</tbody>";
+  $("#links").innerHTML = [["رابط الطلاب", CONFIG.studentUrl, "#4fe3b5"], ["رابط المعلّم", CONFIG.teacherUrl, "#ffc94d"]].filter(x => x[1]).map(([t, u, c]) =>
+    `<div class="code" style="--g:${c};text-align:start"><span>${t}</span><a href="${esc(u)}" target="_blank" rel="noopener" style="display:block;direction:ltr;text-align:left;font-size:13px;color:var(--g);word-break:break-all;margin:4px 0 8px">${esc(u)}</a><button class="btn" type="button" data-copy="${esc(u)}" style="height:34px;font-size:13px">نسخ الرابط</button></div>`).join("");
   $("#codes").innerHTML = CONFIG.groups.map(g => `<div class="code" style="--g:${g.color}"><span>مجموعة ${esc(g.name)}</span><b>${g.code}</b></div>`).join("");
 }
+$("#links").addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.copy); toast("نُسخ الرابط"); } catch (er) { toast("انسخ الرابط يدويًّا من فوق الزر"); }
+});
 $("#printReport").addEventListener("click", () => window.print());
 $("#exportBtn").addEventListener("click", async () => {
   const filename = "mohimmat-alkawakib-" + new Date().toISOString().slice(0, 10) + ".json";
