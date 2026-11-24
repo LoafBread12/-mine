@@ -235,6 +235,8 @@ main{max-width:1200px;margin:0 auto}
 .star{width:38px;height:38px;border:1px solid var(--line);padding:5px;border-radius:10px;background:rgba(0,0,0,.25)}
 .star svg{width:100%;height:100%;fill:rgba(255,255,255,.16)}
 .star.on svg{fill:var(--gold)}
+.roster-note{margin:8px 0 0;padding:10px 14px;border-radius:12px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(255,201,77,.1);border:1px solid rgba(255,201,77,.45);color:#ffe7a8}
+.roster-note.ok{background:rgba(79,227,181,.1);border-color:rgba(79,227,181,.45);color:#c8fbe9}
 .res-note{font-size:13px;font-weight:600;color:var(--ink-mut)}
 .gres-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-bottom:8px;padding:8px 12px;border-radius:14px;background:color-mix(in srgb,var(--g) 10%,transparent);border:1px solid color-mix(in srgb,var(--g) 35%,transparent)}
 .gres{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-mut)}
@@ -459,6 +461,7 @@ dialog::backdrop{background:rgba(4,7,22,.78);backdrop-filter:blur(4px)}
 
   <!-- ===== القيادة ===== -->
   <section class="view" id="view-hq">
+    <div class="roster-note" id="rosterNote" hidden></div>
     <div class="sec" style="margin-top:8px"><div><h2 class="h2">ترتيب المجموعات</h2><p class="sub">كل نقطة يكسبها الطالب تصير كريستالة في خزنة مجموعته، والفوز يرفع نقاط المجموعة كلها.</p></div></div>
     <div class="groups" id="groupCards"></div>
     <div class="sec"><div><h2 class="h2">سباق الصواريخ</h2><p class="sub">الترتيب الفردي للطلاب العشرين. أعلى نتيجة في الفصل ٤٥ نقطة.</p></div></div>
@@ -763,18 +766,39 @@ async function pollSheet() {
     if (changed) rerender();
   } catch (e) { $("#statusTxt").textContent = "غير متّصل بالجدول"; }
 }
+/* حالة أسماء الطلاب، تظهر للمعلّم أعلى «القيادة» ليعرف من أين جاءت الأسماء */
+let rosterStatus = rosterOn ? "cached" : "";
+function rosterNote() {
+  const el = $("#rosterNote"); if (!el) return;
+  const msg = {
+    ok: `الأسماء من جدول «تقييم الفصل»: ${ar(CONFIG.students.length)} طالبًا.`,
+    cached: `الأسماء من آخر نسخة حُفظت من جدول «تقييم الفصل» (${ar(CONFIG.students.length)} طالبًا)، ونحاول تحديثها الآن.`,
+    old: "تظهر الأسماء الوهمية: السكربت المنشور لا يرسل الأسماء. الصق السكربت الجديد في Apps Script، ثم Deploy ← Manage deployments ← Edit ← New version.",
+    empty: "تظهر الأسماء الوهمية: السكربت لم يستطع قراءة جدول «تقييم الفصل». تأكّد أن CLASS_SHEET_ID في السكربت هو معرّف جدولك، وأن الأسماء في العمود H من الصف ٣، وأنك وافقت على أذونات Google بعد النشر.",
+    offline: "تظهر الأسماء الوهمية: تعذّر الاتصال بسكربت Google. تأكّد من الإنترنت ومن رابط السكربت.",
+    nosync: "تظهر الأسماء الوهمية: اللعبة غير مربوطة بسكربت Google (syncUrl فارغ)."
+  }[rosterStatus];
+  el.hidden = !msg || !canWrite || inClaude;
+  el.classList.toggle("ok", rosterStatus === "ok" || rosterStatus === "cached");
+  if (msg) el.textContent = msg;
+}
 async function loadTeacherGrades() {
-  if (!SYNC || !teacherPin) return;
+  if (!SYNC) { rosterStatus = "nosync"; rosterNote(); return; }
+  if (!teacherPin) return;
   try {
     const d = await sheetGet("action=grades&key=" + encodeURIComponent(teacherPin));
+    if (d && d.ok && !("roster" in d)) rosterStatus = "old";
+    else if (d && d.ok && !(Array.isArray(d.roster) && d.roster.length)) rosterStatus = "empty";
     if (d && d.ok && Array.isArray(d.roster) && applyRoster(d.roster)) {
       try { localStorage.setItem(ROSTER_KEY, JSON.stringify(d.roster)); } catch (e) {}
       shown = CONFIG.students.map(() => 0);
       state = normalize(state);   // أعد ترتيب درجات هذا الجهاز على قائمة الجدول
+      rosterStatus = "ok";
     }
     if (d && d.ok && d.grades && Array.isArray(d.grades.s)) { state = normalize(d.grades); lsSet(KEY, state); rerender(); toast(rosterOn ? `حُمّلت الدرجات و${ar(CONFIG.students.length)} طالبًا من الجدول` : "حُمّلت الدرجات من الجدول"); }
     else if (d && d.ok) { lsSet(KEY, state); rerender(); pushSheet(true); }   // الجدول فارغ: ارفع درجات هذا الجهاز
-  } catch (e) {}
+  } catch (e) { rosterStatus = rosterOn ? "cached" : "offline"; }
+  rosterNote();
 }
 let sheetTimer = 0, lastSheet = "";
 function pushSheet(now) {
@@ -1135,6 +1159,7 @@ $("#playFull").addEventListener("click", () => {
 /* ===================== القيادة ===================== */
 let shown = CONFIG.students.map(() => 0);
 function renderHQ() {
+  rosterNote();
   const gr = groupRanking();
   $("#groupCards").innerHTML = CONFIG.groups.map(g => {
     const s = groupStats(g), b = bases[g.id];
