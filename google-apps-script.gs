@@ -174,3 +174,15 @@ function write_(key, value) {
 function out_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
+
+/**
+ * للتجربة من المحرّر: اختر checkSheet من القائمة أعلى المحرّر واضغط Run (تشغيل).
+ * أول مرة يطلب Google الإذن بفتح جدول «تقييم الفصل»؛ وافق. ثم يكتب في السجلّ عدد الطلاب ومجموعاتهم.
+ */
+function checkSheet() {
+  const r = roster_();
+  const count = {};
+  r.forEach(x => { count[x.group || "بلا مجموعة"] = (count[x.group || "بلا مجموعة"] || 0) + 1; });
+  Logger.log("عدد الطلاب: " + r.length + " — " + JSON.stringify(count));
+  Logger.log("أول اسم: " + (r[0] ? r[0].name : "لا يوجد"));
+}
